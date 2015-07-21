@@ -1,0 +1,106 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "Constants/ZPAConstants.h"
+    #import "UIImageView+WebCache.h"
+    #import "ZPAAppDelegate.h"
+    #import "ZPADateHelper.h"
+    #import "ZPAAppData.h"
+    #import "ZPAStaticHelper.h"
+    #import "ZPAMyZeppaUser.h"
+
+    @class GTLServiceTicket;
+    @class GTMOAuth2ViewControllerTouch;
+    @class GTMOAuth2Authentication;
+    @class ZPAMyZeppaUser;
+    @class GTLEventtagendpointEventTag;
+///Global Enums
+
+
+typedef enum{
+    EventScopePublic = 0, // Open to unlimited sharing
+    EventScopePrivate, // Host only sharing
+    EventScopeCasual, // Friends of host can share
+    EventScopeNoRepost
+}EventScope;
+
+
+typedef enum{
+    ConflictStatusAttending = 0,
+    ConflictStatusNoConflict,
+    ConflictStatusPartialConflict,
+    ConflictStatusCompleteConflict,
+    ConflictStatusUnknown
+    
+}ConflictStatus;
+
+typedef enum {
+    LoadTypeHostedEvent = 0,
+    LoadTypeJoinedEvent,
+    LoadTypeWatchingEvent,
+    LoadTypeHeldEvents,
+    LoadTypeNotification,
+    LoadTypeEventTags,
+    LoadTypeFriends,
+    LoadTypeEventRefresh
+}LoadType;
+
+typedef enum {
+    EventUpdateTypeSimpleUpdate = 0,
+    EventUpdateTypeJoined,
+    EventUpdateTypeLeave,
+    EventUpdateTypeWatch,
+    EventUpdateTypeDelete,
+    EventUpdateTypeStopWatching
+}EventUpdateType;
+
+typedef enum {
+    NotificationTypeMingleRequest = 0,
+    NotificationTypeMingleAccepted,
+    NotificationTypeEventRecommendation,
+    NotificationTypeDirectInvite,
+    NotificationTypeCommentOnPost,
+    NotificationTypeEventCancelled,
+    NotificationTypeEventUpdated,
+    NotificationTypeFriendJoinedEvent,
+    NotificationTypeUserLeaving,
+    NotificationTypeFindTime,
+    NotificationTypeTimeFound
+}NotificationType;
+
+typedef enum{
+    UserDataRelationshipIsUser = 0,
+    UserDataRelationshipMingling,
+    UserDataRelationshipSentRequest,
+    UserDataRelationshipPendingRequest,
+    UserDataRelationshipNotConnected,
+    UserDataRelationshipUnknown
+    
+}UserDataRelationship;
+
+
+///Create ZPAUserEndpoint  Completion Block
+typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
+
+///Create Google Plus Authentication Completion Handler
+typedef void (^LoginWithGPCompletionHandler) (GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error);
+
+///Fetch Google plus Profile Information Completion Handler
+typedef void(^getGPProfileInfoCompletionHandler)(ZPAMyZeppaUser *zpaUser, NSError *error);
+
+typedef void(^getTagCompletionHandler)(GTLEventtagendpointEventTag *tag, NSError *error);
+
+
+#endif
