@@ -4,6 +4,10 @@
 # EX: https://github.com/github/gitignore/blob/master/Objective-C.gitignore
 # 
 
+#ignore xcode projects
+*.xcodeproj
+*.xcworkspace
+
 ## Build generated
 build/
 DerivedData
