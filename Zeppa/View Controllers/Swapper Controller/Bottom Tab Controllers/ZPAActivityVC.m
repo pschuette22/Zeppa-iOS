@@ -19,6 +19,7 @@
 @interface ZPAActivityVC ()
 @property (retain, nonatomic) UIRefreshControl *refreshControl;
 @property(nonatomic,strong) UINavigationController * eventDetailVc;
+@property(nonatomic,retain) UILabel *emptyActivityLabel;
 @end
 
 @implementation ZPAActivityVC{
@@ -49,6 +50,11 @@
     
     self.view.backgroundColor = [ZPAStaticHelper backgroundTextureColor];
     
+    _emptyActivityLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
+    _emptyActivityLabel.text= @"You have no notifications";
+    _emptyActivityLabel.backgroundColor=[UIColor clearColor];
+    _emptyActivityLabel.textAlignment = NSTextAlignmentCenter;
+    
     _refreshControl = [[UIRefreshControl alloc]init];
     _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
     [self.tableView addSubview:_refreshControl];
@@ -62,8 +68,13 @@
     
     _arrNotifications = [[[ZPANotificationSingleton sharedObject]getNotification]mutableCopy];
     notificationEventArr = [NSMutableArray array];
-
+    if ([_arrNotifications count]==0){
+        [self.tableView addSubview:_emptyActivityLabel];
+    }else{
+        [_emptyActivityLabel removeFromSuperview];
+    }
     
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning

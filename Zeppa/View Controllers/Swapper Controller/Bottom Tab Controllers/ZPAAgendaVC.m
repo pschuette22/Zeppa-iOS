@@ -22,8 +22,7 @@
 @property (retain, nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic, strong)NSMutableArray *arrAttendingEvents;
 @property (nonatomic, strong)UINavigationController *eventDetailNavigation;
-
-
+@property (retain,nonatomic) IBOutlet UILabel *emptyAgendaLabel;
 
 @end
 
@@ -50,6 +49,11 @@
     ///Set background color of uiview
     [self.view setBackgroundColor:[ZPAStaticHelper backgroundTextureColor]];
     
+    _emptyAgendaLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
+    _emptyAgendaLabel.text= @"Your agenda is empty";
+    _emptyAgendaLabel.backgroundColor=[UIColor clearColor];
+    _emptyAgendaLabel.textAlignment = NSTextAlignmentCenter;
+    
     _refreshControl = [[UIRefreshControl alloc]init];
     _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
     [self.tableView addSubview:_refreshControl];
@@ -72,10 +76,16 @@
     
     _arrAttendingEvents = [[[ZPAZeppaEventSingleton sharedObject]getInterestingEventMediators]mutableCopy];
     
+    if ([_arrAttendingEvents count] > 0){
+        [_emptyAgendaLabel removeFromSuperview];
+    }else{//or add it
+        [self.tableView addSubview:_emptyAgendaLabel];
+    }
+    
     _currentUser = [ZPAAppData sharedAppData].loggedInUser;
     
+    [self.tableView reloadData];
     
-
 }
 - (void)didReceiveMemoryWarning
 {

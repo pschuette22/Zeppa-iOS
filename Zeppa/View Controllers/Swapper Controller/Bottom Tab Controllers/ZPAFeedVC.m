@@ -34,7 +34,7 @@
 @property(nonatomic,strong) UINavigationController * eventDetailVc;
 @property (nonatomic, strong) MBProgressHUD *progressHud;
 @property (nonatomic, strong) ZPAFetchEventsForMingler *eventForMingler;
-
+@property (retain,nonatomic) IBOutlet UILabel *emptyFeedLabel;
 
 @end
 
@@ -49,7 +49,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    
+    _emptyFeedLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
+    _emptyFeedLabel.text= @"Your feed is empty";
+    _emptyFeedLabel.backgroundColor=[UIColor clearColor];
+    _emptyFeedLabel.textAlignment = NSTextAlignmentCenter;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateEvents:) name:kZeppaEventsUpdateNotificationKey object:nil];
     
@@ -75,8 +78,7 @@
 //        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 //    }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     });
     
     _refreshControl = [[UIRefreshControl alloc]init];
@@ -92,6 +94,16 @@
     _arrFeeds = [ZPAZeppaEventSingleton sharedObject].zeppaEvents;
     
     [ZPAStaticHelper sortArrayAlphabatically:_arrFeeds withKey:@"event.start"];
+    
+    //Hide empty feed label if events were added.
+    if ([_arrFeeds count] > 0){
+        [_emptyFeedLabel removeFromSuperview];
+    }else{//or add it
+        if(_progressHud.alpha==0){//Do this check so the label doesnt show up until the loading icon leaves
+            [self.tableView addSubview:_emptyFeedLabel];
+        }
+    }
+    
     [_tableView reloadData];
     
 }
@@ -174,7 +186,7 @@
 {
     
     return self.arrFeeds.count;
-        
+
 }
 
 
@@ -203,7 +215,6 @@
             return _otherEventFeedCell;
 
         }
-  
     
     return  nil;
     
@@ -263,6 +274,13 @@
 -(void)updateEvents:(NSNotification *)notify{
  
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    if ([_arrFeeds count] == 0){
+        //add it to view controller
+        [self.tableView addSubview:_emptyFeedLabel];
+    }else{
+        [_emptyFeedLabel removeFromSuperview];
+        //_emptyFeedLabel.hidden = true;
+    }
     [self.tableView reloadData];
 
 }
