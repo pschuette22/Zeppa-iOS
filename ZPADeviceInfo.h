@@ -21,7 +21,7 @@
 
 +(ZPADeviceInfo *)sharedObject;
 -(void)setLoginDeviceForUser:(ZPAMyZeppaUser *)user;
-- (void)updateDeviceInfoWithObject:(GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
+-(void)updateDeviceInfoWithObject:(GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
 -(void)insertDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
 -(void)removeDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
 @end

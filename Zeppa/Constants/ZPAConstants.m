@@ -19,12 +19,12 @@
 //
 //NSString *const kZeppaGooglePlusClientSecretKey = @"1ShuZnGIfYxJ5_fq3UquOk4z";
 
-NSString *const kZeppaGooglePlusClientIdKey = @"587859844920-gv8jpk5r0bk1esvg4bnsra91ks87bcn9.apps.googleusercontent.com";
+NSString *const kZeppaGooglePlusClientIdKey = @"587859844920-7eie3deskfrbhmkm800jarhbq95h7ejl.apps.googleusercontent.com";
 
 NSString *const kZeppaGooglePlusClientSecretKey = @"GA9d_-d-EiDfcd5vNAXbfC4q";
 NSString *const kZeppaGooglePlusRedirectURIKey  = @"urn:ietf:wg:oauth:2.0:oob";
 NSString *const kZeppaGooglePlusWebClientIdKey = @"587859844920-jiqoh8rn4j8d0941vunu4jfdcl2huv4l.apps.googleusercontent.com";
-NSString *const kZeppaKeychainItemNameKey = @"com.minook.zeppa.GooglePlus";
+NSString *const kZeppaKeychainItemNameKey = @"com.zeppamobile.zeppaios.GooglePlus";
 
 NSString *const kZeppaGoogleCalendarArrayKey = @"googleCalendarArray";
 //****************************************************
@@ -41,6 +41,13 @@ NSString *const kZeppaGoogleAPINextSyncTokenKey          = @"nextSyncToken";
 NSString *const kZeppaGoogleAPINextPageTokenKey          = @"nextPageToken";
 NSString *const kZeppaGoogleAPIItemsKey                  = @"items";
 NSString *const kZeppaGoogleAPIKindKey                   = @"kind";
+
+//****************************************************
+#pragma mark - Zeppa API Values
+//****************************************************
+
+NSString *const kZeppaAPISenderId = @"587859844920";
+
 
 //****************************************************
 #pragma mark - User Login keys

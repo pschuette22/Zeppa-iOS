@@ -11,6 +11,7 @@
 @interface ZPAConstants : NSObject
 
 
+
 //****************************************************
 #pragma mark - Google Plus Authentication Keys
 //****************************************************
@@ -43,6 +44,12 @@ extern NSString *const kZeppaUserIsLoggedInKey;
 extern NSString *const kZeppaLoggedInUserGooglePlusIdKey;
 extern NSString *const kCurrentZeppaUserId;
 extern NSString *const kCurrentZeppaUserEmail;
+
+//****************************************************
+#pragma mark - Zeppa API Values
+//****************************************************
+
+extern NSString *const kZeppaAPISenderId;
 
 //****************************************************
 #pragma mark - https://www.googleapis.com/plus/v1/people/me Response API Keys

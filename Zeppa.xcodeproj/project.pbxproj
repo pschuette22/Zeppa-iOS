@@ -244,9 +244,8 @@
 		CE3B1D331B5ED45D0057120E /* GTLCalendarTimePeriod.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B1D161B5ED45D0057120E /* GTLCalendarTimePeriod.m */; };
 		CE3B1D341B5ED45D0057120E /* GTLQueryCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B1D181B5ED45D0057120E /* GTLQueryCalendar.m */; };
 		CE3B1D351B5ED45D0057120E /* GTLServiceCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE3B1D1A1B5ED45D0057120E /* GTLServiceCalendar.m */; };
-		CE4807F11B5C02720043C921 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4807F01B5C02720043C921 /* GoogleService-Info.plist */; };
-		CE4807F21B5C02720043C921 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4807F01B5C02720043C921 /* GoogleService-Info.plist */; };
 		CE69AD9B1B5D90E900CF028A /* GTLZeppaeventendpointConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0F19621B5CB7A900DA4CD6 /* GTLZeppaeventendpointConstants.m */; };
+		CE77AF8A1B6E0F01005A5DB7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE77AF891B6E0F01005A5DB7 /* GoogleService-Info.plist */; };
 		D84EA6ED1AEA657000923F54 /* ZPAFindMinglers.m in Sources */ = {isa = PBXBuildFile; fileRef = D84EA6EC1AEA657000923F54 /* ZPAFindMinglers.m */; };
 		D84EA6F11AEA723200923F54 /* ZPAPhoneContact.m in Sources */ = {isa = PBXBuildFile; fileRef = D84EA6F01AEA723200923F54 /* ZPAPhoneContact.m */; };
 		D85E15D11B04DBB800F93C56 /* check_mark_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D85E15C91B04DBB800F93C56 /* check_mark_selected.png */; };
@@ -882,7 +881,7 @@
 		CE3B1D181B5ED45D0057120E /* GTLQueryCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLQueryCalendar.m; sourceTree = "<group>"; };
 		CE3B1D191B5ED45D0057120E /* GTLServiceCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLServiceCalendar.h; sourceTree = "<group>"; };
 		CE3B1D1A1B5ED45D0057120E /* GTLServiceCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLServiceCalendar.m; sourceTree = "<group>"; };
-		CE4807F01B5C02720043C921 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE77AF891B6E0F01005A5DB7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D84EA6EB1AEA657000923F54 /* ZPAFindMinglers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAFindMinglers.h; path = ../ZPAFindMinglers.h; sourceTree = "<group>"; };
 		D84EA6EC1AEA657000923F54 /* ZPAFindMinglers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZPAFindMinglers.m; path = ../ZPAFindMinglers.m; sourceTree = "<group>"; };
 		D84EA6EF1AEA723200923F54 /* ZPAPhoneContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAPhoneContact.h; sourceTree = "<group>"; };
@@ -1268,7 +1267,7 @@
 				CE3B1CE31B5ED45D0057120E /* Calendar */,
 				CE3B1CDE1B5EC7BC0057120E /* GoogleOAuth.h */,
 				CE3B1CDF1B5EC7BC0057120E /* GoogleOAuth.m */,
-				CE4807F01B5C02720043C921 /* GoogleService-Info.plist */,
+				CE77AF891B6E0F01005A5DB7 /* GoogleService-Info.plist */,
 				2664FDDD19ACA73A009C43EE /* App Delegate */,
 				2664FDC419ACA40C009C43EE /* View Controllers */,
 				A2808A2B1AD81A6400D29D49 /* Dialog Xib Classes */,
@@ -2509,6 +2508,7 @@
 				D86F17821ACD5DA500CF53AC /* default_user_image.png in Resources */,
 				D86F17AF1ACD5DA500CF53AC /* ic_text_msg_icon@3x.png in Resources */,
 				D8A63C321B2188380022F274 /* ic_feed_empty.png in Resources */,
+				CE77AF8A1B6E0F01005A5DB7 /* GoogleService-Info.plist in Resources */,
 				D86F17931ACD5DA500CF53AC /* ic_text_empty@3x.png in Resources */,
 				D86F17C81ACD5DA500CF53AC /* login_box@3x.png in Resources */,
 				D8B1295D1B2078E6005DB29E /* ic_location_large@3x.png in Resources */,
@@ -2533,7 +2533,6 @@
 				D86F178B1ACD5DA500CF53AC /* ic_join_filled.png in Resources */,
 				2664FDA819ACA1E6009C43EE /* Images.xcassets in Resources */,
 				D8A63C361B2188380022F274 /* ic_feed_filled@2x.png in Resources */,
-				CE4807F11B5C02720043C921 /* GoogleService-Info.plist in Resources */,
 				D86F17721ACD5DA500CF53AC /* ic_chevron_blue@3x.png in Resources */,
 				D86F17811ACD5DA500CF53AC /* small_circle_yellow@3x.png in Resources */,
 				D86F179C1ACD5DA500CF53AC /* ic_watch_filled@3x.png in Resources */,
@@ -2630,7 +2629,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2664FDB919ACA1E6009C43EE /* InfoPlist.strings in Resources */,
-				CE4807F21B5C02720043C921 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3007,8 +3005,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Peter Schuette (GJ8Y7H8WU4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Peter Schuette (GJ8Y7H8WU4)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Peter Schuette (384WS8QBWW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Peter Schuette (384WS8QBWW)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3053,7 +3051,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Peter Schuette (GJ8Y7H8WU4)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Peter Schuette (384WS8QBWW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Peter Schuette (GJ8Y7H8WU4)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;

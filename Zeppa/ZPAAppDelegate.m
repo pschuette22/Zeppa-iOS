@@ -8,14 +8,20 @@
 
 #import "ZPAAppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
+#import <Google/CloudMessaging.h>
 #import "ZPASplitVC.h"
-//#import "Flurry.h"
+#import "ZPAConstants.h"
+#import "ZPADeviceInfo.h"
 
-//#import <GoogleOpenSource/GoogleOpenSource.h>
-//#import "GTLServiceZeppauserendpoint.h"
-//#import "GTLQueryZeppauserendpoint.h"
-//#import "GTLZeppauserendpoint.h"
 
+@interface ZPAAppDelegate ()
+
+@property(nonatomic, strong) void (^registrationHandler)
+    (NSString *registrationToken, NSError *error);
+@property(nonatomic, assign) BOOL connectedToGCM;
+@property(nonatomic, strong) NSString* registrationToken;
+
+@end
 
 
 @implementation ZPAAppDelegate
@@ -27,9 +33,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-    // Flurry Integration
-//    [Flurry setCrashReportingEnabled:YES];
-//    [Flurry startSession:@"5649SHVKK3ZFYZCGWG97"];
     
     // Override point for customization after application launch.
     id rootVC = self.window.rootViewController;
@@ -46,20 +49,62 @@
     [[UISwitch appearance]setOnTintColor:[UIColor colorWithRed:10.0f/255.0 green:210.0f/255.0 blue:255.0f/255.0 alpha:1.0]];
     
     
+    
+    
+    
     ///For getting Devices Token
-    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-    {
-        // iOS 8 Notifications
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+//    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+//    {
+//        // iOS 8 Notifications
+//        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+//        
+//        [application registerForRemoteNotifications];
+//    }
+//    else
+//    {
+//        // iOS < 8 Notifications
+//        [application registerForRemoteNotificationTypes:
+//         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+//    }
+    
+    // Register for Google Cloud Messaging
+    // Taken from: https://developers.google.com/cloud-messaging/ios/client
+    UIUserNotificationType allNotificationTypes =
+    (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+    UIUserNotificationSettings *settings =
+    [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    
+    
+    // Taken from https://github.com/googlesamples/google-services/blob/master/ios/gcm/GcmExample/AppDelegate.m
+    // [END register_for_remote_notifications]
+    // [START start_gcm_service]
+    [[GCMService sharedInstance] startWithConfig:[GCMConfig defaultConfig]];
+    // [END start_gcm_service]
+    __weak typeof(self) weakSelf = self;
+    // Handler for registration token request
+    _registrationHandler = ^(NSString *registrationToken, NSError *error){
         
-        [application registerForRemoteNotifications];
-    }
-    else
-    {
-        // iOS < 8 Notifications
-        [application registerForRemoteNotificationTypes:
-         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
-    }
+        
+        // If registrationToken is not null, make sure the application is updated
+        if (registrationToken != nil) {
+            // Update the held reristration token in case it is called from the
+            weakSelf.registrationToken = registrationToken;
+            
+            // if there is current device, update the device in the backend
+            if([ZPADeviceInfo sharedObject].currentDevice){
+                [[[ZPADeviceInfo sharedObject] currentDevice] setRegistrationId:registrationToken];
+                [[ZPADeviceInfo sharedObject] updateDeviceInfoWithObject:[[ZPADeviceInfo sharedObject] currentDevice]];
+            }
+        } else if(error) { // else if an error was thrown, log it
+            NSLog(@"Didnt update registration token with error: %@", error);
+        }
+    };
+    
+    
+    
+    
 
     return YES;
 }
@@ -190,13 +235,43 @@
         
     }
 }
+
+/*
+ * Callback when app successfully registers for push notifications
+ * Taken from: https://developers.google.com/cloud-messaging/ios/client
+ */
 -(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
     
-    NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    self.currentDeviceToken = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"content---%@", self.currentDeviceToken);
+//    NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+//    self.currentDeviceToken = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+//    NSLog(@"content---%@", self.currentDeviceToken);
+    
+    // Start the GGLInstanceID shared instance with the default config and request a registration
+    // token to enable reception of notifications
+    [[GGLInstanceID sharedInstance] startWithConfig:[GGLInstanceIDConfig defaultConfig]];
+    _registrationOptions = @{kGGLInstanceIDRegisterAPNSOption:deviceToken,
+                             kGGLInstanceIDAPNSServerTypeSandboxOption:@NO}; // Yes-sandbox, No-production
+    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:kZeppaAPISenderId
+                                                        scope:kGGLInstanceIDScopeGCM
+                                                      options:_registrationOptions
+                                                      handler:_registrationHandler];
+    
 
 }
+
+- (void)onTokenRefresh {
+    // A rotation of the registration tokens is happening, so the app needs to request a new token.
+    NSLog(@"The GCM registration token needs to be changed.");
+    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:kZeppaAPISenderId
+                                                        scope:kGGLInstanceIDScopeGCM
+                                                      options:_registrationOptions
+                                                      handler:_registrationHandler];
+}
+
+
+
+
+
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Alert: %@", userInfo);
@@ -205,15 +280,17 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
    // [self.mainControllerDelegate updateMessageLabel:message];
 }
 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
+- (BOOL)application: (UIApplication *)application
+            openURL: (NSURL *)url
+  sourceApplication: (NSString *)sourceApplication
+         annotation: (id)annotation {
     
     return [GPPURLHandler handleURL:url
                   sourceApplication:sourceApplication
                          annotation:annotation];
 }
+
+
 
 
 @end

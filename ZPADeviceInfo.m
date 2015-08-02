@@ -98,6 +98,8 @@
         }];
     }
 }
+
+
 - (void)updateDeviceInfoWithObject:(GTLDeviceinfoendpointDeviceInfo *)deviceInfo {
     
     if(deviceInfo){
@@ -158,7 +160,7 @@
 
 -(NSString *)getRegistrationId{
     
-    return [ZPAAppDelegate sharedObject].currentDeviceToken;
+    return [ZPAAppDelegate sharedObject].registrationKey;
     
 }
 @end
