@@ -82,10 +82,13 @@
                 NSString *nextCursor = response.nextPageToken;
                 if (nextCursor) {
                     [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nextCursor];
-                }else{
-                    [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nil];
                 }
-                
+            
+            // Unnecessary infinite loop
+//                else{
+//                    [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nil];
+//                }
+            
             
                 
             }

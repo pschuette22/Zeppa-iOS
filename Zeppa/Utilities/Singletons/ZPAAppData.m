@@ -135,84 +135,84 @@ static ZPAAppData *sharedData;
 -(void)getAllEventsFromSyncedGoogleCalendarsWithCompletionHandler:(ZPAGenericEndpointServiceCompletionBlock)completion
 {
     
-       typeof(self) __weak weakSelf = self;
-        
-        ///Fetch all the events of Google calendars to be synced in the app
-        GTLBatchQuery *calendarsEventsBatchQuery = [[GTLBatchQuery alloc]init];
-        for (ZPACalendar *calendar in self.arrGoogleSyncedCalendars) {
-            GTLCalendarCalendarListEntry *googleCalendar = calendar.calendar;
-            NSString *calendarID = googleCalendar.identifier;
-            
-            // We will fetch the events for this calendar
-            
-            GTLQueryCalendar *eventsQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendarID];
-            eventsQuery.completionBlock = ^(GTLServiceTicket *ticket, id object, NSError *error) {
-                
-                if (!error && [ZPAStaticHelper canUseWebObject:object]) {
-                    for (GTLCalendarEvent *event in object) {
-                        
-                        ///Wrap the GTLCalendarEvent object in wrapper class
-                        ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithGoogleEvent:event];
-                        eventWrapper.parentCalendarId = calendarID;
-                        
-                        ///Create a array of events if nil
-                        if (!weakSelf.arrSyncedCalendarsEvents) {
-                            weakSelf.arrSyncedCalendarsEvents = [NSMutableArray array];
-                        }
-                        
-                        ///Add event in array of to be synced calendar events
-                        [weakSelf.arrSyncedCalendarsEvents addObject:eventWrapper];
-                        
-                        ///If current event belongs to Zeppa Events calendar on Google then add it to arrZeppaEventsCalendarEvents as well
-                        if ([calendarID isEqualToString:self.zeppaEventsCalendarId]) {
-                           
-                            if (!weakSelf.arrZeppaEventsCalendarEvents) {
-                                weakSelf.arrZeppaEventsCalendarEvents = [NSMutableArray array];
-                            }
-                            
-                            [weakSelf.arrZeppaEventsCalendarEvents addObject:eventWrapper];
-
-                        }
-                        
-                        
-                    }
-                    
-                }
-                else{
-                    
-                    NSLog(@"Error fetching events for calendar id %@ -> %@",calendarID,error.localizedDescription);
-                }
-                
-                
-            };
-            [calendarsEventsBatchQuery addQuery:eventsQuery];
-            
-        }
-        
-        [self.calendarService executeQuery:calendarsEventsBatchQuery
-                         completionHandler:^(GTLServiceTicket *ticket,
-                                             id object, NSError *error) {
-                             // Callback
-                             //
-                             // For batch queries with successful execution,
-                             // the result is a GTLBatchResult object
-                             //
-                             // At this point, the query completion blocks
-                             // have already been called
-                             GTLBatchResult *result = object;
-                             NSLog(@"success = %ld\nfailures = %ld",(unsigned long)result.successes.count, (unsigned long)result.failures.count);
-                             
-                             ///The batch query is complete so update the refresh status
-                             if (completion) {
-                                 completion(ticket,object,error);
-                             }
-                             
-                             
-                             
-                             
-                         }];
-
-       
+//       typeof(self) __weak weakSelf = self;
+//        
+//        ///Fetch all the events of Google calendars to be synced in the app
+//        GTLBatchQuery *calendarsEventsBatchQuery = [[GTLBatchQuery alloc]init];
+//        for (ZPACalendar *calendar in self.arrGoogleSyncedCalendars) {
+//            GTLCalendarCalendarListEntry *googleCalendar = calendar.calendar;
+//            NSString *calendarID = googleCalendar.identifier;
+//            
+//            // We will fetch the events for this calendar
+//            
+//            GTLQueryCalendar *eventsQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendarID];
+//            eventsQuery.completionBlock = ^(GTLServiceTicket *ticket, id object, NSError *error) {
+//                
+//                if (!error && [ZPAStaticHelper canUseWebObject:object]) {
+//                    for (GTLCalendarEvent *event in object) {
+//                        
+//                        ///Wrap the GTLCalendarEvent object in wrapper class
+//                        ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithGoogleEvent:event];
+//                        eventWrapper.parentCalendarId = calendarID;
+//                        
+//                        ///Create a array of events if nil
+//                        if (!weakSelf.arrSyncedCalendarsEvents) {
+//                            weakSelf.arrSyncedCalendarsEvents = [NSMutableArray array];
+//                        }
+//                        
+//                        ///Add event in array of to be synced calendar events
+//                        [weakSelf.arrSyncedCalendarsEvents addObject:eventWrapper];
+//                        
+//                        ///If current event belongs to Zeppa Events calendar on Google then add it to arrZeppaEventsCalendarEvents as well
+//                        if ([calendarID isEqualToString:self.zeppaEventsCalendarId]) {
+//                           
+//                            if (!weakSelf.arrZeppaEventsCalendarEvents) {
+//                                weakSelf.arrZeppaEventsCalendarEvents = [NSMutableArray array];
+//                            }
+//                            
+//                            [weakSelf.arrZeppaEventsCalendarEvents addObject:eventWrapper];
+//
+//                        }
+//                        
+//                        
+//                    }
+//                    
+//                }
+//                else{
+//                    
+//                    NSLog(@"Error fetching events for calendar id %@ -> %@",calendarID,error.localizedDescription);
+//                }
+//                
+//                
+//            };
+//            [calendarsEventsBatchQuery addQuery:eventsQuery];
+//            
+//        }
+//        
+//        [self.calendarService executeQuery:calendarsEventsBatchQuery
+//                         completionHandler:^(GTLServiceTicket *ticket,
+//                                             id object, NSError *error) {
+//                             // Callback
+//                             //
+//                             // For batch queries with successful execution,
+//                             // the result is a GTLBatchResult object
+//                             //
+//                             // At this point, the query completion blocks
+//                             // have already been called
+//                             GTLBatchResult *result = object;
+//                             NSLog(@"success = %ld\nfailures = %ld",(unsigned long)result.successes.count, (unsigned long)result.failures.count);
+//                             
+//                             ///The batch query is complete so update the refresh status
+//                             if (completion) {
+//                                 completion(ticket,object,error);
+//                             }
+//                             
+//                             
+//                             
+//                             
+//                         }];
+//
+    
 }
 
 
@@ -220,126 +220,126 @@ static ZPAAppData *sharedData;
 -(void)getAllEventFromiCalCalendarWithCompletionHandler:(ZPAGetiOSCalendarEventsCompletionHandler)completion
 {
     
-    NSMutableArray *weakArriOSSyncedCalendars = self.arriOSSyncedCalendars;
-    typeof(self) __weak weakSelf = self;
-        
-        ///2.Fetch Calendar List for the current user
-        
-        [[iCalHelper sharedHelper].eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
-            
-            [iCalHelper sharedHelper].isAccessGranted = granted;
-            
-            if (!error && granted) {
-                NSLog(@"Access to event store is granted");
-                //---- code here when user allows your app to access their calendar.
-                
-                ///Unwrap the EKCalendar object from ZPACalendar object
-                NSMutableArray *arrEKCalendars = [NSMutableArray array];
-                for (ZPACalendar *calendar in weakArriOSSyncedCalendars) {
-                    [arrEKCalendars addObject:calendar.calendar];
-                }
-
-                
-//                NSDateComponents *comps = [[NSDateComponents alloc] init];
-//                [comps setYear:1950];
-//                [comps setMonth:1];
-//                [comps setDay:1];
-//                NSDate *start = [[NSCalendar currentCalendar] dateFromComponents:comps];
-//
-//                [comps setYear:2050];
-//                [comps setMonth:1];
-//                [comps setDay:1];
-//                NSDate *finish = [[NSCalendar currentCalendar] dateFromComponents:comps];
+//    NSMutableArray *weakArriOSSyncedCalendars = self.arriOSSyncedCalendars;
+//    typeof(self) __weak weakSelf = self;
+//        
+//        ///2.Fetch Calendar List for the current user
+//        
+//        [[iCalHelper sharedHelper].eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+//            
+//            [iCalHelper sharedHelper].isAccessGranted = granted;
+//            
+//            if (!error && granted) {
+//                NSLog(@"Access to event store is granted");
+//                //---- code here when user allows your app to access their calendar.
 //                
-
-                NSDateComponents *dateComp = [[NSDateComponents alloc]init];
-                [dateComp setYear:-50];
-                [dateComp setMonth:-10];
-                NSDate *start = [[NSCalendar currentCalendar]dateByAddingComponents:dateComp toDate:[NSDate date] options:0];
-                
-                [dateComp setYear:50];
-                [dateComp setMonth:10];
-                NSDate *finish = [[NSCalendar currentCalendar]dateByAddingComponents:dateComp toDate:[NSDate date] options:0];
-                
-                
-                
-                
-                // use Dictionary for remove duplicates produced by events covered more one year segment
-                NSMutableDictionary *eventsDict = [NSMutableDictionary dictionaryWithCapacity:1024];
-                
-                NSDate* currentStart = [NSDate dateWithTimeInterval:0 sinceDate:start];
-                
-                int seconds_in_year = 60*60*24*365;
-                
-                // enumerate events by one year segment because iOS do not support predicate longer than 4 year !
-                while ([currentStart compare:finish] == NSOrderedAscending) {
-                    
-                    NSDate* currentFinish = [NSDate dateWithTimeInterval:seconds_in_year sinceDate:currentStart];
-                    
-                    if ([currentFinish compare:finish] == NSOrderedDescending) {
-                        currentFinish = [NSDate dateWithTimeInterval:0 sinceDate:finish];
-                    }
-                    
-                    NSLog(@"Start Date --> %@\nEnd Date --> %@",currentStart,currentFinish);
-                    
-                    NSPredicate *predicate = [[iCalHelper sharedHelper].eventStore predicateForEventsWithStartDate:currentStart endDate:currentFinish calendars:arrEKCalendars];
-                    [[iCalHelper sharedHelper].eventStore enumerateEventsMatchingPredicate:predicate
-                                                      usingBlock:^(EKEvent *event, BOOL *stop) {
-                                                          
-                                                          if (event) {
-                                                              [eventsDict setObject:event forKey:event.eventIdentifier];
-                                                          }
-                                                          
-                                                      }];
-                    currentStart = [NSDate dateWithTimeInterval:(seconds_in_year + 1) sinceDate:currentStart];
-                    
-                }
-                
-                NSArray *allEvents = [eventsDict allValues];
-                NSLog(@"Total iCal Events = %d",(int)allEvents.count);
-                
-                if (allEvents.count > 0) {
-                    for (EKEvent *event in allEvents) {
-                        
-                        ///Wrap the GTLCalendarEvent object in wrapper class
-                        ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithEkEvent:event];
-                      //  eventWrapper.eventType = CalendarEventTypeiOS;
-                        eventWrapper.parentCalendarId = event.calendar.calendarIdentifier;
-                       // eventWrapper.event = event;
-                        
-                        ///Create a array of events if nil
-                        if (!weakSelf.arrSyncedCalendarsEvents) {
-                            weakSelf.arrSyncedCalendarsEvents = [NSMutableArray array];
-                        }
-                        
-                        ///Add event in array of to be synced calendar events
-                        [weakSelf.arrSyncedCalendarsEvents addObject:eventWrapper];
-                        
-                        NSLog(@"event --> %@",event);
-                        
-                        
-                        
-                    }
-                    
-                }
-                
-                if (completion) {
-                    completion(YES,error);
-                }
-                
-            }
-            else{
-                
-                NSLog(@"Access to eevent store denied with error %@",error.localizedDescription);
-                if (completion) {
-                    completion(NO,error);
-                }
-                
-            }
-            
-            
-       
-        }];
+//                ///Unwrap the EKCalendar object from ZPACalendar object
+//                NSMutableArray *arrEKCalendars = [NSMutableArray array];
+//                for (ZPACalendar *calendar in weakArriOSSyncedCalendars) {
+//                    [arrEKCalendars addObject:calendar.calendar];
+//                }
+//
+//                
+////                NSDateComponents *comps = [[NSDateComponents alloc] init];
+////                [comps setYear:1950];
+////                [comps setMonth:1];
+////                [comps setDay:1];
+////                NSDate *start = [[NSCalendar currentCalendar] dateFromComponents:comps];
+////
+////                [comps setYear:2050];
+////                [comps setMonth:1];
+////                [comps setDay:1];
+////                NSDate *finish = [[NSCalendar currentCalendar] dateFromComponents:comps];
+////                
+//
+//                NSDateComponents *dateComp = [[NSDateComponents alloc]init];
+//                [dateComp setYear:-50];
+//                [dateComp setMonth:-10];
+//                NSDate *start = [[NSCalendar currentCalendar]dateByAddingComponents:dateComp toDate:[NSDate date] options:0];
+//                
+//                [dateComp setYear:50];
+//                [dateComp setMonth:10];
+//                NSDate *finish = [[NSCalendar currentCalendar]dateByAddingComponents:dateComp toDate:[NSDate date] options:0];
+//                
+//                
+//                
+//                
+//                // use Dictionary for remove duplicates produced by events covered more one year segment
+//                NSMutableDictionary *eventsDict = [NSMutableDictionary dictionaryWithCapacity:1024];
+//                
+//                NSDate* currentStart = [NSDate dateWithTimeInterval:0 sinceDate:start];
+//                
+//                int seconds_in_year = 60*60*24*365;
+//                
+//                // enumerate events by one year segment because iOS do not support predicate longer than 4 year !
+//                while ([currentStart compare:finish] == NSOrderedAscending) {
+//                    
+//                    NSDate* currentFinish = [NSDate dateWithTimeInterval:seconds_in_year sinceDate:currentStart];
+//                    
+//                    if ([currentFinish compare:finish] == NSOrderedDescending) {
+//                        currentFinish = [NSDate dateWithTimeInterval:0 sinceDate:finish];
+//                    }
+//                    
+//                    NSLog(@"Start Date --> %@\nEnd Date --> %@",currentStart,currentFinish);
+//                    
+//                    NSPredicate *predicate = [[iCalHelper sharedHelper].eventStore predicateForEventsWithStartDate:currentStart endDate:currentFinish calendars:arrEKCalendars];
+//                    [[iCalHelper sharedHelper].eventStore enumerateEventsMatchingPredicate:predicate
+//                                                      usingBlock:^(EKEvent *event, BOOL *stop) {
+//                                                          
+//                                                          if (event) {
+//                                                              [eventsDict setObject:event forKey:event.eventIdentifier];
+//                                                          }
+//                                                          
+//                                                      }];
+//                    currentStart = [NSDate dateWithTimeInterval:(seconds_in_year + 1) sinceDate:currentStart];
+//                    
+//                }
+//                
+//                NSArray *allEvents = [eventsDict allValues];
+//                NSLog(@"Total iCal Events = %d",(int)allEvents.count);
+//                
+//                if (allEvents.count > 0) {
+//                    for (EKEvent *event in allEvents) {
+//                        
+//                        ///Wrap the GTLCalendarEvent object in wrapper class
+//                        ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithEkEvent:event];
+//                      //  eventWrapper.eventType = CalendarEventTypeiOS;
+//                        eventWrapper.parentCalendarId = event.calendar.calendarIdentifier;
+//                       // eventWrapper.event = event;
+//                        
+//                        ///Create a array of events if nil
+//                        if (!weakSelf.arrSyncedCalendarsEvents) {
+//                            weakSelf.arrSyncedCalendarsEvents = [NSMutableArray array];
+//                        }
+//                        
+//                        ///Add event in array of to be synced calendar events
+//                        [weakSelf.arrSyncedCalendarsEvents addObject:eventWrapper];
+//                        
+//                        NSLog(@"event --> %@",event);
+//                        
+//                        
+//                        
+//                    }
+//                    
+//                }
+//                
+//                if (completion) {
+//                    completion(YES,error);
+//                }
+//                
+//            }
+//            else{
+//                
+//                NSLog(@"Access to eevent store denied with error %@",error.localizedDescription);
+//                if (completion) {
+//                    completion(NO,error);
+//                }
+//                
+//            }
+//            
+//            
+//       
+//        }];
 }
 //****************************************************
 #pragma mark - Public Interface

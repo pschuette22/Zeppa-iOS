@@ -15,15 +15,15 @@
 //typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
 
 
-@interface ZPAAppDelegate : UIResponder <UIApplicationDelegate,ZPALoginVCDelegate,GGLInstanceIDDelegate>
+@interface ZPAAppDelegate : UIResponder <UIApplicationDelegate,ZPALoginVCDelegate> // GGLInstanceIDDelegate
 
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic ,strong) id swapperClassRef;
-@property(nonatomic, readonly, strong) NSString *registrationKey;
-@property(nonatomic, readonly, strong) NSString *messageKey;
-@property(nonatomic, readonly, strong) NSString *gcmSenderID;
-@property(nonatomic, readonly, strong) NSDictionary *registrationOptions;
+@property(nonatomic, strong) NSString *registrationToken;
+//@property(nonatomic, readonly, strong) NSString *messageKey;
+//@property(nonatomic, readonly, strong) NSString *gcmSenderID;
+//@property(nonatomic, readonly, strong) NSDictionary *registrationOptions;
 
 /*!
  * @description This method is called to indicate that user has Logout from the app.This will take the user out of the main interface to the Login screen. Also it will clear the cache.
@@ -31,7 +31,6 @@
 +(ZPAAppDelegate *)sharedObject;
 
 -(void)userDidLogoutFromZeppa;
--(void)doUpdateGCMToken;
 //-(void)gcmRegistrationHandler;
 
 //+(GTLServiceTicket *)executeZeppaUserEndpointQueryWithCompletionBlock:(ZPAUserEndpointServiceCompletionBlock)completion;

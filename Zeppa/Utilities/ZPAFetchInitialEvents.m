@@ -37,7 +37,7 @@
     GTLQueryZeppaeventendpoint *eventQuery = [GTLQueryZeppaeventendpoint queryForListZeppaEvent];
     
     
-    [eventQuery setFilter:[NSString stringWithFormat:@"hostId == %@ && end > %lld",                            [self getUserId],[ZPADateHelper currentTimeMillis]]];
+    [eventQuery setFilter:[NSString stringWithFormat:@"hostId == %@ && end > %lld",[self getUserId],[ZPADateHelper currentTimeMillis]]];
     
     [eventQuery setCursor: cursorValue];
     [eventQuery setLimit:[[NSNumber numberWithInt:25] integerValue]];

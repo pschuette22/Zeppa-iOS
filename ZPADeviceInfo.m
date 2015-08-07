@@ -19,6 +19,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
     device = [[ZPADeviceInfo alloc]init];
+        device.doUpdateToken = NO;
     });
     return device;
 }
@@ -26,19 +27,22 @@
 #pragma mark Devices Informations Methods
 ///****************************************
 -(void)setLoginDeviceForUser:(ZPAMyZeppaUser *)user{
-    
-    loggedInUser = user;
-    GTLDeviceinfoendpointDeviceInfo *deviceInfo = [[GTLDeviceinfoendpointDeviceInfo alloc]init];
-    [deviceInfo setOwnerId:loggedInUser.endPointUser.identifier];
-    [deviceInfo setPhoneType:@"iOS"];
-    [deviceInfo setRegistrationId:[self getRegistrationId]];
-    [deviceInfo setLoggedIn:[NSNumber numberWithInt:1]];
-    [deviceInfo setLastLogin:[NSNumber numberWithLong:[ZPADateHelper currentTimeMillis]]];
-    [deviceInfo setVersion:[NSNumber numberWithInt:1]];
-    [deviceInfo setUpdate:[NSNumber numberWithInt:0]];
-    [deviceInfo setBugfix:[NSNumber numberWithInt:0]];
-    
-    [self getDeviceInfoWithObject:deviceInfo withCursor:nil];
+    // If this object holds a valid registration id, update device in background
+    if([self doUpdateToken] && [self getRegistrationId]){
+        loggedInUser = user;
+        GTLDeviceinfoendpointDeviceInfo *deviceInfo = [[GTLDeviceinfoendpointDeviceInfo alloc]init];
+        [deviceInfo setOwnerId:loggedInUser.endPointUser.identifier];
+        [deviceInfo setPhoneType:@"iOS"];
+        [deviceInfo setRegistrationId:[self getRegistrationId]];
+        [deviceInfo setLoggedIn:[NSNumber numberWithInt:1]];
+        
+        [deviceInfo setLastLogin:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]];
+        [deviceInfo setVersion:[NSNumber numberWithInt:1]];
+        [deviceInfo setUpdate:[NSNumber numberWithInt:0]];
+        [deviceInfo setBugfix:[NSNumber numberWithInt:0]];
+        
+        [self getDeviceInfoWithObject:deviceInfo withCursor:nil];
+    }
     
 }
 -(void)getDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo withCursor:(NSString *)cursorValue{
@@ -79,7 +83,8 @@
 }
 -(void)insertDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo {
     
-    if(deviceInfo){
+    if([self doUpdateToken] && deviceInfo){
+        [self setDoUpdateToken:NO];
        __weak typeof(self) weakSelf = self;
         GTLQueryDeviceinfoendpoint *insertTask = [GTLQueryDeviceinfoendpoint queryForInsertDeviceInfoWithObject:deviceInfo];
     
@@ -102,11 +107,12 @@
 
 - (void)updateDeviceInfoWithObject:(GTLDeviceinfoendpointDeviceInfo *)deviceInfo {
     
-    if(deviceInfo){
+    if([self doUpdateToken] && deviceInfo){
+        [self setDoUpdateToken:NO];
        __weak typeof(self) weakSelf = self;
         [deviceInfo setRegistrationId:[self getRegistrationId]];
         [deviceInfo setLoggedIn:[NSNumber numberWithInt:1]]; // 1 for logged in, 0 for not
-        [deviceInfo setLastLogin:[NSNumber numberWithLong:[ZPADateHelper currentTimeMillis]]];
+        [deviceInfo setLastLogin:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]];
     
         GTLQueryDeviceinfoendpoint *updateDeviceInfoTask = [GTLQueryDeviceinfoendpoint queryForUpdateDeviceInfoWithObject:deviceInfo];
         [[self deviceInfoService] executeQuery:updateDeviceInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLDeviceinfoendpointDeviceInfo *response, NSError *error) {
@@ -160,7 +166,7 @@
 
 -(NSString *)getRegistrationId{
     
-    return [ZPAAppDelegate sharedObject].registrationKey;
+    return [ZPAAppDelegate sharedObject].registrationToken;
     
 }
 @end

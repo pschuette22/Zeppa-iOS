@@ -18,6 +18,7 @@
 
 @property (readonly)GTLServiceDeviceinfoendpoint *deviceInfoService;
 @property(nonatomic, strong) GTLDeviceinfoendpointDeviceInfo *currentDevice;
+@property(readwrite) BOOL doUpdateToken;
 
 +(ZPADeviceInfo *)sharedObject;
 -(void)setLoginDeviceForUser:(ZPAMyZeppaUser *)user;

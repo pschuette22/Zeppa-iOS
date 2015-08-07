@@ -30,6 +30,19 @@ BOOL hasLoadedInitial;
     notif = nil;
 }
 
+
+/**
+ * Did receive notification from app engine backend
+ * This method dispatches notification information appropriately
+ *
+ */
+-(void)didReceiveNotification:(NSDictionary*)userInfo
+{
+    NSLog(@"Did receive notification: %@",userInfo);
+    
+    
+}
+
 -(void)removeNotificationForEvent:(long long)eventId{
 
     NSMutableArray * arr = [NSMutableArray array];
@@ -200,7 +213,7 @@ BOOL hasLoadedInitial;
             notificationMessage = [NSString stringWithFormat:@"%@ %@ left %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
             break;
         case 9:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ repossted %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
+            notificationMessage = [NSString stringWithFormat:@"%@ %@ reposted %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
             break;
             
         default:

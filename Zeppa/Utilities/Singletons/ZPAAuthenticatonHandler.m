@@ -184,142 +184,142 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
 
 
 -(void)getGoogleCalendar:(fetchGoogleCalendar)completion{
-    
-    
-#warning message Remove isFirstTime Variable when Google authentication is done successfully.
-    
-    if ((![self isFirstTime]) && (![ZPAUserDefault isValueExistsForKey:kZeppaCalendarListIdKey])) {
-        
-        
-        GTLServiceCalendar *calendarService = [self calendarService];//self.calendarService;
-        
-        GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForCalendarListList];
-        
-        
-        [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarCalendarList * object, NSError *error) {
-            
-            NSMutableArray *calArray = [NSMutableArray array];
-            for (GTLCalendarCalendarListEntry *calendar in object.items) {
-                
-                ZPACalendarModel *model = [[ZPACalendarModel alloc]init];
-                model.calendarTitle = (calendar.summary)?calendar.summary:@"";
-                model.calendarId = (calendar.identifier)?calendar.identifier:@"";
-                model.calendarHexaColor = (calendar.colorId)?calendar.backgroundColor:@"";
-                model.calendarSync = YES;
-                [calArray addObject:model];
-            }
-           
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:calArray];
-            [ZPAUserDefault storedObject:data withKey:kZeppaCalendarListIdKey];
-            completion(YES,nil);
-        }];
-       
-        
-    }if (![self isFirstTime] && ([ZPAUserDefault isValueExistsForKey:kZeppaCalendarListIdKey])) {
-        completion(YES,nil);
-    }
+//    
+//    
+//#warning message Remove isFirstTime Variable when Google authentication is done successfully.
+//    
+//    if ((![self isFirstTime]) && (![ZPAUserDefault isValueExistsForKey:kZeppaCalendarListIdKey])) {
+//        
+//        
+//        GTLServiceCalendar *calendarService = [self calendarService];//self.calendarService;
+//        
+//        GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForCalendarListList];
+//        
+//        
+//        [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarCalendarList * object, NSError *error) {
+//            
+//            NSMutableArray *calArray = [NSMutableArray array];
+//            for (GTLCalendarCalendarListEntry *calendar in object.items) {
+//                
+//                ZPACalendarModel *model = [[ZPACalendarModel alloc]init];
+//                model.calendarTitle = (calendar.summary)?calendar.summary:@"";
+//                model.calendarId = (calendar.identifier)?calendar.identifier:@"";
+//                model.calendarHexaColor = (calendar.colorId)?calendar.backgroundColor:@"";
+//                model.calendarSync = YES;
+//                [calArray addObject:model];
+//            }
+//           
+//            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:calArray];
+//            [ZPAUserDefault storedObject:data withKey:kZeppaCalendarListIdKey];
+//            completion(YES,nil);
+//        }];
+//       
+//        
+//    }if (![self isFirstTime] && ([ZPAUserDefault isValueExistsForKey:kZeppaCalendarListIdKey])) {
+//        completion(YES,nil);
+//    }
      self.firstTime = YES;
 
 }
 
 
 -(void)getEventsForTheGivenCalendar{
-    __weak typeof(self) weakSelf = self;
-    for (ZPACalendarModel * calendar in [[ZPAZeppaCalendarSingleton sharedObject] getAllGoogleSyncCalendar]) {
-        
-        GTLServiceCalendar *calendarService = [self calendarService];
-        GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendar.calendarId];
-            
-        [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarEvents * object, NSError *error) {
-            
-            if (error) {
-              //  [weakSelf getEventsForTheGivenCalendar];
-            }
-            if (!error && [ZPAStaticHelper canUseWebObject:object]) {
-                for (GTLCalendarEvent *event in object) {
-                    
-                    ///Wrap the GTLCalendarEvent object in wrapper class
-                    ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithGoogleEvent:event];
-                    eventWrapper.parentCalendarId = calendar.calendarId;
-                    eventWrapper.calendarSummary = object.summary;
-                    
-                    ///Create a array of events if nil
-                    if (![ZPAAppData sharedAppData].arrSyncedCalendarsEvents) {
-                        [ZPAAppData sharedAppData].arrSyncedCalendarsEvents = [NSMutableArray array];
-                    }
-                    ///Add event in array of to be synced calendar events
-                    if (![[ZPAAppData sharedAppData].arrSyncedCalendarsEvents containsObject:eventWrapper]) {
-                        [[ZPAAppData sharedAppData].arrSyncedCalendarsEvents addObject:eventWrapper];
-                        
-                    }
-                    
-                }
-                
-                
-                
-              [ZPAAppData sharedAppData].arrSyncedCalendarsEvents  = [[[NSOrderedSet orderedSetWithArray:[ZPAAppData sharedAppData].arrSyncedCalendarsEvents]array] mutableCopy];
-                
-            
-                
-            }
-            else{
-                
-                NSLog(@"Error fetching events for calendar id %@ -> %@",calendar.calendarId,error.localizedDescription);
-            }
-            
-            
-            
-           
-        }];
-         
-    }
+//    __weak typeof(self) weakSelf = self;
+//    for (ZPACalendarModel * calendar in [[ZPAZeppaCalendarSingleton sharedObject] getAllGoogleSyncCalendar]) {
+//        
+//        GTLServiceCalendar *calendarService = [self calendarService];
+//        GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendar.calendarId];
+//            
+//        [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarEvents * object, NSError *error) {
+//            
+//            if (error) {
+//              //  [weakSelf getEventsForTheGivenCalendar];
+//            }
+//            if (!error && [ZPAStaticHelper canUseWebObject:object]) {
+//                for (GTLCalendarEvent *event in object) {
+//                    
+//                    ///Wrap the GTLCalendarEvent object in wrapper class
+//                    ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithGoogleEvent:event];
+//                    eventWrapper.parentCalendarId = calendar.calendarId;
+//                    eventWrapper.calendarSummary = object.summary;
+//                    
+//                    ///Create a array of events if nil
+//                    if (![ZPAAppData sharedAppData].arrSyncedCalendarsEvents) {
+//                        [ZPAAppData sharedAppData].arrSyncedCalendarsEvents = [NSMutableArray array];
+//                    }
+//                    ///Add event in array of to be synced calendar events
+//                    if (![[ZPAAppData sharedAppData].arrSyncedCalendarsEvents containsObject:eventWrapper]) {
+//                        [[ZPAAppData sharedAppData].arrSyncedCalendarsEvents addObject:eventWrapper];
+//                        
+//                    }
+//                    
+//                }
+//                
+//                
+//                
+//              [ZPAAppData sharedAppData].arrSyncedCalendarsEvents  = [[[NSOrderedSet orderedSetWithArray:[ZPAAppData sharedAppData].arrSyncedCalendarsEvents]array] mutableCopy];
+//                
+//            
+//                
+//            }
+//            else{
+//                
+//                NSLog(@"Error fetching events for calendar id %@ -> %@",calendar.calendarId,error.localizedDescription);
+//            }
+//            
+//            
+//            
+//           
+//        }];
+//         
+//    }
     
     
 }
 
 -(void)getEventsForTheGivenCalendarWithCalendarId:(NSString *)calendarId{
-    __weak typeof(self) weakSelf = self;
+//    __weak typeof(self) weakSelf = self;
+//    
+//        GTLServiceCalendar *calendarService = [self calendarService];
+//        GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendarId];
+//        
+//        [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarEvents * object, NSError *error) {
+//            
+//            if (error) {
+//                //  [weakSelf getEventsForTheGivenCalendar];
+//            }
+//            if (!error && [ZPAStaticHelper canUseWebObject:object]) {
+//                for (GTLCalendarEvent *event in object) {
+//                    
+//                    ///Wrap the GTLCalendarEvent object in wrapper class
+//                    ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithGoogleEvent:event];
+//                    eventWrapper.parentCalendarId = calendarId;
+//                    eventWrapper.calendarSummary = object.summary;
+//                    
+//                    ///Create a array of events if nil
+//                    if (![ZPAAppData sharedAppData].arrSyncedCalendarsEvents) {
+//                        [ZPAAppData sharedAppData].arrSyncedCalendarsEvents = [NSMutableArray array];
+//                    }
+//                    ///Add event in array of to be synced calendar events
+//                    if (![[ZPAAppData sharedAppData].arrSyncedCalendarsEvents containsObject:eventWrapper]) {
+//                        [[ZPAAppData sharedAppData].arrSyncedCalendarsEvents addObject:eventWrapper];
+//
+//                    }
+//                    
+//                    
+//                }
+//                
+//            }
+//            else{
+//                
+//                NSLog(@"Error fetching events for calendar id %@ -> %@",calendarId,error.localizedDescription);
+//            }
+//            
+//            
+//            
+//            
+//        }];
     
-        GTLServiceCalendar *calendarService = [self calendarService];
-        GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendarId];
-        
-        [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarEvents * object, NSError *error) {
-            
-            if (error) {
-                //  [weakSelf getEventsForTheGivenCalendar];
-            }
-            if (!error && [ZPAStaticHelper canUseWebObject:object]) {
-                for (GTLCalendarEvent *event in object) {
-                    
-                    ///Wrap the GTLCalendarEvent object in wrapper class
-                    ZPAEvent *eventWrapper = [[ZPAEvent alloc]initWithGoogleEvent:event];
-                    eventWrapper.parentCalendarId = calendarId;
-                    eventWrapper.calendarSummary = object.summary;
-                    
-                    ///Create a array of events if nil
-                    if (![ZPAAppData sharedAppData].arrSyncedCalendarsEvents) {
-                        [ZPAAppData sharedAppData].arrSyncedCalendarsEvents = [NSMutableArray array];
-                    }
-                    ///Add event in array of to be synced calendar events
-                    if (![[ZPAAppData sharedAppData].arrSyncedCalendarsEvents containsObject:eventWrapper]) {
-                        [[ZPAAppData sharedAppData].arrSyncedCalendarsEvents addObject:eventWrapper];
-
-                    }
-                    
-                    
-                }
-                
-            }
-            else{
-                
-                NSLog(@"Error fetching events for calendar id %@ -> %@",calendarId,error.localizedDescription);
-            }
-            
-            
-            
-            
-        }];
-        
     }
     
     
@@ -327,31 +327,31 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
 
 
 -(void)getEventsForCurrentDay:(NSString * )calendarId{
-    for (ZPACalendarModel * calendar in [[ZPAZeppaCalendarSingleton sharedObject] getAllGoogleSyncCalendar]) {
-
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *components = [cal components:( NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit ) fromDate:[NSDate date]];
-
-    //[components setDay:]
-    [components setHour:23];
-    [components setMinute:59];
-    [components setSecond:59];
-
-    
-    GTLServiceCalendar *calendarService = [self calendarService];
-    GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendar.calendarId];
- 
-    [calendarListQuery setTimeMin:[GTLDateTime dateTimeForAllDayWithDate:[NSDate date]]];
-    [calendarListQuery setTimeMax:[GTLDateTime dateTimeWithDateComponents:components]];
-
-    [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarEvents * object, NSError *error) {
-        if (!error){
-            
-            NSLog(@"%@",object);
-        }
-        
-    }];
-    }
+//    for (ZPACalendarModel * calendar in [[ZPAZeppaCalendarSingleton sharedObject] getAllGoogleSyncCalendar]) {
+//
+//    NSCalendar *cal = [NSCalendar currentCalendar];
+//    NSDateComponents *components = [cal components:( NSMonthCalendarUnit | NSYearCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit ) fromDate:[NSDate date]];
+//
+//    //[components setDay:]
+//    [components setHour:23];
+//    [components setMinute:59];
+//    [components setSecond:59];
+//
+//    
+//    GTLServiceCalendar *calendarService = [self calendarService];
+//    GTLQueryCalendar *calendarListQuery = [GTLQueryCalendar queryForEventsListWithCalendarId:calendar.calendarId];
+// 
+//    [calendarListQuery setTimeMin:[GTLDateTime dateTimeForAllDayWithDate:[NSDate date]]];
+//    [calendarListQuery setTimeMax:[GTLDateTime dateTimeWithDateComponents:components]];
+//
+//    [calendarService executeQuery:calendarListQuery completionHandler:^(GTLServiceTicket *ticket, GTLCalendarEvents * object, NSError *error) {
+//        if (!error){
+//            
+//            NSLog(@"%@",object);
+//        }
+//        
+//    }];
+//    }
 }
 
     

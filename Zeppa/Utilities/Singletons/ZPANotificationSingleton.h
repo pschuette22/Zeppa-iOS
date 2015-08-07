@@ -31,4 +31,7 @@
 -(void)fetchNotification:(long long)userId;
 -(void)addZeppaNotification:(GTLZeppanotificationendpointZeppaNotification *)notification;
 -(void)executeRemoveNotification:(long long)notificationId;
+
+-(void)didReceiveNotification:(NSDictionary*)userInfo;
+
 @end
