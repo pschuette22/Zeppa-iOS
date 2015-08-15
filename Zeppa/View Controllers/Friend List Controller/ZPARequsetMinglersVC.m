@@ -67,7 +67,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     user = [_zeppaMinglerUser objectAtIndex:indexPath.row];
-    if (( user.relationShip == nil) || ([user.relationShip.creatorId longLongValue] == [[ZPAZeppaUserSingleton sharedObject].userId longLongValue])) {
+    if (( user.relationship == nil) || ([user.relationship.creatorId longLongValue] == [[ZPAZeppaUserSingleton sharedObject].userId longLongValue])) {
         
         static NSString *userEventCellId = @"RequestMinglersCell";
         ZPARequestMinglersCell *cell = [tableView dequeueReusableCellWithIdentifier:userEventCellId];
@@ -176,7 +176,7 @@
     user = [_zeppaMinglerUser objectAtIndex:indexPath.row];
     
     
-    if (user.relationShip == nil ) {
+    if (user.relationship == nil ) {
         [self inserZeppaUserToUserRelationship:user];
        // [sender setTitle:@"Requested" forState:UIControlStateNormal];
         
@@ -263,7 +263,7 @@
     
     GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationship = [[GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship alloc] init];
     
-     relationship = userInfo.relationShip;
+     relationship = userInfo.relationship;
     [relationship setRelationshipType:@"MINGLING"];
     
     
@@ -295,7 +295,7 @@
 -(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
     
 
-    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForRemoveZeppaUserToUserRelationshipWithIdentifier:[userInfo.relationShip.identifier longLongValue]];
+    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForRemoveZeppaUserToUserRelationshipWithIdentifier:[userInfo.relationship.identifier longLongValue]];
     
     [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship  *response, NSError *error) {
         //

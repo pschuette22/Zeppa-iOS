@@ -30,18 +30,39 @@ BOOL hasLoadedInitial;
     notif = nil;
 }
 
+// Auth object for executing authenticated queries
+-(GTLServiceZeppaeventtouserrelationshipendpoint *) zeppaEventRelationshipService {
+    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+    
+    if(!service){
+        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service.retryEnabled = YES;
+    }
+    
+    // Set Auth that is held in the delegate
+    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
+    return service;
+}
 
 /**
  * Did receive notification from app engine backend
  * This method dispatches notification information appropriately
  *
  */
--(void)didReceiveNotification:(NSDictionary*)userInfo
+-(void)didReceiveNotification:(NSNumber *)notificationId
 {
-    NSLog(@"Did receive notification: %@",userInfo);
-    
-    
+    // Fetch the current
+    [self fetchNotificationById:notificationId];
 }
+                                                            
+-(void)fetchNotificationById:(NSNumber *)notificationId
+{
+
+    // If logged in, fetch event
+    GTLQueryZeppanotificationendpoint *notificationQuery = [GTLQueryZeppanotificationendpoint queryForGetZeppaNotificationWithIdentifier:notificationId.longLongValue];
+
+}
+
 
 -(void)removeNotificationForEvent:(long long)eventId{
 
@@ -232,7 +253,7 @@ BOOL hasLoadedInitial;
     
 }
 
--(void)fetchNotification:(long long)userId{
+-(void)fetchInitialNotifications:(long long)userId{
     
     ZPAFetchInitialNotifications * initialNotification = [[ZPAFetchInitialNotifications alloc]init];
     

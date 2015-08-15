@@ -68,6 +68,7 @@ typedef void(^ZPARefreshSyncedCalendarsEventsCompletionHandler)(NSArray *arrEven
 +(instancetype)sharedAppData;
 
 
+
 /*!
  * @description It will clear the old Google Calendar list and fetch the new Google Calendar list each time it is called.
  * @param completion will return the array of ZPACalendar object if successful and error as nil otherwise it will return an empty array object with error object containing the reason.

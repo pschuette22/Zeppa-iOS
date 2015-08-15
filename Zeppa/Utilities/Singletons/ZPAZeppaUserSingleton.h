@@ -20,6 +20,7 @@
 #import "GTLServiceZeppauserendpoint.h"
 #import "GTLQueryZeppauserendpoint.h"
 
+
 @protocol loginErrorDelegate <NSObject>
 
 -(void)showLoginError;
@@ -31,10 +32,14 @@
 @property (nonatomic,strong)id<loginErrorDelegate>delegate;
 
 @property (strong,readonly) GTLServiceZeppauserendpoint *zeppaUserService;
+
 @property (nonatomic, weak) GTMOAuth2Authentication *auth;
 @property (nonatomic, strong) NSMutableArray *heldUserMediators;
 @property (nonatomic, strong) ZPAMyZeppaUser *zeppaUser;
 @property (nonatomic, strong) NSNumber *userId;
+
+///Create ZPAUserEndpoint  Completion Block
+typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
 
 ///Initialization Methods
 +(ZPAZeppaUserSingleton *)sharedObject;
@@ -53,11 +58,13 @@
 -(NSArray *)getPossibleFriendInfoMediators;
 -(NSArray *)getPendingFriendRequests;
 -(NSArray *)getMinglersFrom:(NSArray *)userIdArray;
+
 ///*******************************
 #pragma mark - ZeppaApi Methods
 ///*******************************
 -(GTLServiceTicket *)getZeppaUserWithUserId:(long long)zeppaUserId andCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion;
 -(GTLServiceTicket *)getCurrentZeppaUserWithCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion;
+  
 @end
 
 

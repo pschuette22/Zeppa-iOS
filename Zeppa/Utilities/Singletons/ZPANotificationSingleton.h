@@ -28,10 +28,11 @@
 -(NSInteger)getNotificationTypeOrder:(GTLZeppanotificationendpointZeppaNotification *)notification;
 -(NSString *)getNotificationTitle:(GTLZeppanotificationendpointZeppaNotification *)notification;
 -(NSString *)getNotificationMessage:(GTLZeppanotificationendpointZeppaNotification *)notification;
--(void)fetchNotification:(long long)userId;
+-(void)fetchInitialNotifications:(long long)userId;
 -(void)addZeppaNotification:(GTLZeppanotificationendpointZeppaNotification *)notification;
 -(void)executeRemoveNotification:(long long)notificationId;
 
--(void)didReceiveNotification:(NSDictionary*)userInfo;
+-(void)didReceiveNotification:(NSNumber *)notificationId;
+-(void)fetchNotificationById:(NSNumber *)notificationId;
 
 @end

@@ -13,9 +13,10 @@
 #import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
 
 @interface ZPAMyZeppaEvent : NSObject
+
 @property (nonatomic, strong) GTLZeppaeventendpointZeppaEvent *event;
 @property (nonatomic, strong) GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *relationship;
-@property (nonatomic)ConflictStatus confictStatus;
+@property (nonatomic, strong)NSString* confictStatus;
 @property (nonatomic, strong)NSMutableArray *relationships;
 @property (nonatomic, strong)NSMutableArray *comments;
 @property (nonatomic, strong)NSArray *getTagIds;

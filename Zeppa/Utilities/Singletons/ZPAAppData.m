@@ -10,7 +10,6 @@
 #import "GTLCalendar.h"
 #import "ZPAAuthenticatonHandler.h"
 #import "GTMOAuth2Authentication.h"
-//#import <GoogleOpenSource/GTMOAuth2Authentication.h>
 
 #import "iCalHelper.h"
 #import "ZPAUserDefault.h"
@@ -46,7 +45,7 @@ static ZPAAppData *sharedData;
         if (!sharedData) {
             sharedData = [[ZPAAppData alloc]init];
             ///Dheeraj--> Zeppa Events Id added for testing purpose need to remove it
-            sharedData.zeppaEventsCalendarId = @"agicent.com_khj43fmte78782f0343s20d3tg@group.calendar.google.com";
+//            sharedData.zeppaEventsCalendarId = @"agicent.com_khj43fmte78782f0343s20d3tg@group.calendar.google.com";
         }
     });
     return sharedData;

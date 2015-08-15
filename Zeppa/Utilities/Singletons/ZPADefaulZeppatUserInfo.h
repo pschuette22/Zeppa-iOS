@@ -16,7 +16,7 @@
 @interface ZPADefaulZeppatUserInfo : NSObject
 @property (nonatomic, strong) ZPAMyZeppaUser *user;
 @property (nonatomic, strong) GTLZeppauserinfoendpointZeppaUserInfo *zeppaUserInfo;
-@property (nonatomic, strong) GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationShip;
+@property (nonatomic, strong) GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationship;
 @property (nonatomic, strong) NSMutableArray *minglersIds;
 @property (readonly, getter=isMingling)BOOL mingling;
 @property (readonly, assign)BOOL requestPending;

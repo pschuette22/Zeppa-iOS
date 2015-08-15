@@ -115,6 +115,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
         }
         if (removeEvent) {
             [_zeppaEvents removeObject:removeEvent];
+            // TODO: dispatch call to redraw where appropriate
         }
     }
     

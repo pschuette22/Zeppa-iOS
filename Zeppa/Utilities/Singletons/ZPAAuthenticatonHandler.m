@@ -18,10 +18,7 @@
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPANotificationSingleton.h"
-
 #import "ZPASwapperVC.h"
-
-
 #import "GTLCalendar.h"
 
 
@@ -66,7 +63,7 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
 
 +(BOOL)isAuthValid:(GTMOAuth2Authentication *)auth
 {
-    return ((auth != nil) && [auth canAuthorize]);
+    return (auth && [auth canAuthorize]);
 }
 
 ///**********************************************
@@ -130,6 +127,10 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
         }
         
         _auth = auth;
+        
+        [[ZPANotificationDelegate sharedObject] dispatchPendingNotifications];
+        
+        // TODO: Do this if necessary
         __weak  typeof(self)  weakSelf = self;
       [self getGoogleCalendar:^(BOOL success, NSError *errr) {
           

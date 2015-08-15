@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ZPALoginVC.h"
 #import "GTMOAuth2Authentication.h"
+#import "ZPAFetchNotificationOnAuth.h"
 #import <Google/CloudMessaging.h>
 
 //@class GTLServiceTicket;
@@ -21,6 +22,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic ,strong) id swapperClassRef;
 @property(nonatomic, strong) NSString *registrationToken;
+@property(nonatomic, strong) NSMutableArray *pendingNotifictions;
 //@property(nonatomic, readonly, strong) NSString *messageKey;
 //@property(nonatomic, readonly, strong) NSString *gcmSenderID;
 //@property(nonatomic, readonly, strong) NSDictionary *registrationOptions;
@@ -34,7 +36,6 @@
 //-(void)gcmRegistrationHandler;
 
 //+(GTLServiceTicket *)executeZeppaUserEndpointQueryWithCompletionBlock:(ZPAUserEndpointServiceCompletionBlock)completion;
-
 
 
 

@@ -20,4 +20,7 @@
 
 +(BOOL)isValueExistsForKey:(NSString *)key;
 +(void)clearUserDefault;
+
++(BOOL)doSendNotificationForType:(NSString*)type;
+
 @end

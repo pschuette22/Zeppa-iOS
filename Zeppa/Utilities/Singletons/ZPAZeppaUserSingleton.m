@@ -135,14 +135,14 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
    
     if (mingler &&  [mingler isMemberOfClass:[ZPADefaulZeppatUserInfo class]]) {
         ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = (ZPADefaulZeppatUserInfo *)mingler;
-        defaultZeppaUserInfo.relationShip = relation;
+        defaultZeppaUserInfo.relationship = relation;
         return;
     }
     if (!mingler) {
         
         ZPADefaulZeppatUserInfo *defaultUserInfo = [[ZPADefaulZeppatUserInfo alloc]init];
         defaultUserInfo.zeppaUserInfo = userInfo;
-        defaultUserInfo.relationShip = relation;
+        defaultUserInfo.relationship = relation;
         [_heldUserMediators addObject:defaultUserInfo];
     }
 }
@@ -185,6 +185,7 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     }
     return nil;
 }
+
 
 -(NSArray *)getMinglersFrom:(NSArray *)userIdArray{
     NSMutableArray * user = [NSMutableArray array];
@@ -231,6 +232,8 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     return ticket;
     
 }
+
+
 -(GTLServiceTicket *)getCurrentZeppaUserWithCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion
 {
    __weak typeof(self)  weakSelf = self;
@@ -271,4 +274,7 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     self.auth.authorizationTokenKey = @"id_token";
     return zeppaUserService;
 }
+
+
+
 @end
