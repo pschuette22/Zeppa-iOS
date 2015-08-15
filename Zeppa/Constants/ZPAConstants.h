@@ -112,4 +112,15 @@ extern NSString *const kZeppaEventsUpdateNotificationKey;
 
 extern NSString *const kzeppacalendarSync;
 
+
+//****************************************************
+#pragma mark - Observer Keys
+//****************************************************
+
+extern NSString *const kObserveEventsChangedKey;
+extern NSString *const kObserveMinglersChangedKey;
+extern NSString *const kObserveCommentsKey;
+
+
+
 @end

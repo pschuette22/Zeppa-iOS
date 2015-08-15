@@ -48,12 +48,15 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
             }
     }
     [_zeppaEvents addObject:event];
+    [self notificationChangeForEvents];
     
 }
 -(BOOL)removeMediator:(ZPAMyZeppaEvent *)event{
     
     if ([_zeppaEvents containsObject:event]) {
         [_zeppaEvents removeObject:event];
+        [self notificationChangeForEvents];
+        
         return YES;
     }
     return NO;
@@ -72,7 +75,12 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
             
         }
     }
-    [_zeppaEvents removeObjectsInArray:removeArr];
+    if(removeArr.count > 0){
+        [_zeppaEvents removeObjectsInArray:removeArr];
+        [self notificationChangeForEvents];
+
+    }
+    
 }
 -(void)clearOldEvents{
     
@@ -92,9 +100,11 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
                                          mediator.getEventId().longValue());
             */
         }
-//        if (arr.count>0) {
-//            [_zeppaEvents removeObjectsInArray:arr];
-//        }
+        if (arr.count>0) {
+            [_zeppaEvents removeObjectsInArray:arr];
+            [self notificationChangeForEvents];
+
+        }
     }
     
     
@@ -115,7 +125,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
         }
         if (removeEvent) {
             [_zeppaEvents removeObject:removeEvent];
-            // TODO: dispatch call to redraw where appropriate
+            [self notificationChangeForEvents];
         }
     }
     

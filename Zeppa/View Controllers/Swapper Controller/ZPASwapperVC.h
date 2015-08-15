@@ -29,5 +29,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnAgenda;
 @property (weak, nonatomic) IBOutlet UIButton *btnActivity;
 
+-(void) onEventsChanged;
 
 @end

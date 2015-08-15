@@ -275,7 +275,6 @@ static NSString * const DFDatePickerViewDayHeaderIdentifier = @"dayHeader";
 	} completion:^(BOOL finished) {
 		
 		NSLog(@"%s %x", __PRETTY_FUNCTION__, finished);
-		
 	}];
 	
 	for (UIView *view in cv.subviews)
@@ -887,7 +886,7 @@ static NSString * const DFDatePickerViewDayHeaderIdentifier = @"dayHeader";
 {
     NSMutableArray *arraysOfObjects =[NSMutableArray array];
     
-    NSLog(@"KEY : %@",key);
+    [ZPALogHelper log:[NSString stringWithFormat:@"KEY : %@",key] fromClass:self];
     
     if([[ZPAAppData sharedAppData].dicRecurrenceEventsForDayFlow objectForKey:key])
     {

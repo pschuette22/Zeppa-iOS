@@ -346,6 +346,21 @@
     
 }
 
+-(void) registerAsEventObserver {
+    
+    
+}
+
+-(void) unregisterAsEventObserver {
+    
+}
+
+-(void) onEventsChanged {
+
+
+}
+
+
 //****************************************************
 #pragma mark - MFDatePickerViewControllerDelegate Method
 //****************************************************

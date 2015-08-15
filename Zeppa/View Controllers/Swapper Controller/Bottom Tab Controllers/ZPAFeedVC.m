@@ -108,6 +108,8 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+
 //****************************************************
 #pragma mark - UIMessage Controller Delegate
 //****************************************************
@@ -235,9 +237,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
-    
     
     _eventDetailVc = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
    

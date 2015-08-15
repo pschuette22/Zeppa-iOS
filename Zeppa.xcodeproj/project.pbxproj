@@ -250,6 +250,8 @@
 		CE8E6E0A1B78DD14008B49C8 /* ZPAFetchUserInfoTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8E6E091B78DD14008B49C8 /* ZPAFetchUserInfoTask.m */; };
 		CE8E6E0D1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8E6E0C1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m */; };
 		CE8E6E101B7AA245008B49C8 /* ZPANotificationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8E6E0F1B7AA245008B49C8 /* ZPANotificationDelegate.m */; };
+		CEA882FF1B7F0ED600A8B9F9 /* ZPAEventObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA882FE1B7F0ED600A8B9F9 /* ZPAEventObserver.m */; };
+		CEA883021B7F36C700A8B9F9 /* ZPALogHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA883011B7F36C700A8B9F9 /* ZPALogHelper.m */; };
 		D84EA6ED1AEA657000923F54 /* ZPAFindMinglers.m in Sources */ = {isa = PBXBuildFile; fileRef = D84EA6EC1AEA657000923F54 /* ZPAFindMinglers.m */; };
 		D84EA6F11AEA723200923F54 /* ZPAPhoneContact.m in Sources */ = {isa = PBXBuildFile; fileRef = D84EA6F01AEA723200923F54 /* ZPAPhoneContact.m */; };
 		D85E15D11B04DBB800F93C56 /* check_mark_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D85E15C91B04DBB800F93C56 /* check_mark_selected.png */; };
@@ -894,6 +896,10 @@
 		CE8E6E0C1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFetchEventInfoTask.m; sourceTree = "<group>"; };
 		CE8E6E0E1B7AA245008B49C8 /* ZPANotificationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPANotificationDelegate.h; sourceTree = "<group>"; };
 		CE8E6E0F1B7AA245008B49C8 /* ZPANotificationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPANotificationDelegate.m; sourceTree = "<group>"; };
+		CEA882FD1B7F0ED600A8B9F9 /* ZPAEventObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAEventObserver.h; path = Utilities/ZPAEventObserver.h; sourceTree = "<group>"; };
+		CEA882FE1B7F0ED600A8B9F9 /* ZPAEventObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZPAEventObserver.m; path = Utilities/ZPAEventObserver.m; sourceTree = "<group>"; };
+		CEA883001B7F36C700A8B9F9 /* ZPALogHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPALogHelper.h; sourceTree = "<group>"; };
+		CEA883011B7F36C700A8B9F9 /* ZPALogHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPALogHelper.m; sourceTree = "<group>"; };
 		D84EA6EB1AEA657000923F54 /* ZPAFindMinglers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAFindMinglers.h; path = ../ZPAFindMinglers.h; sourceTree = "<group>"; };
 		D84EA6EC1AEA657000923F54 /* ZPAFindMinglers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZPAFindMinglers.m; path = ../ZPAFindMinglers.m; sourceTree = "<group>"; };
 		D84EA6EF1AEA723200923F54 /* ZPAPhoneContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAPhoneContact.h; sourceTree = "<group>"; };
@@ -1644,6 +1650,7 @@
 		26D5289419B08A53000C3649 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				CEA882FC1B7F0C8B00A8B9F9 /* Observers */,
 				D8A63C381B21D42C0022F274 /* BRStaticHelper.h */,
 				D8A63C391B21D42C0022F274 /* BRStaticHelper.m */,
 				D8678B091AF4D05E00C3ED87 /* MBProgressHUD.h */,
@@ -1745,6 +1752,8 @@
 				26B380D819B99AF40091EE5D /* ZPAStaticHelper.m */,
 				26ADA7DD19E5366400E63A7B /* iCalHelper.h */,
 				26ADA7DE19E5366400E63A7B /* iCalHelper.m */,
+				CEA883001B7F36C700A8B9F9 /* ZPALogHelper.h */,
+				CEA883011B7F36C700A8B9F9 /* ZPALogHelper.m */,
 			);
 			name = "Helper Classes";
 			sourceTree = "<group>";
@@ -2136,6 +2145,16 @@
 				CE3B1D1A1B5ED45D0057120E /* GTLServiceCalendar.m */,
 			);
 			path = Generated;
+			sourceTree = "<group>";
+		};
+		CEA882FC1B7F0C8B00A8B9F9 /* Observers */ = {
+			isa = PBXGroup;
+			children = (
+				CEA882FD1B7F0ED600A8B9F9 /* ZPAEventObserver.h */,
+				CEA882FE1B7F0ED600A8B9F9 /* ZPAEventObserver.m */,
+			);
+			name = Observers;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		D84EA6EE1AEA720B00923F54 /* ZeppaDefault Classes */ = {
@@ -2742,6 +2761,7 @@
 				CE0F19BF1B5CB7AA00DA4CD6 /* GTLQueryEventcommentendpoint.m in Sources */,
 				CE0F19C61B5CB7AA00DA4CD6 /* GTLQueryZeppanotificationendpoint.m in Sources */,
 				CE0F19A71B5CB7AA00DA4CD6 /* GTLDeviceinfoendpointConstants.m in Sources */,
+				CEA883021B7F36C700A8B9F9 /* ZPALogHelper.m in Sources */,
 				CE0F19E81B5CB7AA00DA4CD6 /* GTLZeppanotificationendpointKey.m in Sources */,
 				CE0F19DC1B5CB7AA00DA4CD6 /* GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship.m in Sources */,
 				CE0F19A91B5CB7AA00DA4CD6 /* GTLDeviceinfoendpointKey.m in Sources */,
@@ -2902,6 +2922,7 @@
 				2623A7EC19E695F500642B02 /* SDImageCache.m in Sources */,
 				D871FD321B0B64FD000170FA /* Checkbox.m in Sources */,
 				A2808A311AD81AB200D29D49 /* ZPADateAndTimePicker.m in Sources */,
+				CEA882FF1B7F0ED600A8B9F9 /* ZPAEventObserver.m in Sources */,
 				CE0F19EF1B5CB7AA00DA4CD6 /* GTLZeppauserendpointZeppaUserInfo.m in Sources */,
 				A29EBABD1AD68377009BD80D /* ZPAApplication.m in Sources */,
 				CE0F19EC1B5CB7AA00DA4CD6 /* GTLZeppauserendpointConstants.m in Sources */,

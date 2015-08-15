@@ -20,6 +20,8 @@
     #import "ZPAAppData.h"
     #import "ZPAStaticHelper.h"
     #import "ZPAMyZeppaUser.h"
+    #import "ZPALogHelper.h"
+
 
     @class GTLServiceTicket;
     @class GTMOAuth2ViewControllerTouch;

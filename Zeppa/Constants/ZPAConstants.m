@@ -123,4 +123,12 @@ NSString *const kZeppaSettingSyncCalendarKey              = @"syncCalendar";
 NSString *const kzeppacalendarSync                          = @"calendarSync";
 
 
+//****************************************************
+#pragma mark - Observer Keys
+//****************************************************
+
+NSString *const kObserveEventsChangedKey = @"observeEventsChanged";
+NSString *const kObserveMinglersChangedKey = @"observeMinglersChanged";
+
+
 @end

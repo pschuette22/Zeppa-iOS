@@ -53,12 +53,21 @@
     [[UISwitch appearance]setOnTintColor:[UIColor colorWithRed:10.0f/255.0 green:210.0f/255.0 blue:255.0f/255.0 alpha:1.0]];
     
     
-    // Register for local notifications
-    UIUserNotificationType allNotificationTypes =
-    (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-    UIUserNotificationSettings *settings =
-    [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    
+    
+    // Register for user notifications in iOS 8 or later
+    if([application respondsToSelector:@selector(registerUserNotificationSettings:)]){
+        
+        // Register for local notifications
+        UIUserNotificationType allNotificationTypes =
+        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+        
+        UIUserNotificationSettings *settings =
+        [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    }
+    // TODO: implement local notification registration if old devices are not receiving them
+    
     
     // Register for remote notifications
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
@@ -110,7 +119,11 @@
 // [START ack_message_reception]
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Notification received - no handler: %@", userInfo);
-    [[ZPANotificationDelegate sharedObject] doNotificationPreprocessing:userInfo];
+    
+    // Notication was consumed here
+    if ([[ZPANotificationDelegate sharedObject] doNotificationPreprocessing:userInfo]){
+        NSLog(@"Did dispatch ");
+    }
 
     // This works only if the app started the GCM service
 //    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
@@ -143,7 +156,9 @@
 
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notif {
     // TODO: handle additional stuff when a local notification is received
-    [self showAlert:notif.alertTitle withMessage:notif.alertBody];
+    if(notif){
+        
+    }
 }
 
 
@@ -262,9 +277,13 @@
 
 }
 
--(void) showAlert: (NSString*) title withMessage:(NSString*) message{
+/*!
+ * Display an alert from Zeppa
+ */
+-(void) showAlertFromZeppa: (NSString*) title withMessage:(NSString*) message{
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message delegate:nil
+                                                        message:message
+                                                       delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
     [alertView show];

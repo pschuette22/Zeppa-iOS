@@ -14,7 +14,7 @@ target :Zeppa do
     # pod 'Google/SignIn'
     # pod 'GoogleSignIn'
     # pod 'Google/Calendar'
-    pod 'Google/CloudMessaging'
+    pod 'GoogleSignIn'
     pod 'googleplus-ios-sdk'
 
     xcodeproj '/Users/DrunkWithFunk21/Workspace/XCode/Zeppa-iOS/Zeppa.xcodeproj'
@@ -31,7 +31,7 @@ target :ZeppaTests  do
     # pod 'Google/SignIn'
     # pod 'GoogleSignIn'
     # pod 'Google/Calendar'
-    pod 'Google/CloudMessaging'
+    pod 'GoogleSignIn'
     pod 'googleplus-ios-sdk'
     
     xcodeproj '/Users/DrunkWithFunk21/Workspace/XCode/Zeppa-iOS/Zeppa.xcodeproj'

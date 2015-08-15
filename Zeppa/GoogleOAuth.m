@@ -238,7 +238,8 @@ postParameterValues:(NSArray *)values{
                 }
                 }
                 
-                NSLog(@"%s\nrequest = %@",__func__,mutableUrlString);
+                [ZPALogHelper log:[NSString stringWithFormat:@"%s\nrequest = %@",__func__,mutableUrlString] fromClass:self];
+
                 request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:mutableUrlString]];
                 
                 [request setHTTPMethod:@"GET"];
@@ -266,8 +267,7 @@ postParameterValues:(NSArray *)values{
                     // Set any other necessary options.
                     [request setHTTPBody:[postParams dataUsingEncoding:NSUTF8StringEncoding]];
                     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-                    NSLog(@"%s\nrequest = %@",__func__,urlString);
-                    
+                    [ZPALogHelper log:[NSString stringWithFormat:@"%s\nrequest = %@",__func__,urlString] fromClass:self];
                 }
                 
                 break;
@@ -536,7 +536,8 @@ postParameterValues:(NSArray *)values{
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    NSLog(@"%ld", (long)[httpResponse statusCode]);
+    [ZPALogHelper log:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]] fromClass:self];
+
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection{
@@ -549,11 +550,12 @@ postParameterValues:(NSArray *)values{
     
     // Convert the received data in NSString format.
     responseJSON = [[NSString alloc] initWithData:(NSData *)_receivedData encoding:NSUTF8StringEncoding];
-    NSLog(@"%s\nResponse = %@",__func__,responseJSON);
+    [ZPALogHelper log:[NSString stringWithFormat:@"%s\nResponse = %@",__func__,responseJSON] fromClass:self];
+
     ///Check for invalid request
     if ([responseJSON rangeOfString:@"invalid_request"].location != NSNotFound) {
-        NSLog(@"General error occured.");
-        
+        [ZPALogHelper log:@"General error occured." fromClass:self];
+
         // If a refresh was on the way then set the respective flag to NO.
         if (_isRefreshing) {
             _isRefreshing = NO;
@@ -599,7 +601,9 @@ postParameterValues:(NSArray *)values{
  
 //        });
         isAPIResponse = NO;
-        NSLog(@"Milan --> Access Token recieved");
+
+        [ZPALogHelper log:@"Access Token received." fromClass:self];
+
 
      }
     

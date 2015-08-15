@@ -19,8 +19,8 @@
 
 +(ZPANotificationDelegate*) sharedObject;
 
--(void)doNotificationPreprocessing:(NSDictionary*)info;
--(void)doNotificationPreprocessing:(NSDictionary*)info withCompletionHandler: (void (^)(UIBackgroundFetchResult))handler ;
+-(BOOL)doNotificationPreprocessing:(NSDictionary*)info;
+-(BOOL)doNotificationPreprocessing:(NSDictionary*)info withCompletionHandler: (void (^)(UIBackgroundFetchResult))handler ;
 
 -(void)dispatchPendingNotifications;
 -(void)didFinishTaskWithSuccess:(BOOL)success;

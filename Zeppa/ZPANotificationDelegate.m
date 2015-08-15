@@ -27,18 +27,18 @@ static ZPANotificationDelegate *notificationDelegate = nil;
     return notificationDelegate;
 }
 
--(void)doNotificationPreprocessing:(NSDictionary*)info withCompletionHandler: (void (^)(UIBackgroundFetchResult))handler
+-(BOOL)doNotificationPreprocessing:(NSDictionary*)info withCompletionHandler: (void (^)(UIBackgroundFetchResult))handler
 {
     // Set the completion handler for this delegate
     [self setCompletionHandler:handler];
     
     // Start processing the notification
-    [self doNotificationPreprocessing:info];
+    return [self doNotificationPreprocessing:info];
 }
 /**
  * Preproccess notification info and handle appropriately
  */
--(void)doNotificationPreprocessing:(NSDictionary*)notification
+-(BOOL)doNotificationPreprocessing:(NSDictionary*)notification
 {
  
     NSNumber *currentUserId = [ZPAUserDefault getValueFromUserDefaultUsingKey:kCurrentZeppaUserId];
@@ -119,10 +119,12 @@ static ZPANotificationDelegate *notificationDelegate = nil;
             
         }
         
+        // Return yes because notification had purpose and was consumed
+        return YES;
     }
 
-
-    
+    // Notification was not consumed, should be handled elsewhere?
+    return NO;
 }
 
 /**

@@ -266,12 +266,14 @@
     NSArray *arr=[str componentsSeparatedByString:@"."];
     int hour=[[arr firstObject] intValue];
     int mint =(([[arr lastObject] intValue]*60)/100);
-    NSLog(@"%d",hour);
-    NSLog(@"%d",mint);
+    [ZPALogHelper log:[NSString stringWithFormat:@"%d",hour] fromClass:self];
+    [ZPALogHelper log:[NSString stringWithFormat:@"%d",mint] fromClass:self];
+
     for (UIView *view in sender.subviews) {
         if ([view isKindOfClass:[UILabel class]]) {
             label =(UILabel *)view;
-            NSLog(@"%@",label.text);
+            [ZPALogHelper log:label.text fromClass:self];
+
         }
     }
     
