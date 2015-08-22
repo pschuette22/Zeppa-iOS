@@ -16,6 +16,7 @@
 #import "UIImageView+WebCache.h"
 #import "Downloader.h"
 
+
 #import "GTLZeppauserendpointZeppaUserInfo.h"
 #import "GTLCalendarCalendarListEntry.h"
 #import "GTLCalendar.h"
@@ -27,7 +28,7 @@
 #import "GTLQueryPhotoinfoendpoint.h"
 #import "GTLPhotoinfoendpoint.h"
 #import "GTLPhotoinfoendpointPhotoInfo.h"
-
+#import <Google/SignIn.h>
 
 
 @import EventKit;
@@ -248,8 +249,12 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     
     ///Reset CalendarFetchStatus
     self.calendarFetchStatus = CalendarFecthedStatusNone;
+    GIDGoogleUser *currentUser = [[GIDSignIn sharedInstance] currentUser];
     
-    _giveName_Txt.text = _user.endPointUser.userInfo.givenName;
+    NSString *name = currentUser.profile.name;
+    
+    
+    _giveName_Txt.text = name;
     _familyName_Txt.text = _user.endPointUser.userInfo.familyName;
     _email_Txt.text = _user.endPointUser.userInfo.googleAccountEmail;
     

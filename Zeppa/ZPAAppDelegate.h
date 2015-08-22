@@ -10,7 +10,6 @@
 #import "ZPALoginVC.h"
 #import "GTMOAuth2Authentication.h"
 #import "ZPAFetchNotificationOnAuth.h"
-#import <Google/CloudMessaging.h>
 
 //@class GTLServiceTicket;
 //typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);

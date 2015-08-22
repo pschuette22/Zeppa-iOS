@@ -237,7 +237,7 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
 -(GTLServiceTicket *)getCurrentZeppaUserWithCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion
 {
    __weak typeof(self)  weakSelf = self;
-    GTLQueryZeppauserendpoint *query = [GTLQueryZeppauserendpoint queryForFetchCurrentZeppaUser];
+    GTLQueryZeppauserendpoint *query = [GTLQueryZeppauserendpoint queryForFetchCurrentZeppaUserWithEmail: [ZPAAuthenticatonHandler sharedAuth].loggedInUserEmail];
     
     GTLServiceTicket *ticket =[self.zeppaUserService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserendpointZeppaUser *zeppaUser, NSError *error) {
         
@@ -266,12 +266,17 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     ///Create ZeppaUserEndPoint Service
     static GTLServiceZeppauserendpoint *zeppaUserService = nil;
     if (!zeppaUserService) {
-        self.auth = [ZPAAuthenticatonHandler sharedAuth].auth;
+        self.auth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kZeppaKeychainItemNameKey clientID:kZeppaGooglePlusClientIdKey clientSecret:kZeppaGooglePlusClientSecretKey];
+        
         zeppaUserService = [[GTLServiceZeppauserendpoint alloc]init];
         zeppaUserService.retryEnabled = YES;
+        
     }
+    
     [zeppaUserService setAuthorizer:self.auth];
     self.auth.authorizationTokenKey = @"id_token";
+    
+    
     return zeppaUserService;
 }
 

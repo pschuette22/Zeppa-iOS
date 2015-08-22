@@ -295,13 +295,13 @@
 -(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
     
 
-    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForRemoveZeppaUserToUserRelationshipWithIdentifier:[userInfo.relationship.identifier longLongValue]];
+    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForRemoveZeppaUserToUserRelationshipWithRelationshipId:[userInfo.relationship.identifier longLongValue] userId:[ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier.longLongValue];
     
     [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship  *response, NSError *error) {
         //
         
         if(error){
-            
+            // TODO: notify user there was an issue removing relationship from DB
         } else if ( response.identifier){
             
 //            [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:userInfo.zeppaUserInfo andRelationShip:response];

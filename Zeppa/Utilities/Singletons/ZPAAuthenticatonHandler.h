@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GooglePlus/GooglePlus.h>
+#import <Google/SignIn.h>
 #import "ZPANotificationDelegate.h"
+#import "GTMOAuth2ViewControllerTouch.h"
 
 @class GTLCalendarEvent;
 
@@ -20,20 +21,26 @@
 @end
 
 
-@interface ZPAAuthenticatonHandler : NSObject<GPPSignInDelegate>
+@interface ZPAAuthenticatonHandler : NSObject<GIDSignInDelegate>
 
-@property (nonatomic , weak) id<loginWithGoogleSdkDelegate>delegate;
+
+
+//@property (nonatomic , weak) id<loginWithGoogleSdkDelegate>delegate;
 
 @property (nonatomic, strong, readonly) GTMOAuth2Authentication *auth;
+//@property (nonatomic, strong, readonly) NSObject *auth;
 
-@property GPPSignIn *googleSignIn;
+//@property GPPSignIn *googleSignIn;
 
 +(instancetype)sharedAuth;
 
-+(BOOL)isAuthValid:(GTMOAuth2Authentication *)auth;
--(void)signInWithGooglePlus;
+//+(BOOL)isAuthValid:(GTMOAuth2Authentication *)auth;
+-(void)signInWithGoogleSilently:(BOOL) silently;
 -(void)logout;
 -(void)getEventsForTheGivenCalendar;
 -(void)getEventsForCurrentDay:(NSString * )calendarId;
 -(void)getEventsForTheGivenCalendarWithCalendarId:(NSString *)calendarId;
+-(NSString*)loggedInUserEmail;
+
+
 @end

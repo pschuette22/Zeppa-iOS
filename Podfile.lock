@@ -1,12 +1,40 @@
 PODS:
+  - GGLInstanceID (1.0.0):
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+    - GoogleUtilities (~> 1.0)
+  - Google-API-Client/Calendar (1.0.422):
+    - Google-API-Client/Common
+    - gtm-http-fetcher (~> 1.0.141)
+    - gtm-oauth2 (~> 1.0.125)
+  - Google-API-Client/Common (1.0.422):
+    - gtm-http-fetcher (~> 1.0.141)
+    - gtm-oauth2 (~> 1.0.125)
+  - Google/CloudMessaging (1.0.7):
+    - GGLInstanceID (~> 1.0)
+    - Google/Core
+    - GoogleCloudMessaging (~> 1.0)
+  - Google/Core (1.0.7):
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+    - GoogleUtilities (~> 1.0)
+  - Google/SignIn (1.0.7):
+    - Google/Core
+    - GoogleSignIn (~> 2.0)
   - GoogleAppUtilities (1.0.0):
     - GoogleSymbolUtilities (~> 1.0)
   - GoogleAuthUtilities (1.0.1):
     - GoogleNetworkingUtilities (~> 1.0)
     - GoogleSymbolUtilities (~> 1.0)
+  - GoogleCloudMessaging (1.0.3):
+    - GoogleInterchangeUtilities (~> 1.0)
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+    - GoogleUtilities (~> 1.0)
+  - GoogleInterchangeUtilities (1.0.0):
+    - GoogleSymbolUtilities (~> 1.0)
   - GoogleNetworkingUtilities (1.0.0):
     - GoogleSymbolUtilities (~> 1.0)
-  - googleplus-ios-sdk (1.7.1)
   - GoogleSignIn (2.2.0):
     - GoogleAppUtilities (~> 1)
     - GoogleAuthUtilities (~> 1)
@@ -15,18 +43,29 @@ PODS:
   - GoogleSymbolUtilities (1.0.0)
   - GoogleUtilities (1.0.1):
     - GoogleSymbolUtilities (~> 1.0)
+  - gtm-http-fetcher (1.0.141)
+  - gtm-oauth2 (1.0.126):
+    - gtm-http-fetcher (~> 1.0.141)
 
 DEPENDENCIES:
-  - googleplus-ios-sdk
-  - GoogleSignIn
+  - Google-API-Client/Calendar
+  - Google/CloudMessaging
+  - Google/SignIn
+  - gtm-oauth2
 
 SPEC CHECKSUMS:
+  GGLInstanceID: 3f2a20acbb91408d45a5696b7722bf44cb410e0b
+  Google: 875f5a8ade86dd02e36586e4a54814843938c7f6
+  Google-API-Client: cb712cf122f1d7fda966de4c2bc551324573366c
   GoogleAppUtilities: c01c6a5671e9da8b9d690fdaec5959d6c2aac699
   GoogleAuthUtilities: 049ffd3a297cdffd271451b82fd4e75304f15ef3
+  GoogleCloudMessaging: 0d64d357dd8db2b6f6a3bd63301b04dd556320f9
+  GoogleInterchangeUtilities: fe088bea8c936218e52324a004d279c4491b9d65
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
-  googleplus-ios-sdk: 065d9135061a5f84c07656a68ced48336408fe35
   GoogleSignIn: c45d8d1a873784a3283b4f47f331dc06d8a727b6
   GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
+  gtm-http-fetcher: 6d4617e7d343b6e4c082b777541c334eb6f5d81e
+  gtm-oauth2: 2a18b824e4f8a02df6cfe987beb59ae9d9697f9d
 
 COCOAPODS: 0.38.0

@@ -8,7 +8,7 @@
 
 #import "ZPAZeppaCalendarSingleton.h"
 //#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
+//#import <GooglePlus/GooglePlus.h>
 #import "GTLCalendar.h"
 #import "ZPACalendarModel.h"
 #import "ZPAUserDefault.h"

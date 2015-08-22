@@ -7,15 +7,15 @@ link_with 'Zeppa', 'ZeppaTests'
 target :Zeppa do
 
     # pod 'Google'
-    # pod 'Google-API-Client'
+    pod 'Google-API-Client/Calendar'
     # pod 'Google-API-Client/Calendar'
     # pod 'Google-API-Client/Plus'
 
-    # pod 'Google/SignIn'
-    # pod 'GoogleSignIn'
+    pod 'Google/CloudMessaging'
+    pod 'Google/SignIn'
+    pod 'gtm-oauth2'
     # pod 'Google/Calendar'
-    pod 'GoogleSignIn'
-    pod 'googleplus-ios-sdk'
+#    pod 'GoogleSignIn'
 
     xcodeproj '/Users/DrunkWithFunk21/Workspace/XCode/Zeppa-iOS/Zeppa.xcodeproj'
 
@@ -24,16 +24,17 @@ end
 target :ZeppaTests  do
     
     # pod 'Google'
-    # pod 'Google-API-Client'
+    pod 'Google-API-Client/Calendar'
     # pod 'Google-API-Client/Calendar'
     # pod 'Google-API-Client/Plus'
     
-    # pod 'Google/SignIn'
+    pod 'Google/CloudMessaging'
+    pod 'Google/SignIn'
+    pod 'gtm-oauth2'
     # pod 'GoogleSignIn'
     # pod 'Google/Calendar'
-    pod 'GoogleSignIn'
-    pod 'googleplus-ios-sdk'
-    
+#    pod 'GoogleSignIn'
+
     xcodeproj '/Users/DrunkWithFunk21/Workspace/XCode/Zeppa-iOS/Zeppa.xcodeproj'
     
 end

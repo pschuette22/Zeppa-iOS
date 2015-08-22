@@ -7,7 +7,7 @@
 //
 
 #import "ZPAAppDelegate.h"
-#import <GooglePlus/GooglePlus.h>
+#import <Google/SignIn.h>
 #import "ZPASplitVC.h"
 #import "ZPADeviceInfo.h"
 #import "ZPANotificationSingleton.h"
@@ -37,6 +37,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
+    NSError* configureError;
+    [[GGLContext sharedInstance] configureWithError: &configureError];
+    
     
     // Override point for customization after application launch.
     id rootVC = self.window.rootViewController;
@@ -51,8 +54,6 @@
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     [[UISwitch appearance]setOnTintColor:[UIColor colorWithRed:10.0f/255.0 green:210.0f/255.0 blue:255.0f/255.0 alpha:1.0]];
-    
-    
     
     
     // Register for user notifications in iOS 8 or later
@@ -84,6 +85,13 @@
     
 
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [[GIDSignIn sharedInstance] handleURL:url
+                               sourceApplication:sourceApplication
+                                      annotation:annotation];
 }
 
 
@@ -125,14 +133,6 @@
         NSLog(@"Did dispatch ");
     }
 
-    // This works only if the app started the GCM service
-//    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
-    // Handle the received message
-    // [START_EXCLUDE]
-//    [[NSNotificationCenter defaultCenter] postNotificationName:_messageKey
-//                                                        object:nil
-//                                                      userInfo:userInfo];
-    // [END_EXCLUDE]
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
@@ -140,15 +140,7 @@
     NSLog(@"Notification received - with handler: %@", userInfo);
     [[ZPANotificationDelegate sharedObject] doNotificationPreprocessing:userInfo];
     
-    // This works only if the app started the GCM service
-//    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
-    // Handle the received message
-    // Invoke the completion handler passing the appropriate UIBackgroundFetchResult value
-    // [START_EXCLUDE]
-//    [[NSNotificationCenter defaultCenter] postNotificationName:_messageKey
-//                                                        object:nil
-//                                                      userInfo:userInfo];
-    // [END_EXCLUDE]
+    
     if(handler != NULL)
         handler(UIBackgroundFetchResultNewData);
     
@@ -240,16 +232,10 @@
     ///Store the logged in user object in singleton
     [ZPAAppData sharedAppData].loggedInUser = user;
     
-    if ([self shouldProceedToMainInterface]) {
         ///Show Main Interface
-        ZPASplitVC *splitVC = [self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"ZPASplitVC"];
-        self.window.rootViewController = splitVC;
-    }
-    else{
-        ///Do other stuffs required before showing Main Interface
-        
-        
-    }
+    ZPASplitVC *splitVC = [self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"ZPASplitVC"];
+    self.window.rootViewController = splitVC;
+
 }
 
 /*

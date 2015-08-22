@@ -71,15 +71,15 @@ static ZPANotificationDelegate *notificationDelegate = nil;
                 
                 ZPAFetchNotificationOnAuth *fetchTask = [[ZPAFetchNotificationOnAuth alloc] initWithNotificationId:notificationId];
                 
-                if([ZPAAuthenticatonHandler isAuthValid:[ZPAAuthenticatonHandler sharedAuth].auth]){
-                    // auth is Valid so fetch notification info
-                    self.runningTasks+=1;
-                    [fetchTask execute];
-                } else {
-                    
-                    [self.pendingNotifications addObject:fetchTask];
-                    [[ZPAAuthenticatonHandler sharedAuth] signInWithGooglePlus];
-                }
+//                if([ZPAAuthenticatonHandler isAuthValid:[ZPAAuthenticatonHandler sharedAuth].auth]){
+//                    // auth is Valid so fetch notification info
+//                    self.runningTasks+=1;
+//                    [fetchTask execute];
+//                } else {
+//                    
+//                    [self.pendingNotifications addObject:fetchTask];
+//                    [[ZPAAuthenticatonHandler sharedAuth] signInWithGooglePlus];
+//                }
                 //if not create handler for when it is
                 
                 //if so, fetch notification and objects

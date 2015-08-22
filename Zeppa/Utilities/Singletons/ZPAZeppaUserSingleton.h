@@ -29,7 +29,6 @@
 
 @interface ZPAZeppaUserSingleton : NSObject
 
-@property (nonatomic,strong)id<loginErrorDelegate>delegate;
 
 @property (strong,readonly) GTLServiceZeppauserendpoint *zeppaUserService;
 

@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import <GooglePlus/GooglePlus.h>
-#import "GoogleOAuth.h"
+#import <Google/SignIn.h>
 #import "ZPAMyZeppaUser.h"
 #import "ZPAAuthenticatonHandler.h"
 
@@ -20,7 +19,7 @@
 
 @protocol ZPALoginVCDelegate;
 
-@interface ZPALoginVC : UIViewController
+@interface ZPALoginVC : UIViewController <GIDSignInUIDelegate>
 
 @property (nonatomic, assign)id<ZPALoginVCDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity_Loading;

@@ -12,10 +12,10 @@
 
 // turn off logging when deployed
 const BOOL DO_LOGGING = YES;
-const int LABEL_COUNT = 2;
+const int LABEL_COUNT = 1;
 
 const NSString * const kLabelNames[] = {
-    @"GoogleOAuth", @"Bar"
+    @"GoogleOAuth" //, @"FooBar"
 };
 
 
