@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GTLServiceZeppausertouserrelationshipendpoint.h"
+#import "GTLServiceZeppaclientapi.h"
 
 #import "ZPAUserProfileCell.h"
 #import "ZPAMinglersEventCell.h"
@@ -19,7 +19,7 @@
 @property(nonatomic,strong)ZPAUserProfileCell *userProfileCell;
 @property(nonatomic,strong)ZPAMinglersEventCell *minglerEventCell;
 
-@property (nonatomic, strong)GTLServiceZeppausertouserrelationshipendpoint *zeppaUserToUserRelationship;
+@property (nonatomic, strong)GTLServiceZeppaclientapi *zeppaUserToUserRelationship;
 
 
 

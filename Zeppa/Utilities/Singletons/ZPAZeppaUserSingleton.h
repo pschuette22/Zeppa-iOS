@@ -11,14 +11,13 @@
 #import "ZPAMyZeppaUser.h"
 #import "ZPAAuthenticatonHandler.h"
 
-#import "GTLZeppauserendpointZeppaUser.h"
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
-#import "GTLZeppauserendpointKey.h"
-#import "GTLZeppauserinfoendpointKey.h"
-#import "GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaUser.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiKey.h"
+#import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
 
-#import "GTLServiceZeppauserendpoint.h"
-#import "GTLQueryZeppauserendpoint.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 
 @protocol loginErrorDelegate <NSObject>
@@ -30,7 +29,7 @@
 @interface ZPAZeppaUserSingleton : NSObject
 
 
-@property (strong,readonly) GTLServiceZeppauserendpoint *zeppaUserService;
+@property (strong,readonly) GTLServiceZeppaclientapi *zeppaUserService;
 
 @property (nonatomic, weak) GTMOAuth2Authentication *auth;
 @property (nonatomic, strong) NSMutableArray *heldUserMediators;
@@ -46,7 +45,7 @@ typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, 
 
 -(void)clear;
 -(NSArray *)getZeppaMinglerUsers;
--(void)addDefaultZeppaUserMediatorWithUserInfo:(GTLZeppauserinfoendpointZeppaUserInfo *)userInfo andRelationShip:(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *)relationShip;
+-(void)addDefaultZeppaUserMediatorWithUserInfo:(GTLZeppaclientapiZeppaUserInfo *)userInfo andRelationShip:(GTLZeppaclientapiZeppaUserToUserRelationship *)relationShip;
 -(void)removeHeldMediatorById:(long long)userId;
 -(id)getZPAUserMediatorById:(long long)userId;
 

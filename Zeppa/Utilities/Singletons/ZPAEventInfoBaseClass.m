@@ -12,11 +12,11 @@
 
 @implementation ZPAEventInfoBaseClass
 
--(void)executeInsertZeppaEventWithAuth:(GTLZeppaeventendpointZeppaEvent *)zeppaEvent withCompletion:(getZeppaEventInfoOject)completion{
+-(void)executeInsertZeppaEventWithAuth:(GTLZeppaclientapiZeppaEvent *)zeppaEvent withCompletion:(getZeppaEventInfoOject)completion{
     
-    GTLQueryZeppaeventendpoint *insertZeppaEventTask = [GTLQueryZeppaeventendpoint queryForInsertZeppaEventWithObject:zeppaEvent];
+    GTLQueryZeppaclientapi *insertZeppaEventTask = [GTLQueryZeppaclientapi queryForInsertZeppaEventWithObject:zeppaEvent idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaEventService executeQuery:insertZeppaEventTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventendpointZeppaEvent * event, NSError *error) {
+    [self.zeppaEventService executeQuery:insertZeppaEventTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEvent * event, NSError *error) {
         //
         
         if(error){
@@ -33,7 +33,7 @@
 }
 
 -(void)removeZeppaEventWithIdentifier:(long long) identifier{
-    GTLQueryZeppaeventendpoint *removeZeppaEvent = [GTLQueryZeppaeventendpoint queryForRemoveZeppaEventWithIdentifier:identifier];
+    GTLQueryZeppaclientapi *removeZeppaEvent = [GTLQueryZeppaclientapi queryForRemoveZeppaEventWithIdentifier:identifier idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [self.zeppaEventService executeQuery:removeZeppaEvent completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         //
         if(error){
@@ -54,13 +54,13 @@
  NSString *ordering = <ordering-string>;
  NSNumber *limit = <limit-integer>;
  
- GTLQueryZeppaeventendpoint *eventQuery = [GTLQueryZeppaeventendpoint queryForListZeppaEvent];
+ GTLQueryZeppaclientapi *eventQuery = [GTLQueryZeppaclientapi queryForListZeppaEvent];
  [eventQuery setFilter: filter];
  [eventQuery setCursor: cursor];
  [eventQuery setOrdering: ordering];
  [eventQuery setLimit:[limit integerValue]];
  
- [[self zeppaEventServiceWithAuth: auth] executeQuery:eventQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventendpointCollectionResponseZeppaEvent *response, NSError *error) {
+ [[self zeppaEventServiceWithAuth: auth] executeQuery:eventQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaEvent *response, NSError *error) {
  //
  if(error){
  // error
@@ -87,9 +87,9 @@
  */
 -(void)fetchZeppaEventWithIdentifier:(long long)identifier withCompletion:(getZeppaEventInfoOject)completion{
     
-    GTLQueryZeppaeventendpoint *zeppaEventQuery = [GTLQueryZeppaeventendpoint queryForGetZeppaEventWithIdentifier:identifier];
+    GTLQueryZeppaclientapi *zeppaEventQuery = [GTLQueryZeppaclientapi queryForGetZeppaEventWithIdentifier:identifier idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-        [self.zeppaEventService executeQuery:zeppaEventQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventendpointZeppaEvent *event, NSError *error) {
+        [self.zeppaEventService executeQuery:zeppaEventQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEvent *event, NSError *error) {
         //
         if(error) {
             // error
@@ -103,14 +103,13 @@
     
 }
 
--(GTLServiceZeppaeventendpoint *)zeppaEventService{
+-(GTLServiceZeppaclientapi *)zeppaEventService{
     
-    static GTLServiceZeppaeventendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceZeppaeventendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 @end

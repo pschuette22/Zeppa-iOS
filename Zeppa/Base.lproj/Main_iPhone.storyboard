@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="4q0-fU-bha">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="4q0-fU-bha">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -326,7 +326,7 @@
             <objects>
                 <viewController storyboardIdentifier="DayFlowViewController" id="Mhl-7T-jJh" customClass="DFDatePickerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5JE-ig-gWG">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </view>
@@ -352,7 +352,7 @@
             <objects>
                 <viewController storyboardIdentifier="MonthFlowViewController" id="JLN-Ew-kxa" customClass="MFDatePickerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1Wp-HI-asB">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="0.8980392157" green="0.8980392157" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -621,7 +621,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAAddEventVC" automaticallyAdjustsScrollViewInsets="NO" id="XTu-Tg-5O2" customClass="ZPAAddEventVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="u6W-Dc-lXC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" id="Ghu-oP-obQ">
@@ -658,7 +658,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Casual" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zkZ-ZT-qjr">
-                                                        <rect key="frame" x="80" y="0.0" width="232" height="32"/>
+                                                        <rect key="frame" x="80" y="0.0" width="232.00000016442658" height="32"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1698,7 +1698,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPARequsetMinglersVC" id="rDs-sa-w8k" customClass="ZPARequsetMinglersVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Win-KU-ciH">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="N25-bH-Jsm">
@@ -1812,7 +1812,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAUserProfileVC" id="l3p-fQ-2W2" customClass="ZPAUserProfileVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kDc-7P-0nV">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0Fo-HU-xdC">
@@ -2336,7 +2336,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPASettingsVC" id="TMs-bJ-fMj" customClass="ZPASettingsVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="12D-58-cxC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EXx-GB-VWr">
@@ -3142,7 +3142,7 @@
                                                 <color key="backgroundColor" red="0.8980392157" green="0.8980392157" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
                                             <view contentMode="scaleToFill" id="S7P-dw-cKw">
-                                                <rect key="frame" x="10" y="110.00000189875691" width="276" height="1"/>
+                                                <rect key="frame" x="10" y="110.00000330364716" width="276" height="1"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                                 <color key="backgroundColor" red="0.8980392157" green="0.8980392157" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
@@ -3477,7 +3477,7 @@
             <objects>
                 <viewController id="vwR-Ol-uca" customClass="ZPARepostEventVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBn-Nj-wZt">
-                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" id="sai-u4-117">
@@ -3851,7 +3851,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAMapViewController" id="CkV-7Y-I04" customClass="ZPAMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fCU-LE-WqT">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="lCt-4g-Ger">
@@ -3875,7 +3875,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAAddInvitesVC" automaticallyAdjustsScrollViewInsets="NO" id="wYP-Ly-F8d" customClass="ZPAAddInvitesVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="48C-NX-1TH">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nwk-SP-eGP">
@@ -3971,7 +3971,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAMinglersProfileVC" id="0fq-RI-IxC" customClass="ZPAUserProfileVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OVc-Ni-8BK">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="gLW-5l-IgT">
@@ -4219,7 +4219,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAInvitedUserVC" id="cAV-7u-Nf6" customClass="ZPAInvitedUserVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vdU-1c-KYQ">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" id="FAY-qi-bwl">
@@ -4277,7 +4277,7 @@
             <objects>
                 <viewController storyboardIdentifier="ZPAInvitedUserProfileVC" id="E7j-g5-8L2" customClass="ZPAUserProfileVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Fij-ex-dZu">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0yL-Uc-LlL">
@@ -4540,11 +4540,6 @@
         <image name="logo_white.png" width="233" height="61"/>
         <image name="small_circle_blue.png" width="20" height="20"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="tez-YY-Dqa"/>
         <segue reference="NKt-XD-6Vl"/>

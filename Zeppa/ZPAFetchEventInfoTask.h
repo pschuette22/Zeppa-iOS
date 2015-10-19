@@ -9,28 +9,26 @@
 #import <Foundation/Foundation.h>
 
 #import "ZPAAuthenticatonHandler.h"
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
-#import "GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship.h"
 
-#import "GTLServiceZeppaeventendpoint.h"
-#import "GTLQueryZeppaeventendpoint.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 #import "ZPAZeppaEventSingleton.h"
 
 @interface ZPAFetchEventInfoTask : NSObject
 
-@property (strong, readonly) GTLServiceZeppaeventendpoint *eventService;
-@property (strong, readonly) GTLServiceZeppaeventtouserrelationshipendpoint *relationshipService;
+@property (strong, readonly) GTLServiceZeppaclientapi *eventService;
+@property (strong, readonly) GTLServiceZeppaclientapi *relationshipService;
 @property (nonatomic, weak) GTMOAuth2Authentication *auth;
 
 @property (nonatomic, strong) NSNumber* eventId;
 @property (nonatomic, strong) NSNumber* userId;
 
-@property (nonatomic, retain) GTLZeppaeventendpointZeppaEvent *zeppaEvent;
-@property (nonatomic, retain) GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *relationship;
+@property (nonatomic, retain) GTLZeppaclientapiZeppaEvent *zeppaEvent;
+@property (nonatomic, retain) GTLZeppaclientapiZeppaEventToUserRelationship *relationship;
 
 typedef void (^FetchZeppaEventCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
 

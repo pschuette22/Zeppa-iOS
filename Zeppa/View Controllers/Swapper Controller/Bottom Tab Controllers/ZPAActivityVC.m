@@ -142,7 +142,7 @@
 //    
 //    ZPAEventDetailVC *event = [[_eventDetailVc viewControllers] objectAtIndex:0];
 //    
-//    for (GTLZeppanotificationendpointZeppaNotification *notification in _arrNotifications) {
+//    for (GTLZeppaclientapiZeppaNotification *notification in _arrNotifications) {
 //        
 //       [notificationEventArr addObject:[[ZPAZeppaEventSingleton sharedObject]getEventById: [notification.eventId longLongValue]]];
 //    }
@@ -164,7 +164,7 @@
 //****************************************************
 -(void)onClickActivity:(NSInteger )index{
     
-    GTLZeppanotificationendpointZeppaNotification * notification = [_arrNotifications objectAtIndex:index];
+    GTLZeppaclientapiZeppaNotification * notification = [_arrNotifications objectAtIndex:index];
     
     switch ([[ZPANotificationSingleton sharedObject]getNotificationTypeOrder:notification]) {
         case 0: //Mingle Request
@@ -184,7 +184,7 @@
         {
             ZPAUserProfileVC *userProfile = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAUserProfileVC"];
             
-            ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.userId longLongValue]];
+            ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];
             
             NSString * str = [NSString stringWithFormat:@"%@ %@", defaultZeppaUserInfo.zeppaUserInfo.givenName,defaultZeppaUserInfo.zeppaUserInfo.familyName];
             
@@ -344,7 +344,7 @@
 //
 //}
 
--(void)showEventDetailViewController:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(void)showEventDetailViewController:(GTLZeppaclientapiZeppaNotification *)notification{
     
         _eventDetailVc = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
     

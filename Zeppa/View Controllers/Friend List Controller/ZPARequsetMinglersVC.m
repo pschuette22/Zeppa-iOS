@@ -227,16 +227,16 @@
 -(void)inserZeppaUserToUserRelationship:(ZPADefaulZeppatUserInfo *)userInfo{
     
     
-    GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationship = [[GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship alloc] init];
+    GTLZeppaclientapiZeppaUserToUserRelationship *relationship = [[GTLZeppaclientapiZeppaUserToUserRelationship alloc] init];
     
     [relationship setCreatorId:[[ZPAZeppaUserSingleton sharedObject] userId]];
     [relationship setSubjectId:userInfo.userId];
     [relationship setRelationshipType:@"PENDING_REQUEST"];
     
     
-    GTLQueryZeppausertouserrelationshipendpoint *insertU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForInsertZeppaUserToUserRelationshipWithObject:relationship];
+    GTLQueryZeppaclientapi *insertU2URelationshipTask = [GTLQueryZeppaclientapi queryForInsertZeppaUserToUserRelationshipWithObject:relationship idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserToUserRelationship executeQuery:insertU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *response, NSError *error) {
+    [self.zeppaUserToUserRelationship executeQuery:insertU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserToUserRelationship *response, NSError *error) {
         //
         
         if(error){
@@ -261,15 +261,15 @@
 
 -(void)updateUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
     
-    GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationship = [[GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship alloc] init];
+    GTLZeppaclientapiZeppaUserToUserRelationship *relationship = [[GTLZeppaclientapiZeppaUserToUserRelationship alloc] init];
     
      relationship = userInfo.relationship;
     [relationship setRelationshipType:@"MINGLING"];
     
     
-    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForUpdateZeppaUserToUserRelationshipWithObject:relationship];
+    GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForUpdateZeppaUserToUserRelationshipWithObject:relationship idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship  *response, NSError *error) {
+    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserToUserRelationship  *response, NSError *error) {
         //
         
         if(error){
@@ -295,9 +295,9 @@
 -(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
     
 
-    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForRemoveZeppaUserToUserRelationshipWithRelationshipId:[userInfo.relationship.identifier longLongValue] userId:[ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier.longLongValue];
+    GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForRemoveZeppaUserToUserRelationshipWithRelationshipId:[userInfo.relationship.identifier longLongValue]  idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship  *response, NSError *error) {
+    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserToUserRelationship  *response, NSError *error) {
         //
         
         if(error){
@@ -319,15 +319,13 @@
 }
 
 
--(GTLServiceZeppausertouserrelationshipendpoint *)zeppaUserToUserRelationship{
+-(GTLServiceZeppaclientapi *)zeppaUserToUserRelationship{
     
-    static GTLServiceZeppausertouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceZeppausertouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

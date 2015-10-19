@@ -60,7 +60,7 @@ static ZPADefaulZeppatUserInfo *defaultUserInfo = nil;
 }
 
 
--(void)setUserRelationship:(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *)relationship{
+-(void)setUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relationship{
     self.relationship = relationship;
 }
 

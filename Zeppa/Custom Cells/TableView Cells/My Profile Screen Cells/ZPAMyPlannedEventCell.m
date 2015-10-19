@@ -9,7 +9,7 @@
 #import "ZPAMyPlannedEventCell.h"
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPAZeppaEventSingleton.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 @implementation ZPAMyPlannedEventCell
 

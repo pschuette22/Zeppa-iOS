@@ -7,7 +7,7 @@
 //
 
 #import "ZPAActivityNotificationCell.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 @implementation ZPAActivityNotificationCell
 
@@ -60,7 +60,7 @@
 }
 
 
--(void)showDetailOncell:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(void)showDetailOncell:(GTLZeppaclientapiZeppaNotification *)notification{
     
     
    // id zeppaUser = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];

@@ -11,12 +11,12 @@
 
 #import "BRStaticHelper.h"
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLQueryZeppaeventendpoint.h"
-#import "GTLServiceZeppaeventendpoint.h"
-#import "GTLEventtagendpointEventTag.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLZeppaclientapiEventTag.h"
 
-#import "GTLEventtagfollowendpointEventTagFollow.h"
+#import "GTLZeppaclientapiEventTagFollow.h"
 
 #import "ZPAAuthenticatonHandler.h"
 
@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     testArray = [NSMutableArray array];
     counter = 1;
     
-    for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
         UIButton *newButton =[[UIButton alloc]init];
         NSString *string =tag.tagText;
@@ -526,7 +526,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     }
     
     //Check tag is already is exist or not.
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
         
         if ([titleString.uppercaseString isEqualToString:tag.tagText.uppercaseString]) {
             
@@ -535,10 +535,10 @@ typedef NS_ENUM(NSInteger, selectedBtn){
             
         }
     }
-    GTLEventtagendpointEventTag *tag = [[GTLEventtagendpointEventTag alloc]init];
+    GTLZeppaclientapiEventTag *tag = [[GTLZeppaclientapiEventTag alloc]init];
         tag.tagText = titleString;
         tag.ownerId = [[ZPAZeppaEventTagSingleton sharedObject]getCurrentUserId];
-      [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLEventtagendpointEventTag *tag, NSError *error) {
+      [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLZeppaclientapiEventTag *tag, NSError *error) {
           [_tagsArray addObject:tag];
         
        }];
@@ -794,7 +794,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     if(sender.backgroundColor == [UIColor whiteColor]){
         
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
             
         if ([sender.titleLabel.text isEqualToString:tag.tagText]) {
             
@@ -819,7 +819,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         [sender setBackgroundColor:[UIColor whiteColor]];
         [sender setTitleColor:[ZPAStaticHelper zeppaThemeColor] forState:UIControlStateNormal];
         
-        for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+        for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
             
             if ([sender.titleLabel.text isEqualToString:tag.tagText]) {
                 [_eventTagIdsArray removeObject:tag.identifier];
@@ -838,11 +838,11 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 -(void )executeZeppaTagFollowApi:(UIButton *)tagButton{
     
     
-    GTLEventtagfollowendpointEventTagFollow * tagFollow = [[GTLEventtagfollowendpointEventTagFollow alloc]init];
+    GTLZeppaclientapiEventTagFollow * tagFollow = [[GTLZeppaclientapiEventTagFollow alloc]init];
     
     
     
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
         if ([tag.tagText.uppercaseString isEqualToString:tagButton.titleLabel.text.uppercaseString]) {
             
             if ([_defaultTagsForUser isFollowing:tag ] == NO ){
@@ -927,7 +927,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     ZPAMyZeppaEvent * myZeppaEvent = [[ZPAMyZeppaEvent alloc]init];
     UIAlertView *alert;
     
-    GTLZeppaeventendpointZeppaEvent *zeppaEvent = [[GTLZeppaeventendpointZeppaEvent alloc] init];
+    GTLZeppaclientapiZeppaEvent *zeppaEvent = [[GTLZeppaclientapiZeppaEvent alloc] init];
     
    
     
@@ -976,9 +976,9 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         [alert show];
 
     
-    GTLQueryZeppaeventendpoint *insertZeppaEventTask = [GTLQueryZeppaeventendpoint queryForInsertZeppaEventWithObject:zeppaEvent];
+    GTLQueryZeppaclientapi *insertZeppaEventTask = [GTLQueryZeppaclientapi queryForInsertZeppaEventWithObject:zeppaEvent idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [[self zeppaEventService] executeQuery:insertZeppaEventTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventendpointZeppaEvent * event, NSError *error) {
+    [[self zeppaEventService] executeQuery:insertZeppaEventTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEvent * event, NSError *error) {
         //
         
         if(error){
@@ -1016,16 +1016,15 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 
 // Create Zeppa Event service
--(GTLServiceZeppaeventendpoint *) zeppaEventService {
-    static GTLServiceZeppaeventendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaEventService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppaeventendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
     // Set Auth that is held in the delegate
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
         
     
     return service;
@@ -1044,7 +1043,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 }
 
 
--(BOOL)isValidEvent:(GTLZeppaeventendpointZeppaEvent *)event{
+-(BOOL)isValidEvent:(GTLZeppaclientapiZeppaEvent *)event{
     
     return [self isValidTimeWithStartTime:[event.start longLongValue] andEndTime:[event.end longLongValue]] && [ZPAStaticHelper isValidString:event.title] && ([ZPAStaticHelper isValidString:event.displayLocation] || [ZPAStaticHelper isValidString:event.mapsLocation]);
 }

@@ -17,17 +17,15 @@
 #import "Downloader.h"
 
 
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 #import "GTLCalendarCalendarListEntry.h"
 #import "GTLCalendar.h"
-#import "GTLQueryZeppauserendpoint.h"
-#import "GTLServiceZeppauserendpoint.h"
-#import "GTLZeppauserendpointZeppaUser.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLZeppaclientapiZeppaUser.h"
 
-#import "GTLServicePhotoinfoendpoint.h"
-#import "GTLQueryPhotoinfoendpoint.h"
-#import "GTLPhotoinfoendpoint.h"
-#import "GTLPhotoinfoendpointPhotoInfo.h"
+#import "GTLZeppaclientapi.h"
+#import "GTLZeppaclientapiPhotoInfo.h"
 #import <Google/SignIn.h>
 
 
@@ -59,8 +57,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 @property (nonatomic, strong)NSString *imageUrl;
 @property (nonatomic, strong)NSMutableArray *tagsArray;
 @property (nonatomic, assign)CalendarFecthedStatus calendarFetchStatus;
-@property (readonly) GTLServiceZeppauserendpoint *zeppaUserService;
-@property (readonly) GTLServicePhotoinfoendpoint *photoService;
+@property (readonly) GTLServiceZeppaclientapi *service;
 
 @end
 
@@ -95,7 +92,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
        _tagsArray = [[[ZPAZeppaEventTagSingleton sharedObject] getMyTags] mutableCopy];
         _view_TagContainer.hidden = (_tagsArray.count>0)?NO:YES;
         
-        for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+        for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
             
             [self showTagButtonWithTitleString:tag.tagText];
            
@@ -389,7 +386,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
   
     UIButton *deleteButton = (UIButton *)[delectButtonBaseView viewWithTag:TAGS_BUTTON_TAG];
     
-    for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
         if ([tag.tagText isEqualToString:deleteButton.titleLabel.text]) {
             
@@ -632,11 +629,11 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 ///Create new Zeppa user
 -(void)callNewZeppaUserApi{
     
-     NSString * phoneStr = [self getPrimaryUnformattedNumber:_contactNo_Txt.text];
+    NSString * phoneStr = [self getPrimaryUnformattedNumber:_contactNo_Txt.text];
     
     NSLog(@"%@",_user.endPointUser.userInfo.imageUrl);
-    GTLZeppauserendpointZeppaUser *zeppaUser = [[GTLZeppauserendpointZeppaUser alloc] init];
-    GTLZeppauserendpointZeppaUserInfo *userInfo = [[GTLZeppauserendpointZeppaUserInfo alloc] init];
+    GTLZeppaclientapiZeppaUser *zeppaUser = [[GTLZeppaclientapiZeppaUser alloc] init];
+    GTLZeppaclientapiZeppaUserInfo *userInfo = [[GTLZeppaclientapiZeppaUserInfo alloc] init];
     
     [userInfo setGivenName:_giveName_Txt.text];
     [userInfo setFamilyName:_familyName_Txt.text];
@@ -645,12 +642,12 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     [userInfo setGoogleAccountEmail:_user.endPointUser.userInfo.googleAccountEmail];
     [zeppaUser setUserInfo:userInfo];
     
-    GTLQueryZeppauserendpoint *insertZeppaUser = [GTLQueryZeppauserendpoint queryForInsertZeppaUserWithObject:zeppaUser];
+    GTLQueryZeppaclientapi *insertZeppaUser = [GTLQueryZeppaclientapi queryForInsertZeppaUserWithObject:zeppaUser idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     
     typeof(self) __weak weakSelf = self;
     
-    [self.zeppaUserService executeQuery:insertZeppaUser completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserendpointZeppaUser *response, NSError *error) {
+    [self.zeppaUserService executeQuery:insertZeppaUser completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUser *response, NSError *error) {
         //
         
         if(error) {
@@ -661,7 +658,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
             
         } else if (response.identifier) {
             
-            GTLZeppauserendpointZeppaUserInfo *responseInfo= [response userInfo];
+            GTLZeppaclientapiZeppaUserInfo *responseInfo= [response userInfo];
             
             if (responseInfo) {
                 ZPAMyZeppaUser *user = [[ZPAMyZeppaUser alloc]init];
@@ -688,8 +685,8 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     
     NSString * phoneStr = [self getPrimaryUnformattedNumber:_contactNo_Txt.text];
     
-    GTLZeppauserendpointZeppaUser *zeppaUser = [ZPAAppData sharedAppData].loggedInUser.endPointUser;
-    GTLZeppauserendpointZeppaUserInfo *userInfo = [zeppaUser userInfo];
+    GTLZeppaclientapiZeppaUser *zeppaUser = [ZPAAppData sharedAppData].loggedInUser.endPointUser;
+    GTLZeppaclientapiZeppaUserInfo *userInfo = [zeppaUser userInfo];
     
     [userInfo setGivenName:_giveName_Txt.text];
     [userInfo setFamilyName:_familyName_Txt.text];
@@ -698,9 +695,9 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     
     // Cannot update email
     
-    GTLQueryZeppauserendpoint *updateZeppaUserTask = [GTLQueryZeppauserendpoint queryForUpdateZeppaUserWithObject:zeppaUser];
+    GTLQueryZeppaclientapi *updateZeppaUserTask = [GTLQueryZeppaclientapi queryForUpdateZeppaUserWithObject:zeppaUser idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserService executeQuery:updateZeppaUserTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserendpointZeppaUser *response, NSError *error) {
+    [self.zeppaUserService executeQuery:updateZeppaUserTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUser *response, NSError *error) {
         //
         
         if(error) {
@@ -724,17 +721,15 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     }];
 }
 // Create ZeppaUser service
--(GTLServiceZeppauserendpoint *) zeppaUserService {
-    static GTLServiceZeppauserendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaUserService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppauserendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
     // Set Auth that is held in the delegate
-    
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     
     return service;
 }
@@ -797,19 +792,19 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 
 -(void)callProfilePhotoApiWithBlobKey:(NSString *)blobKey andservingUrl:(NSString *)url{
     
-    GTLPhotoinfoendpointPhotoInfo *photoInfo = [[GTLPhotoinfoendpointPhotoInfo alloc]init];
+    GTLZeppaclientapiPhotoInfo *photoInfo = [[GTLZeppaclientapiPhotoInfo alloc]init];
     
     [photoInfo setBlobKey:blobKey];
     [photoInfo setUrl:url];
     [photoInfo setOwnerEmail:_email_Txt.text];
     
     
-    GTLQueryPhotoinfoendpoint *query = [GTLQueryPhotoinfoendpoint queryForInsertPhotoInfoWithObject:photoInfo];
+    GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForInsertPhotoInfoWithObject:photoInfo idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [self.photoService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
        
         if (!error && object) {
-            GTLPhotoinfoendpointPhotoInfo *photo = object;
+            GTLZeppaclientapiPhotoInfo *photo = object;
             _imageUrl = photo.url;
             [self hideActivity];
             [ZPAStaticHelper showAlertWithTitle:nil andMessage:@"Profile Photo uploaded successfully"];
@@ -818,17 +813,16 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     }];
 }
 
--(GTLServicePhotoinfoendpoint *) photoService {
+-(GTLServiceZeppaclientapi *) photoService {
     
-    static GTLServicePhotoinfoendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServicePhotoinfoendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
         // Set Auth that is held in the delegate
     
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     
     return service;
 }

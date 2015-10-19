@@ -43,7 +43,7 @@
     
     //_relationships = [NSMutableArray array];
     NSMutableArray *attendingUserIds = [NSMutableArray array];
-    for (GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * relation in _relationships) {
+    for (GTLZeppaclientapiZeppaEventToUserRelationship * relation in _relationships) {
         if ([relation.isAttending boolValue]) {
             [attendingUserIds addObject:relation.userId];
         }

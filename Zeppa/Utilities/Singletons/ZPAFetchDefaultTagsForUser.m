@@ -26,9 +26,9 @@
     NSMutableArray * _tagIdsArray;
 }
 
--(BOOL)isFollowing:(GTLEventtagendpointEventTag *)tag{
+-(BOOL)isFollowing:(GTLZeppaclientapiEventTag *)tag{
     
-    for (GTLEventtagfollowendpointEventTagFollow *tagFollow in _followList) {
+    for (GTLZeppaclientapiEventTagFollow *tagFollow in _followList) {
         
         if ([tag.identifier isEqualToNumber: tagFollow.tagId]) {
             return YES;
@@ -55,12 +55,13 @@
     
     __weak typeof(self) weakSelf = self;
     
-    GTLQueryEventtagfollowendpoint *eventQuery = [GTLQueryEventtagfollowendpoint queryForListEventTagFollow];
+    GTLQueryZeppaclientapi *eventQuery = [GTLQueryZeppaclientapi queryForListEventTagFollowWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    
     [eventQuery setFilter:[NSString stringWithFormat:@"tagOwnerId == %lld && followerId == %lld",_userIdMingler,_userIdSelf]];
     [eventQuery setCursor: cursorValue];
     [eventQuery setLimit:[[NSNumber numberWithInt:25] integerValue]];
     
-    [self.evetTagFollowService executeQuery:eventQuery completionHandler:^(GTLServiceTicket *ticket, GTLEventtagfollowendpointCollectionResponseEventTagFollow *response, NSError *error) {
+    [self.evetTagFollowService executeQuery:eventQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseEventTagFollow *response, NSError *error) {
         //
         if(error){
             // error
@@ -85,22 +86,22 @@
 -(void)executeEventTagListQueryWithCursor:(NSString *)cursorValue {
     
     __weak typeof(self) weakSelf = self;
-    GTLQueryEventtagendpoint *tagQuery = [GTLQueryEventtagendpoint queryForListEventTag];
+    GTLQueryZeppaclientapi *tagQuery = [GTLQueryZeppaclientapi queryForListEventTagWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [tagQuery setFilter:[NSString stringWithFormat: @"userId == %lld",_userIdMingler]];
     [tagQuery setCursor: cursorValue];
     [tagQuery setOrdering:@"created desc"];
     [tagQuery setLimit:[[NSNumber numberWithInt:25] integerValue]];
     
     [self.evetTagService executeQuery:tagQuery
-                                     completionHandler:^(GTLServiceTicket *ticket, GTLEventtagendpointCollectionResponseEventTag *response, NSError *error) {
+                                     completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseEventTag *response, NSError *error) {
         if(error){
                                              
         }else if(response && response.items && response.items.count > 0){
                                             
-            for (GTLEventtagendpointEventTag *eventTag in response.items) {
+            for (GTLZeppaclientapiEventTag *eventTag in response.items) {
                 
-//                GTLEventtagfollowendpointEventTagFollow *follow = nil;
-//                for (GTLEventtagfollowendpointEventTagFollow *eventTagFollow in _followList) {
+//                GTLZeppaclientapiEventTagFollow *follow = nil;
+//                for (GTLZeppaclientapiEventTagFollow *eventTagFollow in _followList) {
 //                    if ([eventTag.identifier longLongValue] == [eventTagFollow.tagId longLongValue]) {
 //                        follow = eventTagFollow;
 //                       // break;
@@ -134,18 +135,18 @@
     
 }
 
-- (void) insertZeppaTagFollow:(GTLEventtagfollowendpointEventTagFollow *)tagFollow{
+- (void) insertZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow{
     
     
-    GTLEventtagfollowendpointEventTagFollow *follow = [[GTLEventtagfollowendpointEventTagFollow alloc] init];
+    GTLZeppaclientapiEventTagFollow *follow = [[GTLZeppaclientapiEventTagFollow alloc] init];
     
     [follow setTagId:tagFollow.tagId];
     [follow setTagOwnerId:tagFollow.tagOwnerId];
     [follow setFollowerId:tagFollow.followerId];
     
-    GTLQueryEventtagfollowendpoint *insertFollowTask = [GTLQueryEventtagfollowendpoint queryForInsertEventTagFollowWithObject:follow];
+    GTLQueryZeppaclientapi *insertFollowTask = [GTLQueryZeppaclientapi queryForInsertEventTagFollowWithObject:follow idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.evetTagFollowService executeQuery:insertFollowTask completionHandler:^(GTLServiceTicket *ticket, GTLEventtagfollowendpointEventTagFollow *response, NSError *error) {
+    [self.evetTagFollowService executeQuery:insertFollowTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiEventTagFollow *response, NSError *error) {
         //
         
         if(error){
@@ -160,10 +161,10 @@
     
 }
 
--(void)removeZeppaTagFollow:(GTLEventtagendpointEventTag *)tag{
+-(void)removeZeppaTagFollow:(GTLZeppaclientapiEventTag *)tag{
     
     long long tagFollowId = 0;
-    for (GTLEventtagfollowendpointEventTagFollow *followTag in _followList) {
+    for (GTLZeppaclientapiEventTagFollow *followTag in _followList) {
         if ([tag.identifier isEqualToNumber:followTag.tagId]) {
             tagFollowId = [followTag.identifier longLongValue];
             [self removeTagFollow:tagFollowId andWithfollowTag:followTag];
@@ -172,9 +173,9 @@
     }
    
 }
--(void)removeTagFollow:(long long)tagFollowId andWithfollowTag:(GTLEventtagfollowendpointEventTagFollow *)followTag{
+-(void)removeTagFollow:(long long)tagFollowId andWithfollowTag:(GTLZeppaclientapiEventTagFollow *)followTag{
     
-    GTLQueryEventtagfollowendpoint *removeFollowTask = [GTLQueryEventtagfollowendpoint queryForRemoveEventTagFollowWithIdentifier:tagFollowId];
+    GTLQueryZeppaclientapi *removeFollowTask = [GTLQueryZeppaclientapi queryForRemoveEventTagFollowWithIdentifier:tagFollowId idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [self.evetTagFollowService executeQuery:removeFollowTask completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         //
@@ -212,25 +213,23 @@
    
     
 }
--(GTLServiceEventtagfollowendpoint *)evetTagFollowService{
+-(GTLServiceZeppaclientapi *)evetTagFollowService{
     
-    static GTLServiceEventtagfollowendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceEventtagfollowendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }
--(GTLServiceEventtagendpoint *)evetTagService{
+-(GTLServiceZeppaclientapi *)evetTagService{
     
-    static GTLServiceEventtagendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceEventtagendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 @end

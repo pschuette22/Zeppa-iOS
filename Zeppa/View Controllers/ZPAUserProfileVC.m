@@ -20,7 +20,7 @@
 #import "ZPAMutualMinglerVC.h"
 #import "MBProgressHUD.h"
 
-#import "GTLEventtagfollowendpointEventTagFollow.h"
+#import "GTLZeppaclientapiEventTagFollow.h"
 
 
 #define TAGS_BASEVIEW_TAGVALUE 100
@@ -483,7 +483,7 @@ NSArray *minglerTagsArray;
     _counter = (minglerTagsArray.count>0)?1:0;
 
     
-    for (GTLEventtagendpointEventTag *tag in minglerTagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in minglerTagsArray) {
         [self showTagButtonWithTitleString:tag];
     }
 
@@ -512,7 +512,7 @@ NSArray *minglerTagsArray;
 ///*************************************************
 
 
--(void)showTagButtonWithTitleString:(GTLEventtagendpointEventTag *)tag{
+-(void)showTagButtonWithTitleString:(GTLZeppaclientapiEventTag *)tag{
     
     
     NSString *title =tag.tagText;
@@ -674,11 +674,11 @@ NSArray *minglerTagsArray;
 -(void )executeZeppaTagFollowApi:(UIButton *)tagButton{
     
     
-    GTLEventtagfollowendpointEventTagFollow * tagFollow = [[GTLEventtagfollowendpointEventTagFollow alloc]init];
+    GTLZeppaclientapiEventTagFollow * tagFollow = [[GTLZeppaclientapiEventTagFollow alloc]init];
     
     
     
-    for (GTLEventtagendpointEventTag * tag in minglerTagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in minglerTagsArray) {
         if ([tag.tagText.uppercaseString isEqualToString:tagButton.titleLabel.text.uppercaseString]) {
             
             if ([_defaultTagsForUser isFollowing:tag ] == NO ){
@@ -705,9 +705,9 @@ NSArray *minglerTagsArray;
 -(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
     
     
-    GTLQueryZeppausertouserrelationshipendpoint *updateU2URelationshipTask = [GTLQueryZeppausertouserrelationshipendpoint queryForRemoveZeppaUserToUserRelationshipWithRelationshipId:[userInfo.relationship.identifier longLongValue] userId:[ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier.longLongValue];
+    GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForRemoveZeppaUserToUserRelationshipWithRelationshipId:[userInfo.relationship.identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship  *response, NSError *error) {
+    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserToUserRelationship  *response, NSError *error) {
         //
         
         if(error){
@@ -731,15 +731,13 @@ NSArray *minglerTagsArray;
 }
 
 
--(GTLServiceZeppausertouserrelationshipendpoint *)zeppaUserToUserRelationship{
+-(GTLServiceZeppaclientapi *)zeppaUserToUserRelationship{
     
-    static GTLServiceZeppausertouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceZeppausertouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

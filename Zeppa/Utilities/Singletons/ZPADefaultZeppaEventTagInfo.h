@@ -10,26 +10,25 @@
 
 #import "ZPAAuthenticatonHandler.h"
 
-#import "GTLEventtagendpointEventTag.h"
-#import "GTLEventtagfollowendpointEventTagFollow.h"
+#import "GTLZeppaclientapiEventTag.h"
+#import "GTLZeppaclientapiEventTagFollow.h"
 
-#import "GTLEventtagfollowendpointEventTagFollow.h"
-#import "GTLEventtagfollowendpointCollectionResponseEventTagFollow.h"
-#import "GTLServiceEventtagfollowendpoint.h"
-#import "GTLQueryEventtagfollowendpoint.h"
+#import "GTLZeppaclientapiCollectionResponseEventTagFollow.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 @interface ZPADefaultZeppaEventTagInfo : NSObject
 
-@property (nonatomic,readonly) GTLServiceEventtagfollowendpoint *evetTagFollowService;
-@property (nonatomic, strong) GTLEventtagendpointEventTag *eventTag;
-@property (nonatomic, strong) GTLEventtagfollowendpointEventTagFollow *eventTagFollow;
+@property (nonatomic,readonly) GTLServiceZeppaclientapi *evetTagFollowService;
+@property (nonatomic, strong) GTLZeppaclientapiEventTag *eventTag;
+@property (nonatomic, strong) GTLZeppaclientapiEventTagFollow *eventTagFollow;
 
 @property (nonatomic,weak)NSMutableArray *followList;
 
 
-- (void)insertZeppaTagFollow:(GTLEventtagfollowendpointEventTagFollow *)tagFollow;
+- (void)insertZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow;
 
-- (void) removeZeppaTagFollow:(GTLEventtagfollowendpointEventTagFollow *)tagFollow;
+- (void) removeZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow;
 
 -(BOOL)isFollowing;
 @end

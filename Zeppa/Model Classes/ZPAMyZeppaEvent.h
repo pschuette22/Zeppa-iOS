@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLZeppaeventendpointKey.h"
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLZeppaclientapiKey.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
 
 @interface ZPAMyZeppaEvent : NSObject
 
-@property (nonatomic, strong) GTLZeppaeventendpointZeppaEvent *event;
-@property (nonatomic, strong) GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *relationship;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaEvent *event;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaEventToUserRelationship *relationship;
 @property (nonatomic, strong)NSString* confictStatus;
 @property (nonatomic, strong)NSMutableArray *relationships;
 @property (nonatomic, strong)NSMutableArray *comments;

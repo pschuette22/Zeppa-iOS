@@ -15,30 +15,25 @@
 @implementation ZPAFetchNotificationOnAuth
 
 // Service for making authenticated notification calls
--(GTLServiceZeppanotificationendpoint *) zeppaNotificationService {
-    static GTLServiceZeppanotificationendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaNotificationService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppanotificationendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 
 // Service for making authenticated event relationship calls
--(GTLServiceZeppaeventtouserrelationshipendpoint *) zeppaEventRelationshipService {
-    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaEventRelationshipService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 
@@ -61,9 +56,9 @@
     
     NSLog(@"Executing Fetch Notification Task");
     // Fetch all the data and display
-    GTLQueryZeppanotificationendpoint *fetchNotificationTask = [GTLQueryZeppanotificationendpoint queryForGetZeppaNotificationWithIdentifier:_notificationId.longLongValue];
+    GTLQueryZeppaclientapi *fetchNotificationTask = [GTLQueryZeppaclientapi queryForGetZeppaNotificationWithIdentifier:_notificationId.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaNotificationService executeQuery:fetchNotificationTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppanotificationendpointZeppaNotification *notification, NSError *error) {
+    [self.zeppaNotificationService executeQuery:fetchNotificationTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaNotification *notification, NSError *error) {
         NSLog(@"Notification Fetch Task Completed");
         if(error){
             NSLog(@"ERROR: %@",error);
@@ -116,7 +111,7 @@
         __weak typeof(self)  weakSelf = self;
         ZPAFetchUserInfoTask* task = [[ZPAFetchUserInfoTask alloc] initWithCurrentUserId:[self notification].recipientId withOtherUserId:senderId];
             
-        [task executeWithCompletionBlock:^(GTLServiceTicket *ticket, GTLZeppauserinfoendpointZeppaUserInfo *userInfo, NSError *error) {
+        [task executeWithCompletionBlock:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
             NSLog(@"Sender Info Fetch Task Completed");
 
             if(error){

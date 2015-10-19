@@ -11,16 +11,14 @@
 #import "ZPAMyZeppaUser.h"
 #import "ZPAAuthenticatonHandler.h"
 
-#import "GTLZeppauserendpointZeppaUser.h"
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
-#import "GTLZeppauserendpointKey.h"
-#import "GTLZeppauserinfoendpointKey.h"
-#import "GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaUser.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiKey.h"
+#import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
 
-#import "GTLServiceZeppauserinfoendpoint.h"
-#import "GTLQueryZeppauserinfoendpoint.h"
-#import "GTLServiceZeppausertouserrelationshipendpoint.h"
-#import "GTLZeppausertouserrelationshipendpoint.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLZeppaclientapi.h"
 
 #import "ZPAZeppaUserSingleton.h"
 
@@ -28,16 +26,15 @@
 @interface ZPAFetchUserInfoTask : NSObject
 
 
-@property (strong,readonly) GTLServiceZeppauserinfoendpoint *userInfoService;
-@property (strong,readonly) GTLServiceZeppausertouserrelationshipendpoint *userRelationshipService;
+@property (strong,readonly) GTLServiceZeppaclientapi *zeppaClientApiService;
 @property (nonatomic, weak) GTMOAuth2Authentication *auth;
 
 
 @property (nonatomic, strong) NSNumber* currentUserId;
 @property (nonatomic, strong) NSNumber* otherUserId;
 
-@property (nonatomic, retain) GTLZeppauserinfoendpointZeppaUserInfo *zeppaUserInfo;
-@property (nonatomic, retain) GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *userRelationship;
+@property (nonatomic, retain) GTLZeppaclientapiZeppaUserInfo *zeppaUserInfo;
+@property (nonatomic, retain) GTLZeppaclientapiZeppaUserToUserRelationship *userRelationship;
 
 
 typedef void (^FetchUserInfoCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);

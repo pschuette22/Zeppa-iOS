@@ -27,7 +27,7 @@
     @class GTMOAuth2ViewControllerTouch;
     @class GTMOAuth2Authentication;
     @class ZPAMyZeppaUser;
-    @class GTLEventtagendpointEventTag;
+    @class GTLZeppaclientapiEventTag;
 
 ///Global Enums
 
@@ -103,7 +103,7 @@ typedef void (^LoginWithGPCompletionHandler) (GTMOAuth2ViewControllerTouch *view
 ///Fetch Google plus Profile Information Completion Handler
 typedef void(^getGPProfileInfoCompletionHandler)(ZPAMyZeppaUser *zpaUser, NSError *error);
 
-typedef void(^getTagCompletionHandler)(GTLEventtagendpointEventTag *tag, NSError *error);
+typedef void(^getTagCompletionHandler)(GTLZeppaclientapiEventTag *tag, NSError *error);
 
 
 #endif

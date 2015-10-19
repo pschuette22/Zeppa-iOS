@@ -38,9 +38,9 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     
     _abstactEventTagArray = [array mutableCopy];
 }
--(GTLEventtagendpointEventTag *)newTagInstance{
+-(GTLZeppaclientapiEventTag *)newTagInstance{
     
-    GTLEventtagendpointEventTag *tag = [[GTLEventtagendpointEventTag alloc]init];
+    GTLZeppaclientapiEventTag *tag = [[GTLZeppaclientapiEventTag alloc]init];
     tag.ownerId = [ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier;
     return tag;
 }
@@ -51,7 +51,7 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
 }
 -(NSArray *)getZeppaTagForUser:(long long)userId{
     NSMutableArray *arr = [[NSMutableArray alloc]init];
-    for (GTLEventtagendpointEventTag *tag in _abstactEventTagArray) {
+    for (GTLZeppaclientapiEventTag *tag in _abstactEventTagArray) {
         if ([tag.ownerId longLongValue]== userId) {
             [arr addObject:tag];
         }
@@ -70,9 +70,9 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
         [_abstactEventTagArray addObjectsFromArray:eventTagsArray];
     }
 }
--(GTLEventtagendpointEventTag *)getZeppaTagWithId:(long long)tagId{
+-(GTLZeppaclientapiEventTag *)getZeppaTagWithId:(long long)tagId{
     
-    for (GTLEventtagendpointEventTag *tag in _abstactEventTagArray) {
+    for (GTLZeppaclientapiEventTag *tag in _abstactEventTagArray) {
         if ([tag.identifier isEqualToNumber:[NSNumber numberWithLongLong:tagId]]) {
             return tag;
         }
@@ -83,7 +83,7 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     NSMutableArray *arr = [NSMutableArray array];
     for (int i = 0; i<ids.count; i++) {
         
-        GTLEventtagendpointEventTag *tag = [self getZeppaTagWithId:[[ids objectAtIndex:i] longLongValue]];
+        GTLZeppaclientapiEventTag *tag = [self getZeppaTagWithId:[[ids objectAtIndex:i] longLongValue]];
         if (tag) {
             [arr addObject:tag];
         }
@@ -91,7 +91,7 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     return arr;
 }
 
--(void)removeZeppaEventTag:(GTLEventtagendpointEventTag *)tag{
+-(void)removeZeppaEventTag:(GTLZeppaclientapiEventTag *)tag{
     
     if ([_abstactEventTagArray containsObject:tag]) {
         [_abstactEventTagArray removeObject:tag];
@@ -99,7 +99,7 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
 }
 -(void)removeZeppaEventTagsUsingUserId:(long long)userId{
     NSMutableArray *arr = [NSMutableArray array];
-    for (GTLEventtagendpointEventTag *tag in _abstactEventTagArray) {
+    for (GTLZeppaclientapiEventTag *tag in _abstactEventTagArray) {
         if ([tag.ownerId longLongValue] == userId) {
             [arr addObject:tag];
         }
@@ -122,16 +122,16 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     NSString *filter = [NSString stringWithFormat:@"userId == %lld",[[self getCurrentUserId] longLongValue]];
     NSNumber *limit = [NSNumber numberWithInt:50];
     
-    GTLQueryEventtagendpoint *tagQuery = [GTLQueryEventtagendpoint queryForListEventTag];
+    GTLQueryZeppaclientapi *tagQuery = [GTLQueryZeppaclientapi queryForListEventTagWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [tagQuery setFilter: filter];
     [tagQuery setCursor: cursorValue];
     [tagQuery setLimit:[limit integerValue]];
     
-    [self.eventTagService executeQuery:tagQuery completionHandler:^(GTLServiceTicket *ticket, GTLEventtagendpointCollectionResponseEventTag *response, NSError *error) {
+    [self.eventTagService executeQuery:tagQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseEventTag *response, NSError *error) {
             if(error){
                                              
             }else if(response && response.items &&response.items.count > 0){
-                for (GTLEventtagendpointEventTag *tag in response.items) {
+                for (GTLZeppaclientapiEventTag *tag in response.items) {
                     if (tag) {
                         [weakSelf.abstactEventTagArray addObject:tag];
                     }
@@ -148,13 +148,13 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
             }
         }];
 }
--(void)executeInsetEventTagWithEventTag:(GTLEventtagendpointEventTag *)eventTag WithCompletion:(getTagCompletionHandler)completion{
+-(void)executeInsetEventTagWithEventTag:(GTLZeppaclientapiEventTag *)eventTag WithCompletion:(getTagCompletionHandler)completion{
     
     
     __weak typeof(self) weakSelf = self;
-    GTLQueryEventtagendpoint *insertEventTagTask = [GTLQueryEventtagendpoint queryForInsertEventTagWithObject:eventTag];
+    GTLQueryZeppaclientapi *insertEventTagTask = [GTLQueryZeppaclientapi queryForInsertEventTagWithObject:eventTag idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.eventTagService executeQuery:insertEventTagTask completionHandler:^(GTLServiceTicket *ticket, GTLEventtagendpointEventTag *result, NSError *error) {
+    [self.eventTagService executeQuery:insertEventTagTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiEventTag *result, NSError *error) {
         //
         
         if(error) {
@@ -173,11 +173,11 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     
     
     __weak typeof(self) weakSelf = self;
-    GTLQueryEventtagendpoint *removeTagTask = [GTLQueryEventtagendpoint queryForRemoveEventTagWithTagId:identifier];
+    GTLQueryZeppaclientapi *removeTagTask = [GTLQueryZeppaclientapi queryForRemoveEventTagWithTagId:identifier idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [self.eventTagService executeQuery:removeTagTask completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         if (error){
-            GTLEventtagendpointEventTag *eventTag = [self getZeppaTagWithId:identifier];
+            GTLZeppaclientapiEventTag *eventTag = [self getZeppaTagWithId:identifier];
             
             if (eventTag) {
                 [weakSelf.abstactEventTagArray removeObject:eventTag];
@@ -189,15 +189,14 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     }];
     
 }
--(GTLServiceEventtagendpoint *)eventTagService{
+-(GTLServiceZeppaclientapi *)eventTagService{
     
-    static GTLServiceEventtagendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceEventtagendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

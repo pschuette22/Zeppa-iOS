@@ -98,7 +98,6 @@ static ZPAAppData *sharedData;
         // automatically
         service.retryEnabled = YES;
        // GTMOAuth2Authentication *auth = [ZPAAuthenticatonHandler sharedAuth].auth;
-        [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     }
     return service;
 }

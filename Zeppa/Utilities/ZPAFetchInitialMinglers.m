@@ -25,14 +25,14 @@
     __block  NSString *ordering = @"created desc";
     __block NSNumber *limit = [NSNumber numberWithInt:50];
     
-    GTLQueryZeppausertouserrelationshipendpoint *u2uRelationshipQuery = [GTLQueryZeppausertouserrelationshipendpoint queryForListZeppaUserToUserRelationship];
+    GTLQueryZeppaclientapi *u2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [u2uRelationshipQuery setFilter:filter];
     [u2uRelationshipQuery setCursor:cursorValue];
     [u2uRelationshipQuery setOrdering:ordering];
     [u2uRelationshipQuery setLimit:[limit integerValue]];
     
-    [self.zeppaUserRelationshipService executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
+    [self.zeppaUserRelationshipService executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
         //
         
       //  __strong typeof(self) strongSelf = weakSelf;
@@ -41,8 +41,8 @@
             // error
         } else if(response && response.items && response.items.count > 0){
             
-            for (GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *mingler in response.items) {
-                [weakSelf fetchZeppaUserInfoWithParentIdentifier:mingler.subjectId withCompletion:^(GTLZeppauserinfoendpointZeppaUserInfo *info) {
+            for (GTLZeppaclientapiZeppaUserToUserRelationship *mingler in response.items) {
+                [weakSelf fetchZeppaUserInfoWithParentIdentifier:mingler.subjectId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
                     
                     [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:mingler];
                     
@@ -67,21 +67,21 @@
     __block  NSString *ordering = @"created desc";
     __block NSNumber *limit = [NSNumber numberWithInt:50];
     
-    GTLQueryZeppausertouserrelationshipendpoint *u2uRelationshipQuery = [GTLQueryZeppausertouserrelationshipendpoint queryForListZeppaUserToUserRelationship];
+    GTLQueryZeppaclientapi *u2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [u2uRelationshipQuery setFilter:filter];
     [u2uRelationshipQuery setCursor:cursorValue];
     [u2uRelationshipQuery setOrdering:ordering];
     [u2uRelationshipQuery setLimit:[limit integerValue]];
     
-    [self.zeppaUserRelationshipService executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
+    [self.zeppaUserRelationshipService executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
         //
         if(error){
             // error
         } else if(response && response.items && response.items.count > 0){
             
-            for(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *mingler in response.items) {
-                [weakSelf fetchZeppaUserInfoWithParentIdentifier:mingler.creatorId withCompletion:^(GTLZeppauserinfoendpointZeppaUserInfo *info) {
+            for(GTLZeppaclientapiZeppaUserToUserRelationship *mingler in response.items) {
+                [weakSelf fetchZeppaUserInfoWithParentIdentifier:mingler.creatorId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
                     
                     [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:mingler];
                     
@@ -100,15 +100,14 @@
     }];
     
 }
--(GTLServiceZeppausertouserrelationshipendpoint *)zeppaUserRelationshipService{
+-(GTLServiceZeppaclientapi *)zeppaUserRelationshipService{
     
-    static GTLServiceZeppausertouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppausertouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 ///***********************************************

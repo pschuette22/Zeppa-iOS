@@ -20,12 +20,12 @@
     }
     return self;
 }
--(void)setZepppUserToUserRelationship:(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier{
+-(void)setZepppUserToUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier{
     
     
-    GTLQueryZeppauserinfoendpoint *userInfoQuery = [GTLQueryZeppauserinfoendpoint queryForGetZeppaUserInfoWithIdentifier:identifier];
+    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForGetZeppaUserInfoWithIdentifier:identifier idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserinfoendpointZeppaUserInfo *userInfo, NSError *error) {
+    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         
         if(error) {
             // error
@@ -45,9 +45,9 @@
 }
 -(void)fetchZeppaUserInfoWithIdentifier:(NSNumber *)identifier  withCompletion:(getZeppaUserInfoOject)completion {
     
-    GTLQueryZeppauserinfoendpoint *userInfoQuery = [GTLQueryZeppauserinfoendpoint queryForGetZeppaUserInfoWithIdentifier:[identifier longLongValue]];
+    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForGetZeppaUserInfoWithIdentifier:[identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserinfoendpointZeppaUserInfo *userInfo, NSError *error) {
+    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         
         if(error) {
             // error
@@ -63,9 +63,9 @@
 
 -(void)fetchZeppaUserInfoWithParentIdentifier:(NSNumber *)identifier withCompletion:(getZeppaUserInfoOject)completion {
     
-    GTLQueryZeppauserinfoendpoint *userInfoQuery = [GTLQueryZeppauserinfoendpoint queryForFetchZeppaUserInfoByParentIdWithRequestedParentId:[identifier longLongValue]];
+    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithRequestedParentId:[identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserinfoendpointZeppaUserInfo *userInfo, NSError *error) {
+    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         
         if(error) {
             // error
@@ -80,10 +80,10 @@
 -(void)executeZeppaUserInfoListQueryWithAuthWithFilter:(NSString *)filter withCompletion:(getZeppaUserInfoOjectArray)completion{
     
     
-    GTLQueryZeppauserinfoendpoint *listZeppaUserInfoTask = [GTLQueryZeppauserinfoendpoint queryForListZeppaUserInfo];
+    GTLQueryZeppaclientapi *listZeppaUserInfoTask = [GTLQueryZeppaclientapi queryForListZeppaUserInfoWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [listZeppaUserInfoTask setFilter:filter];
     
-    [[self zeppaUserInfoService] executeQuery:listZeppaUserInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserinfoendpointCollectionResponseZeppaUserInfo *response, NSError *error) {
+    [[self zeppaUserInfoService] executeQuery:listZeppaUserInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaUserInfo *response, NSError *error) {
         
         if(error){
             // error
@@ -96,15 +96,14 @@
     }];
 }
 
--(GTLServiceZeppauserinfoendpoint *)zeppaUserInfoService{
+-(GTLServiceZeppaclientapi *)zeppaUserInfoService{
     
-    static GTLServiceZeppauserinfoendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppauserinfoendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

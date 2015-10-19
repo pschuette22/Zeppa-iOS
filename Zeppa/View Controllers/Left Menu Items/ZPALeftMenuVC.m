@@ -10,7 +10,7 @@
 #import "ZPALeftMenuProfileCell.h"
 #import "ZPALeftMenuItemCell.h"
 #import "ZPAAppData.h"
-#import "GTLZeppauserendpoint.h"
+#import "GTLZeppaclientapi.h"
 #import "UIImageView+WebCache.h"
 
 

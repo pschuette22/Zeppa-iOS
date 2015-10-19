@@ -13,7 +13,7 @@
 -(id)init{
     self = [super init];
     if (self) {
-        //self.endPointUser = [[GTLZeppauserendpointZeppaUser alloc] init];
+        //self.endPointUser = [[GTLZeppaclientapiZeppaUser alloc] init];
     }
     return self;
 }

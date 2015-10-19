@@ -11,9 +11,9 @@
 #import "ZPAMyBasicInfoCell.h"
 #import "ZPAMyPlannedEventCell.h"
 #import "ZPAZeppaEventSingleton.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
-#import "GTLServiceZeppauserendpoint.h"
-#import "GTLQueryZeppauserendpoint.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 #import "UIImageView+WebCache.h"
 #import "ZPALoginVC.h"
 #import "ZPAAppDelegate.h"
@@ -124,7 +124,7 @@
     
     _counter = (_currentUser.tagsArray.count>0)?1:0;
     
-    for (GTLEventtagendpointEventTag *tag in _currentUser.tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _currentUser.tagsArray) {
         [self showTagButtonWithTitleString:tag.tagText];
     }
     
@@ -420,11 +420,11 @@
         //str1 = [str1.capitalizedString stringByAppendingString:str2.capitalizedString];
         
         
-        GTLEventtagendpointEventTag *tag = [[GTLEventtagendpointEventTag alloc]init];
+        GTLZeppaclientapiEventTag *tag = [[GTLZeppaclientapiEventTag alloc]init];
         tag.tagText = titleString;
         tag.ownerId = [[ZPAZeppaEventTagSingleton sharedObject]getCurrentUserId];
     
-       [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLEventtagendpointEventTag *tag, NSError *error) {
+       [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLZeppaclientapiEventTag *tag, NSError *error) {
        
         
         

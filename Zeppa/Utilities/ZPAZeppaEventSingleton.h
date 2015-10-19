@@ -10,7 +10,7 @@
 
 #import "ZPAMyZeppaEvent.h"
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
 
 @interface ZPAZeppaEventSingleton : NSObject
 
@@ -31,7 +31,7 @@
 
 -(void)removeEventById:(long long)eventId;
 
--(BOOL)relationshipAlreadyHeld:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relation;
+-(BOOL)relationshipAlreadyHeld:(GTLZeppaclientapiZeppaEventToUserRelationship *)relation;
 -(ZPAMyZeppaEvent *)getEventById:(long long)eventId;
 
 -(NSArray *)getEventMediatorsForFriend:(long long)userId;
@@ -41,7 +41,7 @@
 -(NSArray *)getInterestingEventMediators;
 
 
--(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaeventendpointZeppaEvent *)event;
+-(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaclientapiZeppaEvent *)event;
 
 -(void)setConflictIndicator:(UIImageView *)imageView withZeppaEvent:(ZPAMyZeppaEvent *)zeppaEvent;
 

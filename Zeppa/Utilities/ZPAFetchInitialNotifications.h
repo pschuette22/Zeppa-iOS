@@ -10,24 +10,20 @@
 #import "ZPAAuthenticatonHandler.h"
 #import "ZPAUserInfoBaseClass.h"
 
-#import "GTLServiceZeppanotificationendpoint.h"
-#import "GTLQueryZeppanotificationendpoint.h"
-#import "GTLZeppanotificationendpointCollectionResponseZeppaNotification.h"
-#import "GTLZeppanotificationendpointZeppaNotification.h"
-#import "GTLZeppanotificationendpoint.h"
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
-
-#import "GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
-#import "GTLZeppaeventtouserrelationshipendpoint.h"
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaNotification.h"
+#import "GTLZeppaclientapiZeppaNotification.h"
+#import "GTLZeppaclientapi.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h"
 
 @interface ZPAFetchInitialNotifications : ZPAUserInfoBaseClass
 
 
-@property (nonatomic, strong)GTLServiceZeppanotificationendpoint * zeppaNotificationService;
+@property (nonatomic, strong)GTLServiceZeppaclientapi * zeppaNotificationService;
 
-@property (nonatomic,strong)GTLServiceZeppaeventtouserrelationshipendpoint * zeppaEventToUserRelationship;
+@property (nonatomic,strong)GTLServiceZeppaclientapi * zeppaEventToUserRelationship;
 
 -(void)excuteZeppaApiWithUserId:(long long)userId andToken:(NSString *)token;
 -(void)executeZeppaNotificationRemoveQuery:(long long)notificationId;

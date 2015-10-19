@@ -20,10 +20,10 @@
 
 #import "ZPAPhoneContact.h"
 
-#import "GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship.h"
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
-#import "GTLServiceZeppausertouserrelationshipendpoint.h"
-#import "GTLQueryZeppausertouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 
 #import <AddressBook/ABAddressBook.h>
@@ -31,7 +31,7 @@
 
 @interface ZPARequsetMinglersVC : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic, strong)GTLServiceZeppausertouserrelationshipendpoint *zeppaUserToUserRelationship;
+@property (nonatomic, strong)GTLServiceZeppaclientapi *zeppaUserToUserRelationship;
 
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

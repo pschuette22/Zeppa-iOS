@@ -11,15 +11,15 @@
 #import "ZPAAppData.h"
 #import "ZPAAuthenticatonHandler.h"
 
-#import "GTLEventtagendpointEventTag.h"
-#import "GTLEventtagfollowendpointEventTagFollow.h"
-#import "GTLEventtagendpointCollectionResponseEventTag.h"
-#import "GTLQueryEventtagendpoint.h"
-#import "GTLServiceEventtagendpoint.h"
+#import "GTLZeppaclientapiEventTag.h"
+#import "GTLZeppaclientapiEventTagFollow.h"
+#import "GTLZeppaclientapiCollectionResponseEventTag.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 
 @interface ZPAZeppaEventTagSingleton : NSObject
 
-@property (strong , readonly) GTLServiceEventtagendpoint * eventTagService;
+@property (strong , readonly) GTLServiceZeppaclientapi * eventTagService;
 @property (nonatomic, strong)NSMutableArray *abstactEventTagArray;
 @property (nonatomic, strong) NSMutableArray * tagId;
 
@@ -31,7 +31,7 @@
 
 -(void)addEventTagsFromArray:(NSArray *)array;
 
--(GTLEventtagendpointEventTag *)newTagInstance;
+-(GTLZeppaclientapiEventTag *)newTagInstance;
 
 -(NSArray *)getMyTags;
 
@@ -39,11 +39,11 @@
 
 -(void)updateEventTagsForUserId:(long long)userId andZeppaEventTagsArray:(NSMutableArray *)eventTagsArray;
 
--(GTLEventtagendpointEventTag *)getZeppaTagWithId:(long long)tagId;
+-(GTLZeppaclientapiEventTag *)getZeppaTagWithId:(long long)tagId;
 
 -(NSArray *)getTagsFromTagIdsArray:(NSArray *)ids;
 
--(void)removeZeppaEventTag:(GTLEventtagendpointEventTag *)tag;
+-(void)removeZeppaEventTag:(GTLZeppaclientapiEventTag *)tag;
 
 -(void)removeZeppaEventTagsUsingUserId:(long long)userId;
 
@@ -55,7 +55,7 @@
 #pragma mark - ZeppaEventTag Api
 ///*****************************************
 -(void)executeEventTagListQueryWithCursor:(NSString *)cursorValue;
--(void)executeInsetEventTagWithEventTag:(GTLEventtagendpointEventTag *)eventTag WithCompletion:(getTagCompletionHandler)completion;
+-(void)executeInsetEventTagWithEventTag:(GTLZeppaclientapiEventTag *)eventTag WithCompletion:(getTagCompletionHandler)completion;
 -(void)executeRemoveRequestWithIdentifier:(long long)identifier;
--(GTLServiceEventtagendpoint *)eventTagService;
+-(GTLServiceZeppaclientapi *)eventTagService;
 @end

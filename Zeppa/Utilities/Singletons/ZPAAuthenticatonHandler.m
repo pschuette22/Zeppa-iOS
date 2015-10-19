@@ -20,6 +20,7 @@
 #import "ZPANotificationSingleton.h"
 #import "ZPASwapperVC.h"
 #import "GTLCalendar.h"
+#import "GTLZeppaclientapi.h"
 
 
 static ZPAAuthenticatonHandler *authHandler;
@@ -47,7 +48,7 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
             
             [GIDSignIn sharedInstance].delegate = authHandler;
             [GIDSignIn sharedInstance].clientID = kZeppaGooglePlusClientIdKey;
-            [GIDSignIn sharedInstance].scopes = @[@"https://www.googleapis.com/auth/userinfo.email"];
+            [GIDSignIn sharedInstance].scopes = @[kGTLAuthScopeZeppaclientapiUserinfoEmail];
             [GIDSignIn sharedInstance].shouldFetchBasicProfile = true;
 
         }
@@ -62,17 +63,19 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
     return [[GIDSignIn sharedInstance] currentUser].profile.email;
 }
 
-///**********************************************
-#pragma mark - Auth Method
-///**********************************************
-
-
-+(BOOL)isAuthValid:(GTMOAuth2Authentication *)auth
-{
-    return (auth && [auth canAuthorize]);
+/*
+ * Get the auth token for the signed in user.
+ * Assumes user is signed in
+ */
+-(NSString*)authToken {
+    return [[GIDSignIn sharedInstance] currentUser].authentication.idToken;
 }
 
 
+
+///**********************************************
+#pragma mark - Auth Method
+///**********************************************
 
 
 
@@ -80,7 +83,12 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
 #pragma mark - Google Login Authentication
 ///**********************************************
 -(void)signInWithGoogleSilently:(BOOL) silently {
+    // Check to see if already signed in
+    if([[GIDSignIn sharedInstance] currentUser]){
+        return;
+    }
     
+    //
     if(silently) {
         [[GIDSignIn sharedInstance] signInSilently];
     } else {
@@ -97,18 +105,17 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
 didSignInForUser:(GIDGoogleUser *)user
      withError:(NSError *)error {
     // Perform any operations on signed in user here.
-
     if(error){
-        
-        
-        
-        
+        NSLog(@"Loggin Error: %@", error);
+        // Fuck an error
         return;
     }
     
-    if(signIn.hasAuthInKeychain){
-        NSLog(@"Signin has auth in Keychain..?");
-    }
+    NSLog(@"Logged In For User: %@",user);
+
+    
+    /// TODO: anythin once the signin has gone through
+    /// I think the UI delegate feels this first
     
 }
 
@@ -122,6 +129,8 @@ didDisconnectWithUser:(GIDGoogleUser *)user
     [self logout];
     
 }
+
+
 
 
 

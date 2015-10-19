@@ -11,7 +11,7 @@
 #import "ZPAMyZeppaEvent.h"
 #import "ZPAZeppaUserSingleton.h"
 
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 @interface ZPAMyEventAgendaCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_EventHostProfilePic;

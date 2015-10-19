@@ -8,21 +8,14 @@
 
 #import "ZPAUserInfoBaseClass.h"
 #import "ZPAAuthenticatonHandler.h"
-#import "GTLServiceZeppanotificationendpoint.h"
-#import "GTLServiceZeppanotificationendpoint.h"
-#import "GTLQueryZeppanotificationendpoint.h"
-#import "GTLZeppanotificationendpointCollectionResponseZeppaNotification.h"
-#import "GTLZeppanotificationendpointZeppaNotification.h"
-#import "GTLZeppanotificationendpoint.h"
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
 
-#import "GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
-#import "GTLZeppaeventtouserrelationshipendpoint.h"
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
-
-#import "GTLZeppaeventendpoint.h"
-#import "GTLQueryZeppaeventendpoint.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaNotification.h"
+#import "GTLZeppaclientapiZeppaNotification.h"
+#import "GTLZeppaclientapi.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h"
 
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAZeppaUserSingleton.h"
@@ -37,13 +30,13 @@
 @interface ZPAFetchNotificationOnAuth: ZPAUserInfoBaseClass
 
 // Authed service objects
-@property (nonatomic, strong)GTLServiceZeppanotificationendpoint * zeppaNotificationService;
-@property (nonatomic,strong)GTLServiceZeppaeventtouserrelationshipendpoint * zeppaEventRelationshipService;
+@property (nonatomic, strong)GTLServiceZeppaclientapi * zeppaNotificationService;
+@property (nonatomic,strong)GTLServiceZeppaclientapi * zeppaEventRelationshipService;
 
 
 // Notification information
 @property (nonatomic, strong)NSNumber *notificationId;
-@property (nonatomic, retain)GTLZeppanotificationendpointZeppaNotification *notification;
+@property (nonatomic, retain)GTLZeppaclientapiZeppaNotification *notification;
 //// Sender info
 
 @property (nonatomic, retain) ZPAMyZeppaEvent *eventInfo;

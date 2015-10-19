@@ -46,9 +46,9 @@
 {
     __weak typeof(self)  weakSelf = self;
     
-    GTLQueryZeppauserinfoendpoint *query = [GTLQueryZeppauserinfoendpoint queryForFetchZeppaUserInfoByParentIdWithRequestedParentId:self.otherUserId.longLongValue];
+    GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithRequestedParentId:self.otherUserId.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    GTLServiceTicket *ticket = [self.userInfoService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppauserinfoendpointZeppaUserInfo *userInfo, NSError *error) {
+    GTLServiceTicket *ticket = [self.zeppaClientApiService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         
         if (error || !userInfo){
             weakSelf.completionBlock(ticket, nil, error);
@@ -80,19 +80,19 @@
     if(_zeppaUserInfo){
         __weak typeof(self) weakSelf = self;
         
-            GTLQueryZeppausertouserrelationshipendpoint *query = [GTLQueryZeppausertouserrelationshipendpoint queryForListZeppaUserToUserRelationship];
+            GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
         
             [query setFilter: [NSString stringWithFormat:@"(creatorId == %lld || creatorId == %lld) && (subjectId == %lld || subjectId == %lld)",_currentUserId.longLongValue, _otherUserId.longLongValue, _currentUserId.longLongValue, _otherUserId.longLongValue]];
             [query setLimit:1]; // should only be one user to user relationship
         
-            GTLServiceTicket *ticket = [self.zeppaUserRelationshipService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship* response, NSError *error) {
+            GTLServiceTicket *ticket = [self.zeppaClientApiService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship* response, NSError *error) {
         
                 if(error){
                     weakSelf.completionBlock(ticket, nil, error);
                 } else {
                     // There was no error. since there can be a nil relationship, added the mediator
                     
-                    GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationship = nil;
+                    GTLZeppaclientapiZeppaUserToUserRelationship *relationship = nil;
                     
                     if(response && response.items && response.items.count > 0){
                         relationship = [response.items objectAtIndex:0];
@@ -115,33 +115,17 @@
 /*
  * Retrieve a service object for making authenticated queries for userInfoObjects
  */
--(GTLServiceZeppauserinfoendpoint *)userInfoService
+-(GTLServiceZeppaclientapi *)zeppaClientApiService
 {
     ///Create ZeppaUserEndPoint Service
-    static GTLServiceZeppauserinfoendpoint *userInfoService = nil;
+    static GTLServiceZeppaclientapi *userInfoService = nil;
     if (!userInfoService) {
-        self.auth = [ZPAAuthenticatonHandler sharedAuth].auth;
-        userInfoService = [[GTLServiceZeppauserinfoendpoint alloc]init];
+        userInfoService = [[GTLServiceZeppaclientapi alloc]init];
         userInfoService.retryEnabled = YES;
     }
-    [userInfoService setAuthorizer:self.auth];
-    self.auth.authorizationTokenKey = @"id_token";
     return userInfoService;
 }
 
--(GTLServiceZeppausertouserrelationshipendpoint *) zeppaUserRelationshipService
-{
-    // Create endpoint service for the ZeppaUserToUserRelationship object
-    static GTLServiceZeppausertouserrelationshipendpoint *zeppaUserRelationshipService = nil;
-    if(!zeppaUserRelationshipService){
-        self.auth = [ZPAAuthenticatonHandler sharedAuth].auth;
-        zeppaUserRelationshipService = [[GTLServiceZeppausertouserrelationshipendpoint alloc] init];
-        zeppaUserRelationshipService.retryEnabled = YES;
-    }
-    [zeppaUserRelationshipService setAuthorizer:self.auth];
-    self.auth.authorizationTokenKey = @"id_token";
-    return zeppaUserRelationshipService;
-}
 
 
 @end

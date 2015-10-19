@@ -31,16 +31,14 @@ BOOL hasLoadedInitial;
 }
 
 // Auth object for executing authenticated queries
--(GTLServiceZeppaeventtouserrelationshipendpoint *) zeppaEventRelationshipService {
-    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaEventRelationshipService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 
@@ -59,7 +57,7 @@ BOOL hasLoadedInitial;
 {
 
     // If logged in, fetch event
-    GTLQueryZeppanotificationendpoint *notificationQuery = [GTLQueryZeppanotificationendpoint queryForGetZeppaNotificationWithIdentifier:notificationId.longLongValue];
+    GTLQueryZeppaclientapi *notificationQuery = [GTLQueryZeppaclientapi queryForGetZeppaNotificationWithIdentifier:notificationId.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
 
 }
 
@@ -68,7 +66,7 @@ BOOL hasLoadedInitial;
 
     NSMutableArray * arr = [NSMutableArray array];
     
-    for (GTLZeppanotificationendpointZeppaNotification * notification in _notificationArray) {
+    for (GTLZeppaclientapiZeppaNotification * notification in _notificationArray) {
         if (notification.eventId != nil && [notification.eventId longLongValue] == eventId) {
             [arr addObject:notification];
         }
@@ -79,9 +77,9 @@ BOOL hasLoadedInitial;
 
 -(void)removeNotification:(long long)notificationId{
     
-    GTLZeppanotificationendpointZeppaNotification * notification = nil;
+    GTLZeppaclientapiZeppaNotification * notification = nil;
     
-    for (GTLZeppanotificationendpointZeppaNotification * n in _notificationArray) {
+    for (GTLZeppaclientapiZeppaNotification * n in _notificationArray) {
         if ([n.identifier longLongValue] == notificationId) {
             notification = n;
             break;
@@ -92,11 +90,11 @@ BOOL hasLoadedInitial;
     }
 }
 
--(BOOL)alreadyHoldingNotification:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(BOOL)alreadyHoldingNotification:(GTLZeppaclientapiZeppaNotification *)notification{
     
     
     if (_notificationArray.count > 0) {
-        for (GTLZeppanotificationendpointZeppaNotification *notifi in _notificationArray) {
+        for (GTLZeppaclientapiZeppaNotification *notifi in _notificationArray) {
             if ([notifi.identifier isEqualToNumber:notification.identifier]) {
                 return true;
             }
@@ -123,7 +121,7 @@ BOOL hasLoadedInitial;
     //notifyObserver;
 }
 
--(NSInteger)getNotificationTypeOrder:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(NSInteger)getNotificationTypeOrder:(GTLZeppaclientapiZeppaNotification *)notification{
     
     NSString *notificationType = notification.type;
     
@@ -153,7 +151,7 @@ BOOL hasLoadedInitial;
     
 }
 
--(NSString *)getNotificationTitle:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(NSString *)getNotificationTitle:(GTLZeppaclientapiZeppaNotification *)notification{
     
     NSString *notificationTitle ;
     
@@ -195,7 +193,7 @@ BOOL hasLoadedInitial;
     return notificationTitle;
 }
 
--(NSString *)getNotificationMessage:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(NSString *)getNotificationMessage:(GTLZeppaclientapiZeppaNotification *)notification{
     
     NSString *notificationMessage;
     ZPADefaulZeppatEventInfo *eventMediator = [ZPADefaulZeppatEventInfo sharedObject] ;
@@ -244,7 +242,7 @@ BOOL hasLoadedInitial;
     
 }
 
--(void)addZeppaNotification:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(void)addZeppaNotification:(GTLZeppaclientapiZeppaNotification *)notification{
     
     if (![self alreadyHoldingNotification:notification]) {
         [_notificationArray addObject:notification];

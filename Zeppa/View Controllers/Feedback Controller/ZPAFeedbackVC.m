@@ -7,16 +7,16 @@
 //
 
 #import "ZPAFeedbackVC.h"
-#import "GTLZeppafeedbackendpointZeppaFeedback.h"
-#import "GTLQueryZeppafeedbackendpoint.h"
-#import "GTLServiceZeppafeedbackendpoint.h"
+#import "GTLZeppaclientapiZeppaFeedback.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 #import "ZPAAuthenticatonHandler.h"
 #import <AudioToolbox/AudioServices.h>
 
 #define RATE_STAR_WIDTH 28
 
 @interface ZPAFeedbackVC ()
-@property (readonly) GTLServiceZeppafeedbackendpoint *zeppaFeedbackService;
+@property (readonly) GTLServiceZeppaclientapi *zeppaFeedbackService;
 @property (nonatomic, assign) UITextView *currentTextView;
 @property (nonatomic, assign) float rating;
 @property (nonatomic, assign,getter = isFirstTime) BOOL firstTime;
@@ -303,7 +303,7 @@
     
     NSString * rating= [NSString stringWithFormat:@"%.02f",_rating];
     
-    GTLZeppafeedbackendpointZeppaFeedback *feedback = [[GTLZeppafeedbackendpointZeppaFeedback alloc] init];
+    GTLZeppaclientapiZeppaFeedback *feedback = [[GTLZeppaclientapiZeppaFeedback alloc] init];
     
     [feedback setUserId:identifier];
     [feedback setReleaseCode:@"1.0.0"];
@@ -312,9 +312,9 @@
     [feedback setSubject:_txtSubject.text];
     [feedback setFeedback:_txtView_Comment.text];
     
-    GTLQueryZeppafeedbackendpoint *insertFeedbackTask = [GTLQueryZeppafeedbackendpoint queryForInsertZeppaFeedbackWithObject:feedback];
+    GTLQueryZeppaclientapi *insertFeedbackTask = [GTLQueryZeppaclientapi queryForInsertZeppaFeedbackWithObject:feedback idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [[self zeppaFeedbackService] executeQuery:insertFeedbackTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppafeedbackendpointZeppaFeedback *response, NSError *error) {
+    [[self zeppaFeedbackService] executeQuery:insertFeedbackTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaFeedback *response, NSError *error) {
         //
         
         if(error) {
@@ -332,15 +332,14 @@
     
 }
 
--(GTLServiceZeppafeedbackendpoint *)zeppaFeedbackService
+-(GTLServiceZeppaclientapi *)zeppaFeedbackService
 {
     ///Create ZeppaUserEndPoint Service
-    static GTLServiceZeppafeedbackendpoint *zeppaFeedbackService = nil;
+    static GTLServiceZeppaclientapi *zeppaFeedbackService = nil;
     if (!zeppaFeedbackService) {
         
-        zeppaFeedbackService = [[GTLServiceZeppafeedbackendpoint alloc]init];
+        zeppaFeedbackService = [[GTLServiceZeppaclientapi alloc]init];
         zeppaFeedbackService.retryEnabled = YES;
-        [zeppaFeedbackService setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     }
     return zeppaFeedbackService;
 }

@@ -23,24 +23,20 @@
 
 #import "MBProgressHUD.h"
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLQueryZeppaeventendpoint.h"
-#import "GTLServiceZeppaeventendpoint.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 
-#import "GTLZeppaeventtouserrelationshipendpoint.h"
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
+#import "GTLZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 #import "ZPAAuthenticatonHandler.h"
 
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
-#import "GTLEventcommentendpoint.h"
-#import "GTLEventcommentendpointCollectionResponseEventComment.h"
-#import "GTLEventcommentendpointEventComment.h"
+#import "GTLZeppaclientapiCollectionResponseEventComment.h"
+#import "GTLZeppaclientapiEventComment.h"
 
-#import "GTLQueryEventcommentendpoint.h"
-#import "GTLServiceEventcommentendpoint.h"
 
 
 #define SEGUE_ID_ADD_INVITES @"addInvites"
@@ -572,7 +568,7 @@
 ///*************************************************
 #pragma mark - Tag Private Method ..
 ///*************************************************
--(void)showTagButtonWithTitleString:(NSString *)title andTag:(GTLEventtagendpointEventTag *)tag{
+-(void)showTagButtonWithTitleString:(NSString *)title andTag:(GTLZeppaclientapiEventTag *)tag{
     
     if (![title isEqualToString:@""]) {
         title = [title stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -816,7 +812,7 @@
     }
     
     
-    for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         [self showTagButtonWithTitleString:tag.tagText andTag:tag];
     }
     
@@ -841,7 +837,7 @@
         }
 
     
-    for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
         [self showTagButtonWithTitleString:tag.tagText andTag:tag];
         [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
@@ -861,7 +857,7 @@
     }
     
     
-    for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
       [self showTagButtonWithTitleString:tag.tagText andTag:tag];
         
@@ -1015,7 +1011,7 @@
     
 }
 
--(void)insertOrUpdateEventRelationship:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)zeppaEventRelationShip withUserId:(NSNumber *)userId{
+-(void)insertOrUpdateEventRelationship:(GTLZeppaclientapiZeppaEventToUserRelationship *)zeppaEventRelationShip withUserId:(NSNumber *)userId{
     
     if (zeppaEventRelationShip) {
         [self executeUpdateEventRelationship:zeppaEventRelationShip withUserId:userId];
@@ -1030,11 +1026,11 @@
 -(void )executeZeppaTagFollowApi:(UIButton *)tagButton{
     
     
-    GTLEventtagfollowendpointEventTagFollow * tagFollow = [[GTLEventtagfollowendpointEventTagFollow alloc]init];
+    GTLZeppaclientapiEventTagFollow * tagFollow = [[GTLZeppaclientapiEventTagFollow alloc]init];
     
     
     
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
         if ([tag.tagText.uppercaseString isEqualToString:tagButton.titleLabel.text.uppercaseString]) {
             
             if ([_defaultTagsForUser isFollowing:tag ] == NO ){
@@ -1087,12 +1083,12 @@
     
     NSString * filterStr = [NSString stringWithFormat:@"eventId == %@",_eventDetail.event.identifier];
     
-    GTLQueryEventcommentendpoint * commentListQuery = [GTLQueryEventcommentendpoint queryForListEventComment];
+    GTLQueryZeppaclientapi * commentListQuery = [GTLQueryZeppaclientapi queryForListEventCommentWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [commentListQuery setFilter:filterStr];
     [commentListQuery setOrdering:@"created desc"];
     
-    [[self eventCommentService] executeQuery:commentListQuery completionHandler:^(GTLServiceTicket *ticket, GTLEventcommentendpointCollectionResponseEventComment * response, NSError *error) {
+    [[self eventCommentService] executeQuery:commentListQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseEventComment * response, NSError *error) {
         
         if (error) {
             NSLog(@"Error while executing event comment List Query %@",error.description);
@@ -1107,7 +1103,7 @@
             
 #warning  to be done after
             
-//            for (GTLEventcommentendpointEventComment *eventComment in response.items) {
+//            for (GTLZeppaclientapiEventComment *eventComment in response.items) {
 //                
 //                if ([[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[eventComment.commenterId longLongValue]] == nil) {
 //                    ZPADefaulZeppatUserInfo * userInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[eventComment.commenterId longLongValue ]];
@@ -1156,14 +1152,14 @@
 
 -(void)executeInsertEventComment{
     
-    GTLEventcommentendpointEventComment * eventComment = [[GTLEventcommentendpointEventComment alloc]init];
+    GTLZeppaclientapiEventComment * eventComment = [[GTLZeppaclientapiEventComment alloc]init];
     
     [eventComment setCommenterId:[NSNumber numberWithLongLong:[self getUserID]]];
     [eventComment setText:_discussTextView.text];
     [eventComment setEventId:_eventDetail.event.identifier];
     
-    GTLQueryEventcommentendpoint *inserComment = [GTLQueryEventcommentendpoint queryForInsertEventCommentWithObject:eventComment];
-    [[self eventCommentService] executeQuery:inserComment completionHandler:^(GTLServiceTicket *ticket, GTLEventcommentendpointEventComment * object, NSError *error) {
+    GTLQueryZeppaclientapi *inserComment = [GTLQueryZeppaclientapi queryForInsertEventCommentWithObject:eventComment idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    [[self eventCommentService] executeQuery:inserComment completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiEventComment * object, NSError *error) {
 
         if (error) {
             NSLog(@"Error inserting Comment %@",error.description);
@@ -1185,11 +1181,11 @@
     
 }
 
--(void)executeUpdateEventRelationship:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)eventRelationShip withUserId:(NSNumber *)userId{
+-(void)executeUpdateEventRelationship:(GTLZeppaclientapiZeppaEventToUserRelationship *)eventRelationShip withUserId:(NSNumber *)userId{
     
 
     
-    GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * eventRelationship = [[GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship alloc]init];
+    GTLZeppaclientapiZeppaEventToUserRelationship * eventRelationship = [[GTLZeppaclientapiZeppaEventToUserRelationship alloc]init];
     
     eventRelationship =eventRelationShip;
     
@@ -1202,9 +1198,9 @@
     [eventRelationship setWasInvited:[NSNumber numberWithInt:1]];
     
     
-    GTLQueryZeppaeventtouserrelationshipendpoint * updateRelationship = [GTLQueryZeppaeventtouserrelationshipendpoint queryForUpdateZeppaEventToUserRelationshipWithObject:eventRelationship];
+    GTLQueryZeppaclientapi * updateRelationship = [GTLQueryZeppaclientapi queryForUpdateZeppaEventToUserRelationshipWithObject:eventRelationship idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [[self zeppaEventToUserRelationshipService] executeQuery:updateRelationship completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * result , NSError *error) {
+    [[self zeppaEventToUserRelationshipService] executeQuery:updateRelationship completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEventToUserRelationship * result , NSError *error) {
         
         if (error) {
             NSLog(@"update event relationship unsuccessful %@",error.description);
@@ -1225,7 +1221,7 @@
 
 -(void)executeInsertZeppaEventRelationshipWithUserId:(NSNumber *)userId{
     
-    GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * eventRelationship = [[GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship alloc]init];
+    GTLZeppaclientapiZeppaEventToUserRelationship * eventRelationship = [[GTLZeppaclientapiZeppaEventToUserRelationship alloc]init];
     
     [eventRelationship setEventId:_eventDetail.event.identifier];
     [eventRelationship setUserId:userId];
@@ -1234,9 +1230,9 @@
     [eventRelationship setWasInvited:[NSNumber numberWithInt:1]];
     [eventRelationship setIsRecommended:[NSNumber numberWithInt:0]];
     
-    GTLQueryZeppaeventtouserrelationshipendpoint *inserQuery = [GTLQueryZeppaeventtouserrelationshipendpoint queryForInsertZeppaEventToUserRelationshipWithObject:eventRelationship];
+    GTLQueryZeppaclientapi *inserQuery = [GTLQueryZeppaclientapi queryForInsertZeppaEventToUserRelationshipWithObject:eventRelationship idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [[self zeppaEventToUserRelationshipService] executeQuery:inserQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * result, NSError *error) {
+    [[self zeppaEventToUserRelationshipService] executeQuery:inserQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEventToUserRelationship * result, NSError *error) {
         
         if (error) {
             NSLog(@"error updating event relatioship %@",error.description);
@@ -1257,7 +1253,7 @@
 }
 
 -(void)removeZeppaEventWithIdentifier:(long long) identifier{
-    GTLQueryZeppaeventendpoint *removeZeppaEvent = [GTLQueryZeppaeventendpoint queryForRemoveZeppaEventWithIdentifier:identifier];
+    GTLQueryZeppaclientapi *removeZeppaEvent = [GTLQueryZeppaclientapi queryForRemoveZeppaEventWithIdentifier:identifier idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [self.zeppaEventService executeQuery:removeZeppaEvent completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         //
         if(error){
@@ -1273,41 +1269,37 @@
     }];
 }
 
--(GTLServiceZeppaeventendpoint *)zeppaEventService{
+-(GTLServiceZeppaclientapi *)zeppaEventService{
     
-    static GTLServiceZeppaeventendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceZeppaeventendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 
 
 
--(GTLServiceZeppaeventtouserrelationshipendpoint *)zeppaEventToUserRelationshipService{
+-(GTLServiceZeppaclientapi *)zeppaEventToUserRelationshipService{
     
-    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }
 
 
--(GTLServiceEventcommentendpoint *)eventCommentService{
+-(GTLServiceZeppaclientapi *)eventCommentService{
     
-    static GTLServiceEventcommentendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if (!service) {
-        service = [[GTLServiceEventcommentendpoint alloc]init];
+        service = [[GTLServiceZeppaclientapi alloc]init];
         service.retryEnabled = YES;
     }
-    
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     
     return service;
 }

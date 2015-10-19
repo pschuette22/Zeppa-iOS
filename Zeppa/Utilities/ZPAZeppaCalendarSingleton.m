@@ -191,7 +191,6 @@ static ZPAZeppaCalendarSingleton * zeppaCalendarSingleton = nil;
         service = [[GTLServiceCalendar alloc] init];
         service.shouldFetchNextPages = YES;
         service.retryEnabled = YES;
-        [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     }
     return service;
 }

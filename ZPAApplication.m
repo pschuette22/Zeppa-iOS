@@ -11,8 +11,8 @@
 #import "ZPADeviceInfo.h"
 #import "ZPAUserDefault.h"
 
-#import "GTLZeppauserendpointZeppaUserInfo.h"
-#import "GTLZeppauserendpointZeppaUser.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUser.h"
 #import "GTLCalendarCalendarListEntry.h"
 
 

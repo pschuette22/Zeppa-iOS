@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GTLEventcommentendpointEventComment.h"
+#import "GTLZeppaclientapiEventComment.h"
 #import "ZPAMyZeppaEvent.h"
 
 @interface ZPADiscussionCell : UITableViewCell
@@ -19,5 +19,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *lbl_discussionTime;
 
 
--(void)showEventCommentDetail:(GTLEventcommentendpointEventComment *)eventComment;
+-(void)showEventCommentDetail:(GTLZeppaclientapiEventComment *)eventComment;
 @end

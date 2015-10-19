@@ -67,7 +67,6 @@
         [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
-    // TODO: implement local notification registration if old devices are not receiving them
     
     
     // Register for remote notifications
@@ -192,9 +191,9 @@
 {
     ///Addded by Milan to test Google App Engine End Point
     ///Create ZeppaUserEndPoint Service
-        static GTLServiceZeppauserendpoint *zeppaUserService = nil;
+        static GTLServiceZeppaclientapi *zeppaUserService = nil;
         if (!zeppaUserService) {
-            zeppaUserService = [[GTLServiceZeppauserendpoint alloc]init];
+            zeppaUserService = [[GTLServiceZeppaclientapi alloc]init];
             zeppaUserService.retryEnabled = YES;
  //           [zeppaUserService setAuthorizer:(id<GTMFetcherAuthorizationProtocol>)[GPPSignIn sharedInstance].authentication];
         }
@@ -202,17 +201,17 @@
     NSString *googleProfileID = [defaults objectForKey:kZeppaLoggedInUserGooglePlusIdKey];
     
         ///Create a query object
-//        GTLQueryZeppauserendpoint *zeppaUserQuery = [GTLQueryZeppauserendpoint queryForFetchMatchingUserWithProfileId:googleProfileID];
-    GTLQueryZeppauserendpoint *zeppaUserQuery = [GTLQueryZeppauserendpoint queryForListZeppaUser];
+//        GTLQueryZeppaclientapi *zeppaUserQuery = [GTLQueryZeppaclientapi queryForFetchMatchingUserWithProfileId:googleProfileID];
+    GTLQueryZeppaclientapi *zeppaUserQuery = [GTLQueryZeppaclientapi queryForListZeppaUser];
   
         GTLServiceTicket *ticket = [zeppaUserService executeQuery:zeppaUserQuery completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
             if (!error) {
-                GTLZeppauserendpointZeppaUser *zeppaUser = object;
+                GTLZeppaclientapiZeppaUser *zeppaUser = object;
                 NSLog(@"%@",zeppaUser);
             }
             else{
     
-                NSLog(@"Error in GTLQueryZeppauserendpoint %@",error.localizedDescription);
+                NSLog(@"Error in GTLQueryZeppaclientapi %@",error.localizedDescription);
                 
             }
             

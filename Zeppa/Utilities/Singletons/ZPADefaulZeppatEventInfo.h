@@ -12,17 +12,17 @@
 
 #import "ZPAAuthenticatonHandler.h"
 
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
+#import "GTLQueryZeppaclientapi.h"
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
 
 @interface ZPADefaulZeppatEventInfo : NSObject
-@property (nonatomic, strong) GTLZeppaeventendpointZeppaEvent *event;
-@property (nonatomic, strong) GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *relationship;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaEvent *event;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaEventToUserRelationship *relationship;
 
-@property (readonly) GTLServiceZeppaeventtouserrelationshipendpoint *zeppaEventToUserRelationshipService;
+@property (readonly) GTLServiceZeppaclientapi *zeppaEventToUserRelationshipService;
 
 @property (nonatomic, strong) NSMutableArray *minglerRelationships;
 @property (nonatomic, strong) ZPAMyZeppaEvent *zeppaEvent;
@@ -35,14 +35,14 @@
 
 -(BOOL)isAttending;
 
--(BOOL)relationshipDoesMatch:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relationShip;
+-(BOOL)relationshipDoesMatch:(GTLZeppaclientapiZeppaEventToUserRelationship *)relationShip;
 
 
--(void)onWatchButtonClicked:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relationship;
+-(void)onWatchButtonClicked:(GTLZeppaclientapiZeppaEventToUserRelationship *)relationship;
 
 -(void)onTextButtonClicked:(UIButton *)textButton;
 
--(void)onJoinButtonClicked:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relationship;
+-(void)onJoinButtonClicked:(GTLZeppaclientapiZeppaEventToUserRelationship *)relationship;
 
 
 @end

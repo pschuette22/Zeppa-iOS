@@ -11,7 +11,7 @@
 #import "ZPADefaulZeppatUserInfo.h"
 #import "ZPADefaulZeppatEventInfo.h"
 #import "ZPAZeppaUserSingleton.h"
-#import "GTLZeppanotificationendpointZeppaNotification.h"
+#import "GTLZeppaclientapiZeppaNotification.h"
 
 @interface ZPAActivityNotificationCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_ActivityOwner;
@@ -20,6 +20,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblNotificationTime;
 @property (weak, nonatomic) IBOutlet UIButton *btnDisclosureIndicator;
 
--(void)showDetailOncell:(GTLZeppanotificationendpointZeppaNotification *)notification;
+-(void)showDetailOncell:(GTLZeppaclientapiZeppaNotification *)notification;
 
 @end

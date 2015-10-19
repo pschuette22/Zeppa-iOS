@@ -7,16 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GTLZeppauserendpointZeppaUser.h"
+#import "GTLZeppaclientapiZeppaUser.h"
 
 
-///This class is the wrapper class which wraps GTLZeppauserendpointZeppaUser class to include more data for zeppa user to be used in the app
+///This class is the wrapper class which wraps GTLZeppaclientapiZeppaUser class to include more data for zeppa user to be used in the app
 
 
 ///It is similar as MyZeppaUserMediator in android.
 @interface ZPAMyZeppaUser : NSObject
 
-@property (nonatomic, strong) GTLZeppauserendpointZeppaUser *endPointUser;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaUser *endPointUser;
 @property (nonatomic, strong) NSArray                       *arrEmails;
 @property (nonatomic, strong) UIImage                       *profileImage;
 

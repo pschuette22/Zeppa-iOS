@@ -10,7 +10,7 @@
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPADefaulZeppatUserInfo.h"
 #import "ZPAMyZeppaUser.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 @implementation ZPADiscussionCell
 
@@ -28,7 +28,7 @@
     [self.viewUserDisscussion.layer setMasksToBounds:YES];
 }
 
--(void)showEventCommentDetail:(GTLEventcommentendpointEventComment *)eventComment{
+-(void)showEventCommentDetail:(GTLZeppaclientapiEventComment *)eventComment{
     
     id zeppaUser = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[eventComment.commenterId longLongValue]];
     

@@ -130,7 +130,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
     }
     
 }
--(BOOL)relationshipAlreadyHeld:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relation{
+-(BOOL)relationshipAlreadyHeld:(GTLZeppaclientapiZeppaEventToUserRelationship *)relation{
     
     
     for (ZPAMyZeppaEvent *myZeppaEvent in _zeppaEvents) {
@@ -216,7 +216,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
 }
 
 
--(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaeventendpointZeppaEvent *)event{
+-(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaclientapiZeppaEvent *)event{
     
     NSString *eTitle = event.title;
     long long eStart = [event.start longLongValue];
@@ -354,7 +354,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
     //_relationships = [NSMutableArray array];
     NSMutableArray *attendingUserIds = [NSMutableArray array];
     
-    for (GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * relation in _relationships) {
+    for (GTLZeppaclientapiZeppaEventToUserRelationship * relation in _relationships) {
         if ([relation.isAttending boolValue] && [relation.eventId isEqualToNumber:zeppaEvent.event.identifier]) {
             [attendingUserIds addObject:relation.userId];
         }

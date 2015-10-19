@@ -16,8 +16,7 @@
 
 #import "ZPAZeppaEventTagSingleton.h"
 
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 #import "ZPAMinglerCell.h"
 #import "UIImageView+WebCache.h"

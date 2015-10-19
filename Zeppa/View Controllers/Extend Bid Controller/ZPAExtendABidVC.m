@@ -9,7 +9,7 @@
 #import "ZPAExtendABidVC.h"
 #import "ZPAExtendBidCell.h"
 #import "UIImageView+WebCache.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 
 @interface ZPAExtendABidVC ()

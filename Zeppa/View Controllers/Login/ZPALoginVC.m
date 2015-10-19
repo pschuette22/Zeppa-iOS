@@ -17,12 +17,11 @@
 #import "ZPASwapperVC.h"
 #import "ZPASplitVC.h"
 
-#import "GTMOAuth2ViewControllerTouch.h"
 #import "GTMHTTPFetcherLogging.h"
 #import "GTLCalendar.h"
 
-#import "GTLZeppauserendpoint.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapi.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 typedef enum {
 
@@ -38,9 +37,8 @@ typedef enum {
 
 @property (nonatomic, strong) ZPAMyZeppaUser *user;
 @property (nonatomic, assign) GoogleFetchOperation currentOperation;
-@property (nonatomic, weak) GTMOAuth2Authentication *auth;
 
-@property (readonly) GTLServiceZeppauserendpoint *zeppaUserService;
+@property (readonly) GTLServiceZeppaclientapi *zeppaUserService;
 
 
 @end
@@ -66,23 +64,14 @@ typedef enum {
     [GIDSignIn sharedInstance].uiDelegate = self;
     
     [self.view setBackgroundColor:[ZPAStaticHelper backgroundTextureColor]];
-    _btnLoginWithGoogle.hidden = YES;
-
-   NSString *zeppUserIdentifier = [ZPAUserDefault getValueFromUserDefaultUsingKey:kCurrentZeppaUserId];
-   if (zeppUserIdentifier && zeppUserIdentifier.length> 0) {
-       
-       [self showActivity];
-       ///Silentily call google plus
-       [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogleSilently:YES];
-       
-    }else{
-       _btnLoginWithGoogle.hidden = NO;
-   }
+    _btnLoginWithGoogle.hidden = NO;
     
-    
-    
-    
-    
+    // If Auth is stored, sign in silently
+    if([[GIDSignIn sharedInstance] hasAuthInKeychain]){
+        _btnLoginWithGoogle.hidden = YES;
+        [self showActivity];
+        [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogleSilently:YES];
+    }
     
 }
 - (void)didReceiveMemoryWarning
@@ -113,35 +102,10 @@ typedef enum {
 - (IBAction)btnLoginWithGoogleTapped:(UIButton *)sender {
     sender.hidden = YES;
     [self showActivity];
-   [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogleSilently:NO];
-
-    
-//    GTMOAuth2ViewControllerTouch *authController;
-//    NSArray *scopes = [NSArray arrayWithObjects:kGTLAuthScopeZeppauserendpointUserinfoEmail, kGTLAuthScopeCalendar, nil];
-//    
-//    authController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:[scopes componentsJoinedByString:@" "]
-//                                                                clientID:kZeppaGooglePlusClientIdKey
-//                                                            clientSecret:kZeppaGooglePlusClientSecretKey
-//                                                        keychainItemName:kZeppaKeychainItemNameKey
-//                                                                delegate:self
-//                                                        finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-//    [self presentViewController:authController animated:YES completion:nil];
-    
+    [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogleSilently:NO];
 }
 
-//- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
-//      finishedWithAuth:(GTMOAuth2Authentication *)authResult
-//                 error:(NSError *)error {
-//    if (error != nil) {
-//        NSLog(@"Error: %@", error);
-//        // FUCK
-//    }
-//    else {
-//        
-//        NSLog(@"All went through apparently");
-//        [viewController dismissViewControllerAnimated:YES completion:nil];
-//    }
-//}
+
 
 ///**********************************************
 #pragma mark  - LoginWithGoogleSdkDelegate
@@ -155,29 +119,9 @@ typedef enum {
     if(error){
         [self hideActivity];
         _btnLoginWithGoogle.hidden = NO;
-        // TODO: Show error
+        
     } else {
-        
-        GIDGoogleUser *user = signIn.currentUser;
-        
-        // Get the keychain item and update the necessary fields
-        GTMOAuth2Authentication *auth = [[GTMOAuth2Authentication alloc] init];
-        
-        [auth setClientID:kZeppaGooglePlusClientIdKey];
-        [auth setClientSecret:kZeppaGooglePlusClientSecretKey];
-        [auth setUserEmail:user.profile.email];
-        [auth setUserID:user.userID];
-        [auth setAccessToken:user.authentication.accessToken];
-        [auth setRefreshToken:user.authentication.refreshToken];
-        [auth setExpirationDate: user.authentication.accessTokenExpirationDate];
-        
-        
-        
-        // Set the locally held auth to the one that was just grabbed
-        self.auth = auth;
-        
-        [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kZeppaKeychainItemNameKey authentication:auth];
-        
+        // Follow the signin protocol
         [self followSignInProtocol];
     }
     
@@ -190,7 +134,7 @@ typedef enum {
 
 
 /*!
- * @description Once we have valid auth object and google profile id, this method can be called, which will look after the next stage of sign in protocol in which it will try to fetch the existing user from backend server with either saved database id or google profile id. The successful response will either give GTLZeppauserendpointZeppaUser object if it exist on backend server otherwise nil. This is response will be passed to makeNextScreenDecisionWithZeppaUser: method to decide the next screen to be shown to user.
+ * @description Once we have valid auth object and google profile id, this method can be called, which will look after the next stage of sign in protocol in which it will try to fetch the existing user from backend server with either saved database id or google profile id. The successful response will either give GTLZeppaclientapiZeppaUser object if it exist on backend server otherwise nil. This is response will be passed to makeNextScreenDecisionWithZeppaUser: method to decide the next screen to be shown to user.
  * @param valid, non empty google plus id of authenticated user
  */
 
@@ -199,60 +143,18 @@ typedef enum {
     
     NSLog(@"Attempting to sign in");
     
-  NSNumber *zeppUserIdentifier = [ZPAUserDefault getValueFromUserDefaultUsingKey:kCurrentZeppaUserId];
-    
-    __weak ZPALoginVC *weakSelf = self;
-    
-    if (zeppUserIdentifier > 0) {
-        
-        
-       long long userId = [zeppUserIdentifier longLongValue];
-        
-        
-        ///Fetch the current user object using saved zeppaUserId
-        [[ZPAZeppaUserSingleton sharedObject]getZeppaUserWithUserId:userId andCompletionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
-            
-            if (error) {
-                [ZPAStaticHelper showAlertWithTitle:@"error" andMessage:@"Error Fetching Currrent user"];
-                 NSLog(@"error %@",error.description);
-                _btnLoginWithGoogle.hidden = NO;
-                [self hideActivity];
-            } else if (object) {
-                
-                    ZPAMyZeppaUser *currentUser = object;
-                    [_delegate zpaLoginVC:weakSelf didLogInWithUser:currentUser];
-                    [[ZPAApplication sharedObject] initizationsWithCurrentUser:currentUser];
-
-                
-            } else {
-                
-                [self followSignInProtocolForCurrentUser];
-
-            }
-            
-            
-        }];
-        
-        
-    } else {
-    
-        [self followSignInProtocolForCurrentUser];
-        
-    }
-}
-
--(void) followSignInProtocolForCurrentUser {
-    
     __weak ZPALoginVC *weakSelf = self;
 
-    //It never be execute but if any exception is generate than for fetcthing Zeppauser  it works
     [[ZPAZeppaUserSingleton sharedObject]getCurrentZeppaUserWithCompletionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         
         if (error) {
-            [ZPAStaticHelper showAlertWithTitle:@"error" andMessage:@"Error Fetching Currrent user"];
+            
+            
+            [ZPAStaticHelper showAlertWithTitle:@"error" andMessage:@"Error Signing in"];
             NSLog(@"error %@",error.description);
             _btnLoginWithGoogle.hidden = NO;
             [self hideActivity];
+            
         } else if(object){
             
             ZPAMyZeppaUser *currentUser = object;
@@ -260,7 +162,7 @@ typedef enum {
             [[ZPAApplication sharedObject] initizationsWithCurrentUser:currentUser];
             
         }else{
-
+            
             weakSelf.btnLoginWithGoogle.hidden = NO;
             [self hideActivity];
             
@@ -268,6 +170,7 @@ typedef enum {
             
         }
     }];
+    
 }
 
 

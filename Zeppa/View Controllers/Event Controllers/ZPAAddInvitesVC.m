@@ -10,7 +10,7 @@
 #import "ZPAAddEventVC.h"
 
 #import "UIImageView+WebCache.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPADefaulZeppatUserInfo.h"
 
