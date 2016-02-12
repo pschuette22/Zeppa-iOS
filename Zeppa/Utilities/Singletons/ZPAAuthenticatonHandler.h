@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <Google/SignIn.h>
-#import "ZPANotificationDelegate.h"
 
 @class GTLCalendarEvent;
 
@@ -32,7 +31,8 @@
 
 +(instancetype)sharedAuth;
 
--(void)signInWithGoogleSilently:(BOOL) silently;
+-(void)signInWithGoogle;
+-(void)signInWithGoogleSilently;
 -(void)logout;
 -(void)getEventsForTheGivenCalendar;
 -(void)getEventsForCurrentDay:(NSString * )calendarId;

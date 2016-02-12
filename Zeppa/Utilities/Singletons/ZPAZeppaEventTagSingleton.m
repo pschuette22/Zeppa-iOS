@@ -119,7 +119,7 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
 -(void)executeEventTagListQueryWithCursor:(NSString *)cursorValue{
     
     __weak typeof(self) weakSelf = self;
-    NSString *filter = [NSString stringWithFormat:@"userId == %lld",[[self getCurrentUserId] longLongValue]];
+    NSString *filter = [NSString stringWithFormat:@"ownerId == %lld",[[self getCurrentUserId] longLongValue]];
     NSNumber *limit = [NSNumber numberWithInt:50];
     
     GTLQueryZeppaclientapi *tagQuery = [GTLQueryZeppaclientapi queryForListEventTagWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
@@ -169,6 +169,7 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
         
     }];
 }
+// Remove a given tag
 -(void)executeRemoveRequestWithIdentifier:(long long)identifier{
     
     
@@ -185,10 +186,12 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
             // error
         } else {
             // removed successfully
+            NSLog(@"Did remove tag");
         }
     }];
     
 }
+
 -(GTLServiceZeppaclientapi *)eventTagService{
     
     static GTLServiceZeppaclientapi *service = nil;

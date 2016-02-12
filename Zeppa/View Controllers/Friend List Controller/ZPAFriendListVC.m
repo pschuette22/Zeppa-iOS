@@ -49,7 +49,7 @@
     // Do any additional setup after loading the view.
     self.navigationController.navigationBar.topItem.title = @"";
     self.view.backgroundColor = [ZPAStaticHelper backgroundTextureColor];
-    self.title = NSLocalizedString(@"You Mingle With", nil);
+    self.title = NSLocalizedString(@"Friends", nil);
     
     
 }

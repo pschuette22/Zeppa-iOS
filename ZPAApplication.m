@@ -38,8 +38,6 @@
     [self setLoggedInAccountEmailInUserDefault];
     
     
-    
-    
     //Get all mingle for this user
     [self fetchInitialMinglers];
     
@@ -68,7 +66,7 @@
 }
 -(void)setLoggedInAccountEmailInUserDefault{
     
-    [ZPAUserDefault storedObject:loggedInUser.endPointUser.userInfo.googleAccountEmail withKey:kCurrentZeppaUserEmail];
+    [ZPAUserDefault storedObject:loggedInUser.endPointUser.authEmail withKey:kCurrentZeppaUserEmail];
 }
 -(void)fetchInitialMinglers{
     _fetchIntialMinglers = [[ZPAFetchInitialMinglers alloc]init];

@@ -20,10 +20,10 @@
     }
     return self;
 }
--(void)setZepppUserToUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier{
+-(void)setZeppaUserToUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier{
     
     
-    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForGetZeppaUserInfoWithIdentifier:identifier idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken] requestedParentId:identifier];
     
     [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         
@@ -43,27 +43,27 @@
     
     
 }
--(void)fetchZeppaUserInfoWithIdentifier:(NSNumber *)identifier  withCompletion:(getZeppaUserInfoOject)completion {
-    
-    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForGetZeppaUserInfoWithIdentifier:[identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    
-    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
-        
-        if(error) {
-            // error
-        
-        } else if (userInfo.identifier){
-            completion(userInfo);
-        } else {
-            // nil object returned
-        }
-    }];
-    
-}
+//-(void)fetchZeppaUserInfoWithIdentifier:(NSNumber *)identifier  withCompletion:(getZeppaUserInfoOject)completion {
+//    
+//    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken] requestedParentId:identifier.longLongValue];
+//    
+//    [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
+//        
+//        if(error) {
+//            // error
+//        
+//        } else if (userInfo.identifier){
+//            completion(userInfo);
+//        } else {
+//            // nil object returned
+//        }
+//    }];
+//    
+//}
 
 -(void)fetchZeppaUserInfoWithParentIdentifier:(NSNumber *)identifier withCompletion:(getZeppaUserInfoOject)completion {
     
-    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithRequestedParentId:[identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    GTLQueryZeppaclientapi *userInfoQuery = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken] requestedParentId:identifier.longLongValue];
     
     [self.zeppaUserInfoService executeQuery:userInfoQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         

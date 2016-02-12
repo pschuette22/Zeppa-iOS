@@ -25,9 +25,10 @@
 -(NSArray *)getNotification;
 -(BOOL)hasLoadedInitial;
 -(void)onLoadedInitialNotification;
--(NSInteger)getNotificationTypeOrder:(GTLZeppaclientapiZeppaNotification *)notification;
+-(NSInteger)getNotificationTypeOrder:(NSString *)notificationType ;
 -(NSString *)getNotificationTitle:(GTLZeppaclientapiZeppaNotification *)notification;
 -(NSString *)getNotificationMessage:(GTLZeppaclientapiZeppaNotification *)notification;
+
 -(void)fetchInitialNotifications:(long long)userId;
 -(void)addZeppaNotification:(GTLZeppaclientapiZeppaNotification *)notification;
 -(void)executeRemoveNotification:(long long)notificationId;

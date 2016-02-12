@@ -14,7 +14,6 @@
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAUserDefault.h"
-#import "ZPANotificationDelegate.h"
 
 @interface ZPAAppDelegate ()
 
@@ -116,6 +115,8 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    // TODO: remove expired data and run queries for new stuff
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -128,28 +129,51 @@
     NSLog(@"Notification received - no handler: %@", userInfo);
     
     // Notication was consumed here
-    if ([[ZPANotificationDelegate sharedObject] doNotificationPreprocessing:userInfo]){
-        NSLog(@"Did dispatch ");
-    }
+    [self processRemoteNotification:userInfo withHandler:nil];
 
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     
     NSLog(@"Notification received - with handler: %@", userInfo);
-    [[ZPANotificationDelegate sharedObject] doNotificationPreprocessing:userInfo];
-    
-    
-    if(handler != NULL)
-        handler(UIBackgroundFetchResultNewData);
-    
+    [self processRemoteNotification:userInfo withHandler:handler];
+
 }
 
+/*
+ * Did receive a local notification
+ */
 - (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notif {
     // TODO: handle additional stuff when a local notification is received
+
     if(notif){
-        
+        // if the phone is running ios 8 or later
+        if(NSClassFromString(@"UIAlertController")) {
+            // Do something
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:notif.alertTitle
+                                                                           message:notif.alertBody
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction * action) {}];
+            // Add the default action
+            [alert addAction:defaultAction];
+            
+            // Find the root view controller and dispatch the notification
+            [[[self window] rootViewController] presentViewController:alert animated:YES completion:nil];
+            
+        } else {
+
+            // This is an older version, display a notification this way
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:notif.alertTitle
+                                                                message:notif.alertBody
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }
     }
+    
 }
 
 
@@ -186,41 +210,6 @@
     self.window.rootViewController = loginVC;
 }
 
-/*
-+(GTLServiceTicket *)executeZeppaUserEndpointQueryWithCompletionBlock:(ZPAUserEndpointServiceCompletionBlock)completion
-{
-    ///Addded by Milan to test Google App Engine End Point
-    ///Create ZeppaUserEndPoint Service
-        static GTLServiceZeppaclientapi *zeppaUserService = nil;
-        if (!zeppaUserService) {
-            zeppaUserService = [[GTLServiceZeppaclientapi alloc]init];
-            zeppaUserService.retryEnabled = YES;
- //           [zeppaUserService setAuthorizer:(id<GTMFetcherAuthorizationProtocol>)[GPPSignIn sharedInstance].authentication];
-        }
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *googleProfileID = [defaults objectForKey:kZeppaLoggedInUserGooglePlusIdKey];
-    
-        ///Create a query object
-//        GTLQueryZeppaclientapi *zeppaUserQuery = [GTLQueryZeppaclientapi queryForFetchMatchingUserWithProfileId:googleProfileID];
-    GTLQueryZeppaclientapi *zeppaUserQuery = [GTLQueryZeppaclientapi queryForListZeppaUser];
-  
-        GTLServiceTicket *ticket = [zeppaUserService executeQuery:zeppaUserQuery completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
-            if (!error) {
-                GTLZeppaclientapiZeppaUser *zeppaUser = object;
-                NSLog(@"%@",zeppaUser);
-            }
-            else{
-    
-                NSLog(@"Error in GTLQueryZeppaclientapi %@",error.localizedDescription);
-                
-            }
-            
-        }];
-    
-    return ticket;
-    
-}
-*/
 
 //****************************************************
 #pragma mark - ZPALoginVCDelegate Methods
@@ -256,25 +245,146 @@
         [[ZPADeviceInfo sharedObject] setLoginDeviceForUser:[ZPAZeppaUserSingleton sharedObject].zeppaUser];
     }
     
+}
 
+///*!
+// * Display an alert from Zeppa
+// */
+//-(void) showAlertFromZeppa: (NSString*) title withMessage:(NSString*) message{
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+//                                                        message:message
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"OK"
+//                                              otherButtonTitles:nil];
+//    [alertView show];
+//}
 
+/*
+ * Dispatch a notification and increment the icon badge
+ */
+-(void) dispatchNotificationWithTitle: (NSString*) title withBody:(NSString*) body {
+    
+    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    if(localNotif){
+        
+        // Set the title and the body of this message
+        localNotif.alertTitle = title;
+        localNotif.alertBody = body;
+        
+        // If application is not active, add action to open app
+        if([[UIApplication sharedApplication] applicationState] !=UIApplicationStateActive){
+            localNotif.alertAction = NSLocalizedString(@"View", nil);
+        }
+        
+        localNotif.soundName = UILocalNotificationDefaultSoundName;
+        localNotif.applicationIconBadgeNumber = 1;
+        
+        // Set the fire date to right now
+        localNotif.fireDate = [NSDate date];
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
+        
+    }
+}
+
+/*
+ * When a notification is received, process it accordingly
+ */
+-(void) processRemoteNotification: (NSDictionary *) notification withHandler:(void (^)(UIBackgroundFetchResult))handler {
+    
+    // Grab the logged in user's ID and the purpose of this notification
+    NSNumber *currentUserId = [ZPAUserDefault getValueFromUserDefaultUsingKey:kCurrentZeppaUserId];
+    
+    // If there isn't a logged in user, ignore notification
+    if(!currentUserId || currentUserId.longLongValue < 0){
+        return;
+    }
+    
+    // Allocate the Number Formatter
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    
+    // Determine the purpose of this notification
+    NSString* purpose = [notification valueForKey:@"purpose"];
+    
+    // Determine why this notification was sent to this user and react accordingly
+    if([purpose isEqualToString:@"zeppaNotification"]){
+        // User received a displayable notification
+        // Fetch the expiration and purpose of this notification
+        NSLog(@"Packet received for notification");
+        
+        // Make sure notification has not expired
+        NSString *expireString = [notification valueForKey:@"expires"];
+        
+        NSNumber *expiresNumber = [f numberFromString:expireString];
+        
+        // Make sure the notification has not expired
+        if(expiresNumber.longLongValue > [ZPADateHelper currentTimeMillis]){
+            
+            // Dispatch a simple notifiction
+            NSString *notificationType = [notification valueForKey:@"type"];
+            
+            // If the user is notified about this type of notification, dispatch one
+            if([ZPAUserDefault doSendNotificationForType:notificationType]){
+                NSString *title = [notification valueForKey:@"title"];
+                NSString *message = [notification valueForKey:@"message"];
+                
+                [self dispatchNotificationWithTitle:title withBody:message];
+                
+            }
+            
+            
+            // If the app is active, fetch the data
+            if([UIApplication sharedApplication].applicationState == UIApplicationStateActive ){
+                
+                NSString *notificationIdString = [notification valueForKey:@"id"];
+                
+                NSNumber* notificationId = [f numberFromString:notificationIdString];
+                NSLog(@"Do Fetch notification for id: %@", notificationId);
+                
+                
+                // Initialize a task to fetch objects
+                ZPAFetchNotificationTask *fetchTask = [[ZPAFetchNotificationTask alloc] initWithNotificationId:notificationId withCompletionHandler:handler];
+                
+                [fetchTask execute];
+            } // If this app is in the background maybe set a pending task?
+        }
     
 
+    
+        
+    } else if ([purpose isEqualToString:@"userRelationshipDeleted"] && [UIApplication sharedApplication].applicationState != UIApplicationStateInactive) {
+        // If there was a relationship to another user that was deleted, get rid of them in local data
+        NSLog(@"Packet received because relationship deleted");
+        
+        
+        // Make sure intended recipient is user
+        NSString *recipientIdString = [notification valueForKey:@"recipientId"];
+        NSNumber *recipientId = [f numberFromString:recipientIdString];
+        
+        // Intended recipient is the current user
+        if([currentUserId isEqualToNumber:recipientId]){
+            
+            NSString *senderIdString = [notification valueForKey:@"senderId"];
+            NSNumber *senderId = [f numberFromString:senderIdString];
+            [[ZPAZeppaUserSingleton sharedObject] removeHeldMediatorById:senderId.longLongValue];
+            [[ZPAZeppaEventSingleton sharedObject] removeMediatorsForUser:senderId.longLongValue];
+        }
+        
+        
+    } else if ([purpose isEqualToString:@"eventDeleted"] && [UIApplication sharedApplication].applicationState != UIApplicationStateInactive){
+        // Event was deleted in backend, make sure it does not exist here
+        NSLog(@"Packet received because event deleted");
+        
+        // Extract the eventId and format
+        NSString *eventIdString = [notification valueForKey:@"eventId"];
+        NSNumber *eventId = [f numberFromString:eventIdString];
+        
+        // Call to remove event by the Id
+        [[ZPAZeppaEventSingleton sharedObject] removeEventById:eventId.longLongValue];
+        
+    }
 }
-
-/*!
- * Display an alert from Zeppa
- */
--(void) showAlertFromZeppa: (NSString*) title withMessage:(NSString*) message{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
-}
-
-
 
 
 

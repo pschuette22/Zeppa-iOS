@@ -46,7 +46,7 @@
 {
     __weak typeof(self)  weakSelf = self;
     
-    GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithRequestedParentId:self.otherUserId.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForFetchZeppaUserInfoByParentIdWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken] requestedParentId:self.otherUserId.longLongValue];
     
     GTLServiceTicket *ticket = [self.zeppaClientApiService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserInfo *userInfo, NSError *error) {
         
@@ -98,11 +98,14 @@
                         relationship = [response.items objectAtIndex:0];
                     }
                     
+                    // Initialize a user mediator for this user with or without a relationship to said user
                     [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:weakSelf.zeppaUserInfo andRelationShip:relationship];
                     
-                    // Dispatch completion block
-                    weakSelf.completionBlock(ticket, weakSelf.zeppaUserInfo, error);
-                    
+                    // Verify there is a completion block associated with this task
+                    if(weakSelf.completionBlock){
+                        // Dispatch completion block
+                        weakSelf.completionBlock(ticket, weakSelf.zeppaUserInfo, error);
+                    }
                 }
                 
             }];

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ZPALoginVC.h"
 #import "GTMOAuth2Authentication.h"
-#import "ZPAFetchNotificationOnAuth.h"
+#import "ZPAFetchNotificationTask.h"
 
 //@class GTLServiceTicket;
 //typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
@@ -20,11 +20,8 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic ,strong) id swapperClassRef;
-@property(nonatomic, strong) NSString *registrationToken;
-@property(nonatomic, strong) NSMutableArray *pendingNotifictions;
-//@property(nonatomic, readonly, strong) NSString *messageKey;
-//@property(nonatomic, readonly, strong) NSString *gcmSenderID;
-//@property(nonatomic, readonly, strong) NSDictionary *registrationOptions;
+@property (nonatomic, strong) NSString *registrationToken;
+@property (nonatomic, strong) NSMutableArray *pendingNotifictions;
 
 /*!
  * @description This method is called to indicate that user has Logout from the app.This will take the user out of the main interface to the Login screen. Also it will clear the cache.
@@ -32,9 +29,8 @@
 +(ZPAAppDelegate *)sharedObject;
 
 -(void)userDidLogoutFromZeppa;
-//-(void)gcmRegistrationHandler;
-
-//+(GTLServiceTicket *)executeZeppaUserEndpointQueryWithCompletionBlock:(ZPAUserEndpointServiceCompletionBlock)completion;
+-(void)dispatchNotificationWithTitle: (NSString*) title withBody:(NSString*) body;
+-(void)processRemoteNotification: (NSDictionary *) notification withHandler:(void (^)(UIBackgroundFetchResult))handler;
 
 
 

@@ -19,7 +19,4 @@
 - (IBAction)joinBtnTapped:(UIButton *)sender;
 - (IBAction)watchBtnTapped:(UIButton *)sender;
 
-- (IBAction)textBtnTapped:(UIButton *)sender;
-
-
 @end

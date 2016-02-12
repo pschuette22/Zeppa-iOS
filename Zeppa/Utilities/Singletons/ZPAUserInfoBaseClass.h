@@ -28,5 +28,5 @@ typedef void(^getZeppaUserInfoOjectArray)(NSArray * info);
 
 -(void)executeZeppaUserInfoListQueryWithAuthWithFilter:(NSString *)filter withCompletion:(getZeppaUserInfoOjectArray)completion;
 
--(void)setZepppUserToUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier;
+-(void)setZeppaUserToUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier;
 @end

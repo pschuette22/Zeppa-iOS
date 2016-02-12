@@ -27,7 +27,6 @@
 
 
 @property (strong,readonly) GTLServiceZeppaclientapi *zeppaClientApiService;
-@property (nonatomic, weak) GTMOAuth2Authentication *auth;
 
 
 @property (nonatomic, strong) NSNumber* currentUserId;

@@ -81,10 +81,6 @@
     ZPAAppDelegate *appdelegate = (ZPAAppDelegate *)[UIApplication sharedApplication].delegate;
     appdelegate.swapperClassRef = self;
     
-    NSString *activityBtnStr = [NSString stringWithFormat:@"%lu",(unsigned long)[ZPANotificationSingleton sharedObject].notificationArray.count ];
-    
-    [self.activity_BedgeBtn setTitle:activityBtnStr forState:UIControlStateNormal];
-    
     self.selectedTabIndex = -1;
     self.transitionInProgress = NO;
     _btnCalendar.tag = TAG_MONTH_CALENDAR_VISIBLE;
@@ -106,6 +102,13 @@
 -(void)viewWillAppear:(BOOL)animated{
     
 }
+
+- (void) viewDidAppear:(BOOL)animated {
+    [self updateNotificationNumber];
+    // Attempt to set the
+    
+}
+
 -(void)eventButtonTapped:(id)object{
     
    
@@ -358,6 +361,23 @@
 -(void) onEventsChanged {
 
 
+}
+
+/**
+ * Update the badge indicating the number of notifications
+ */
+-(void) updateNotificationNumber {
+    NSInteger badgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber;
+    if(badgeNumber > 0){
+        [self.activity_BedgeBtn setHidden:NO];
+        if(badgeNumber>99){
+            [self.activity_BedgeBtn setTitle:[NSString stringWithFormat:@"+99"] forState:UIControlStateNormal];
+        } else {
+            [self.activity_BedgeBtn setTitle:[NSString stringWithFormat:@"%d",badgeNumber] forState:UIControlStateNormal];
+        }
+    } else {
+        [self.activity_BedgeBtn setHidden:YES];
+    }
 }
 
 

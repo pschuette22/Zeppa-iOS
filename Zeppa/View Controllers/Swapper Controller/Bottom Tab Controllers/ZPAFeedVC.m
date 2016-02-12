@@ -9,8 +9,6 @@
 #import "ZPAFeedVC.h"
 #import "ZPAEventDetailVC.h"
 
-#import <MessageUI/MessageUI.h>
-
 #import "ZPADateHelper.h"
 #import "ZPAMyEventFeedCell.h"
 
@@ -26,7 +24,7 @@
 
 
 
-@interface ZPAFeedVC ()<MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate>
+@interface ZPAFeedVC ()
 
 @property (retain, nonatomic) UIRefreshControl *refreshControl;
 @property(nonatomic,strong) NSMutableArray *arrFeeds;
@@ -110,58 +108,6 @@
 }
 
 
-//****************************************************
-#pragma mark - UIMessage Controller Delegate
-//****************************************************
--(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    
-    switch (result) {
-        case MessageComposeResultCancelled:
-            
-            break;
-        case MessageComposeResultFailed:
-        {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-       
-            break;
-             }
-        case MessageComposeResultSent:
-            break;
-        default:
-            break;
-    }
-     [self dismissViewControllerAnimated:YES completion:nil];
-    
-}
-//****************************************************
-#pragma mark - Mail Controller Delegate
-//****************************************************
--(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    switch (result) {
-        case MFMailComposeResultCancelled:
-            NSLog(@"mail cancelled");
-            
-            break;
-        case MFMailComposeResultFailed:
-            
-            NSLog(@"Mail failed %@",[error localizedDescription]);
-            
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Mail succcessfuly sent");
-            
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Mail saved");
-            break;
-            
-        default:
-            break;
-    }
-    
-     [self dismissViewControllerAnimated:YES completion:NULL];
-}
 
 //****************************************************
 #pragma mark - UITableViewDataSource Methods
@@ -323,29 +269,6 @@
 
 }
 
-- (IBAction)textBtnTapped:(UIButton *)sender {
-    
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    myEvent = [_arrFeeds objectAtIndex:indexPath.row];
-    
-    ZPADefaulZeppatUserInfo * eventMediatorInfo = [ZPADefaulZeppatUserInfo sharedObject];
-    
-   id eventHostMediator = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[myEvent.event.hostId longLongValue]];
-    
-    if ([eventHostMediator isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        eventMediatorInfo = eventHostMediator;
-    }else{
-       
-    }
-    
-    if (eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber) {
-        [self showSmsWithRecepientsNumber:eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber];
-    }else{
-        [self sendEmailWithRecipientsMail:eventMediatorInfo.zeppaUserInfo.googleAccountEmail];
-    }
-    
-    
-}
 
 
 -(NSIndexPath *)getIndexPathOfRowWithBtnClick:(UIButton *)sender{
@@ -357,42 +280,6 @@
     return indexPath;
     
 }
-//****************************************************
-#pragma mark - Private methods
-//****************************************************
 
--(void)showSmsWithRecepientsNumber:(NSString *)phoneNumber{
-    
-    
-    if(![MFMessageComposeViewController canSendText]){
-        UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [warningAlert show];
-        return;
-    }
-    NSArray * reciepients =[NSArray arrayWithObject:phoneNumber];
-    MFMessageComposeViewController * messageController = [[MFMessageComposeViewController alloc]init];
-    
-    messageController.messageComposeDelegate = self;
-    [messageController setRecipients:reciepients];
-    
-    [self presentViewController:messageController animated:YES completion:nil];
-}
-
--(void)sendEmailWithRecipientsMail:(NSString *)emailId{
-    
-    NSString * mailSubject = @"";
-    NSString * mailBody = @"";
-    NSArray * mailRecepients = [NSArray arrayWithObject:emailId];
-    
-    MFMailComposeViewController * mailController = [[MFMailComposeViewController alloc]init];
-    
-    mailController.mailComposeDelegate = self;
-    
-    [mailController setSubject:mailSubject];
-    [mailController setMessageBody:mailBody isHTML:NO];
-    [mailController setToRecipients:mailRecepients];
-    
-    [self presentViewController:mailController animated:YES completion:nil];
-}
 
 @end

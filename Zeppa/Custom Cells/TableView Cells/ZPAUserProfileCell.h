@@ -22,6 +22,8 @@
 @property (strong, nonatomic) IBOutlet UIView *tagBaseView;
 @property (weak, nonatomic) IBOutlet UIButton *commonMinglerButton;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tcHeightConstraint;
+
 
 -(void)showZeppaMinglersInfoOnCell:(ZPADefaulZeppatUserInfo *)zeppaUser;
 @end

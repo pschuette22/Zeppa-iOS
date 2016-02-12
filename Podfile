@@ -8,6 +8,7 @@ target :Zeppa do
 
     pod 'Google-API-Client/Calendar'
     pod 'Google/SignIn'
+    pod 'GrowingTextViewHandler', '~> 1.0.3'
 
     xcodeproj '/Users/DrunkWithFunk21/Workspace/XCode/Zeppa-iOS/Zeppa.xcodeproj'
 
@@ -17,6 +18,7 @@ target :ZeppaTests  do
     
     pod 'Google-API-Client/Calendar'
     pod 'Google/SignIn'
+    pod 'GrowingTextViewHandler', '~> 1.0.3'
 
     xcodeproj '/Users/DrunkWithFunk21/Workspace/XCode/Zeppa-iOS/Zeppa.xcodeproj'
     

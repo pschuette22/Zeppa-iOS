@@ -32,8 +32,6 @@
 
 - (IBAction)watchBtnTapped:(UIButton *)sender;
 
-- (IBAction)textBtnTapped:(UIButton *)sender;
-
 - (IBAction)joinBtnTapped:(UIButton *)sender;
 
 @end

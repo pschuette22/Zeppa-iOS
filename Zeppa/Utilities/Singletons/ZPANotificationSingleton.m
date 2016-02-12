@@ -31,7 +31,7 @@ BOOL hasLoadedInitial;
 }
 
 // Auth object for executing authenticated queries
--(GTLServiceZeppaclientapi *) zeppaEventRelationshipService {
+-(GTLServiceZeppaclientapi *) notificationService {
     static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
@@ -59,6 +59,19 @@ BOOL hasLoadedInitial;
     // If logged in, fetch event
     GTLQueryZeppaclientapi *notificationQuery = [GTLQueryZeppaclientapi queryForGetZeppaNotificationWithIdentifier:notificationId.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
 
+    // Execute the retrieval query
+    [[self notificationService] executeQuery:notificationQuery completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        
+        // If there was an error, handle it
+        if(error){
+            
+        } else if (object){
+            GTLZeppaclientapiZeppaNotification *notification = object;
+            [self addZeppaNotification:notification];
+        }
+        
+    } ];
+    
 }
 
 
@@ -121,9 +134,8 @@ BOOL hasLoadedInitial;
     //notifyObserver;
 }
 
--(NSInteger)getNotificationTypeOrder:(GTLZeppaclientapiZeppaNotification *)notification{
-    
-    NSString *notificationType = notification.type;
+// Get an application wide ordinal for the notification type
+-(NSInteger)getNotificationTypeOrder:(NSString *)notificationType {
     
     if ([notificationType isEqualToString:@"MINGLE_REQUEST"]) {
         return 0;
@@ -151,11 +163,17 @@ BOOL hasLoadedInitial;
     
 }
 
+// Conveninence from prior implementation
 -(NSString *)getNotificationTitle:(GTLZeppaclientapiZeppaNotification *)notification{
     
+    return [self getNotificationTitleForKey:[notification type]];
+}
+
+// Return the title of a notification to be sent provided the notification type
+-(NSString *) getNotificationTitleForKey:(NSString*) notificationType {
     NSString *notificationTitle ;
     
-    switch ([self getNotificationTypeOrder:notification]) {
+    switch ([self getNotificationTypeOrder:notificationType]) {
         case 0:
             notificationTitle = @"New Request To Mingle";
             break;
@@ -172,7 +190,7 @@ BOOL hasLoadedInitial;
             notificationTitle = @"Unread Comment";
             break;
         case 5:
-            notificationTitle = @"Event Cancelation";
+            notificationTitle = @"Event Canceled";
             break;
         case 6:
             notificationTitle = @"Event Updated";
@@ -246,6 +264,8 @@ BOOL hasLoadedInitial;
     
     if (![self alreadyHoldingNotification:notification]) {
         [_notificationArray addObject:notification];
+        // Post a notification that a ZeppaNotification has been received
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ZeppaNotification" object:notification];
     }
     
     

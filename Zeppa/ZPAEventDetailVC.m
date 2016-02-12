@@ -7,8 +7,6 @@
 //
 
 #import "ZPAEventDetailVC.h"
-#import <MessageUI/MessageUI.h>
-
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPAZeppaEventTagSingleton.h"
 #import "ZPAZeppaEventSingleton.h"
@@ -36,7 +34,7 @@
 
 #import "GTLZeppaclientapiCollectionResponseEventComment.h"
 #import "GTLZeppaclientapiEventComment.h"
-
+#import "GrowingTextViewHandler.h"
 
 
 #define SEGUE_ID_ADD_INVITES @"addInvites"
@@ -54,8 +52,14 @@
 #define HEIGHTEXTEND 33
 #define WIDTHPADDING 5
 #define TAGS_BASEVIEW_TAG_VALUE 100
+#define TITLE_STORYBOARD_HEIGHT 25
+#define DESC_STORYBOARD_HEIGHT 32
+#define QUICKACTION_STORYBOARD_HEIGHT 32
+#define LEFT_TITLE_STORYBOARD_OFFSET 86
+#define RIGHT_TITLE_STORYBOARD_OFFSET 28
 
-@interface ZPAEventDetailVC ()<MutualMinglerTagDelegate,addInvitesDelegate, MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate>
+
+@interface ZPAEventDetailVC ()<MutualMinglerTagDelegate,addInvitesDelegate, UITextViewDelegate>
 {
     NSMutableArray *temp;
     NSMutableArray *testArray;
@@ -71,6 +75,7 @@
 @property (nonatomic, strong)UITextView *currentTextView;
 @property (nonatomic, assign)NSInteger scrollViewHeight;
 @property (nonatomic, strong)ZPADiscussionCell *discussionCell;
+@property (strong, nonatomic) GrowingTextViewHandler *handler;
 
 @end
 
@@ -127,6 +132,10 @@
     [self executeListEventComment];
     
     [self showEventDetails];
+    
+    // set the description label handler
+    self.handler = [[GrowingTextViewHandler alloc]initWithTextView:self.discussTextView withHeightConstraint:self.discussionTextHeight];
+    [self.handler updateMinimumNumberOfLines:1 andMaximumNumberOfLine:6];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -135,9 +144,14 @@
    // _lbl_NoOfInvitedUser.text =[NSString stringWithFormat:@"%lu",(unsigned long)addInvites.invitesUserIdArray.count];
     
     
-    _scollView_base.contentSize = CGSizeMake(0, _discussionPostBaseView.frame.origin.y+_discussionPostBaseView.frame.size.height+10);
+//    _scollView_base.contentSize = CGSizeMake(0, _discussionPostBaseView.frame.origin.y+_discussionPostBaseView.frame.size.height+10);
     
     //[self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(notificationReceived:)
+                                                 name:@"ZeppaNotification"
+                                               object:nil];
 
 }
 
@@ -145,7 +159,7 @@
     
     [_tagsArray removeAllObjects];
     [_tagsTempArray removeAllObjects];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
 
@@ -168,7 +182,14 @@
 {
     
    
-    self.title = @"Event Detail";
+    // Set the appropriate view title
+    if([self.eventDetail.event.privacy isEqualToString:@"PRIVATE"]){
+        self.title = @"Private Activity";
+    } else if ([self.eventDetail.event.privacy isEqualToString:@"CASUAL"]) {
+        self.title = @"Casual Activity";
+    } else {
+        self.title = @"Activity Info";
+    }
     
     self.view.backgroundColor = [ZPAStaticHelper backgroundTextureColor];
     
@@ -176,7 +197,7 @@
 //        [self updateDiscussionTableViewAndDisussionBaseViewFrame];
 //    }
     
-    [self.lbl_EventDuration setNumberOfLines:0];
+//    [self.lbl_EventDuration setNumberOfLines:0];
     
     [self.userProfile_ImageView.layer setCornerRadius:5.0];
     [self.userProfile_ImageView.layer setBorderColor:[[ZPAStaticHelper greyBorderColor] CGColor]];
@@ -194,10 +215,10 @@
     [self.location_ImageView.layer setMasksToBounds:YES];
     
     
-    [self.discussionPostBaseView.layer setCornerRadius:3.0];
-    [self.discussionPostBaseView.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
-    [self.discussionPostBaseView.layer setBorderWidth:1.0];
-    [self.discussionPostBaseView.layer setMasksToBounds:YES];
+    [self.discussionBoardView.layer setCornerRadius:3.0];
+    [self.discussionBoardView.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
+    [self.discussionBoardView.layer setBorderWidth:1.0];
+    [self.discussionBoardView.layer setMasksToBounds:YES];
     
     [self.eventDetailView.layer setBorderWidth:1.0];
     [self.eventDetailView.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
@@ -206,8 +227,12 @@
     
     [self.postButton.layer setCornerRadius:3.0];
     [self.postButton.layer setMasksToBounds:YES];
+    
 }
 
+/*
+ * Prepare to leave this view
+ */
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     
@@ -224,8 +249,7 @@
         
         addInvites.delegate = self;
     }
-    
-    if ([segue.identifier isEqualToString:SEGUE_ID_JOINED_USER]) {
+    else if ([segue.identifier isEqualToString:SEGUE_ID_JOINED_USER]) {
         
         ZPAMutualMinglerVC *minglerVC = [segue destinationViewController];
         minglerVC.isAttendingUser = YES;
@@ -239,7 +263,7 @@
         minglerVC.attendingUserIdArr = attendingUser;
        // minglerVC.minglerUserInfo = _userProfileInfo;
     }
-    if ([segue.identifier isEqualToString:SEGUE_ID_MAPLOCATION]) {
+    else if ([segue.identifier isEqualToString:SEGUE_ID_MAPLOCATION]) {
         ZPAMapViewController * mapViewVC = [segue destinationViewController];
         
         if (_eventDetail.event.mapsLocation) {
@@ -271,28 +295,6 @@
 
 
 
-//****************************************************
-#pragma mark - UITableViewDataSource Methods
-//****************************************************
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-//  _scollView_base.contentSize = CGSizeMake(320, _scrollViewHeight+(temp.count-1)*TABLEVIEW_ROW_HEIGHT);
-//    return temp.count;
-    return eventCommentArray.count;
-}
-
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row ==1) {
-        
-    }
-    static NSString *discussionCellId = @"discussionCell";
-    _discussionCell = [tableView dequeueReusableCellWithIdentifier:discussionCellId];
-    [_discussionCell showEventCommentDetail:[eventCommentArray objectAtIndex:indexPath.row]];
-    
-    return _discussionCell;
-}
 ///**********************************************
 #pragma mark - Initialization Method
 ///**********************************************
@@ -303,70 +305,12 @@
     invitedUserIdArray = [NSMutableArray array];
 }
 
-//****************************************************
-#pragma mark - UIMessage Controller Delegate
-//****************************************************
--(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    
-    switch (result) {
-        case MessageComposeResultCancelled:
-            
-            break;
-        case MessageComposeResultFailed:
-        {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            
-            break;
-        }
-        case MessageComposeResultSent:
-            break;
-        default:
-            break;
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-}
-//****************************************************
-#pragma mark - Mail Controller Delegate
-//****************************************************
--(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    switch (result) {
-        case MFMailComposeResultCancelled:
-            NSLog(@"mail cancelled");
-            
-            break;
-        case MFMailComposeResultFailed:
-            
-            NSLog(@"Mail failed %@",[error localizedDescription]);
-            
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Mail succcessfuly sent");
-            
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Mail saved");
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
 
 
 //****************************************************
 #pragma mark - UITableViewDelegate Methods
 //****************************************************
 
-///@todo need to implement below methods
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    
-}
 /*
 #pragma mark - Navigation
 
@@ -377,12 +321,36 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+///*******************************************
+#pragma mark - UITextViewDelegate Methods
+///*******************************************
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:@"Let's talk..."]) {
+        textView.text = @"";
+        textView.textColor = [UIColor blackColor];
+    }
+    [textView becomeFirstResponder];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:@""]) {
+        textView.text = @"Let's talk...";
+        textView.textColor = [UIColor lightGrayColor];
+    }
+    [textView resignFirstResponder];
+}
+
+
+
 ///*******************************************
 #pragma mark - Action Method
 ///*******************************************
 - (IBAction)postButtonTapped:(UIButton *)sender
 {
-    
     
     [self executeInsertEventComment];
     
@@ -391,28 +359,18 @@
     
    // _scollView_base.contentSize = CGSizeMake(320, _tableView_discussion.frame.origin.y+_tableView_discussion.frame.size.height+5);
     
-     _whiteLabelInTextView.hidden = NO;
-   // _discussTextView.text = @"";
    
    // _tableView_discussion.hidden = NO;
     
     _tableView_discussion.backgroundColor = [ZPAStaticHelper backgroundTextureColor];
-
 }
-//-(void)updateDiscussionTableViewAndDisussionBaseViewFrame{
-//    CGRect frame = _tableView.frame;
-//    frame.size.height += TABLEVIEW_ROW_HEIGHT;
-//    _tableView.frame = frame;
-//    
-//    CGRect discussionBaseFrame = _discussionPostBaseView.frame;
-//    discussionBaseFrame.origin.y += TABLEVIEW_ROW_HEIGHT;
-//    _discussionPostBaseView.frame = discussionBaseFrame;
-//}
+
+
 - (IBAction)cancelBarButtonTapped:(UIBarButtonItem *)sender {
     
     progress = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [progress setLabelText:@"Removing Event..."];
+    [progress setLabelText:@"Canceling Event..."];
     [progress show:YES];
     [self removeZeppaEventWithIdentifier:[_eventDetail.event.identifier longLongValue]];
     
@@ -446,26 +404,6 @@
 
 }
 
-- (IBAction)textBtnTapped:(UIButton *)sender {
-    
-    
-    ZPADefaulZeppatUserInfo * eventMediatorInfo = [ZPADefaulZeppatUserInfo sharedObject];
-    
-    id eventHostMediator = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[_eventDetail.event.hostId longLongValue]];
-    
-    if ([eventHostMediator isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        eventMediatorInfo = eventHostMediator;
-    }else{
-        
-    }
-    
-    if (eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber) {
-        [self showSmsWithRecepientsNumber:eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber];
-    }else{
-        [self sendEmailWithRecipientsMail:eventMediatorInfo.zeppaUserInfo.googleAccountEmail];
-    }
-
-}
 
 - (IBAction)watchBtnTapped:(UIButton *)sender {
     
@@ -489,13 +427,58 @@
     
    // [self setAttendingUserButtonText:sender];
 //    [self showAttendingUserMediator:sender];
-    
+    // TODO: navigate to invite users page
     
 }
 
 -(IBAction)otherEventTagButtonAction:(UIButton *)sender{
     
     [self executeZeppaTagFollowApi:sender];
+}
+
+// User tapped the time, indicate
+- (IBAction)eventTimeBtnTapped:(UIButton*)sender {
+    // Identify Calendar Conflicts
+}
+
+// Tapped the location
+- (IBAction)eventLocationBtnTapped:(UIButton*)sender {
+    // Open
+}
+
+// Show the user who is going
+- (IBAction)attendingUsersBtnTapped:(UIButton*)sender {
+    
+}
+
+/*
+ * User tapped description to see more, or hide it
+ */
+- (IBAction)descriptionTapped:(UIButton*)sender {
+    
+    
+    CGSize desiredSize = [_lbl_EventDescription sizeThatFits:CGSizeMake(_lbl_EventDescription.frame.size.width, CGFLOAT_MAX)];
+    CGFloat desiredHeight = desiredSize.height;
+
+    if(_lbl_EventDescription.frame.size.height < desiredHeight){
+        // If the current height is not the desired height, make it the desired height
+        self.eventOverviewHeightConstraint.constant += (desiredHeight - self.descHeight.constant);
+        self.descHeight.constant = desiredHeight;
+        
+    } else {
+        CGFloat resize = _lbl_EventDescription.font.lineHeight * 3;
+        self.eventOverviewHeightConstraint.constant -= (self.descHeight.constant-resize);
+        // Was already desired height, make it 3 lines
+        self.descHeight.constant = resize;
+    }
+
+    // Animate the layout changes
+    [UIView animateWithDuration:0.25 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+ 
+    [self resizeScrollViewContent];
+
 }
 
 
@@ -518,12 +501,13 @@
 
 - (void)keyboardWillShow:(NSNotification*)notification {
     
-    
+    // TODO: handle this appropriately
     
 }
 -(void)keyboardWillHide:(NSNotification *)notification
 {
 
+    // TODO: handle this appropriately
     [self.scollView_base setContentOffset:CGPointZero];
     
 }
@@ -533,11 +517,22 @@
 ///*****************************************************
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    NSUInteger newLength = [textView.text length] + [text length] - range.length;
-    
-    _whiteLabelInTextView.hidden = (newLength == 0) ? NO : YES;
-    
+//    NSUInteger newLength = [textView.text length] + [text length] - range.length;
+//    
+//    _whiteLabelInTextView.hidden = (newLength == 0) ? NO : YES;
+//    
     //return (newLength > [ZPAStaticHelper getMaxCharacterInTextField]) ? NO : YES;
+    
+    if(textView == self.discussTextView && textView.contentSize.height != self.discussionBoardHeight.constant) {
+        
+        // Should resize
+        
+        
+    }
+//    CGRect frame = textView.frame;
+//    frame.size.height = textView.contentSize.height;
+//    textView.frame = frame;
+    
     return YES;
 
 }
@@ -557,8 +552,31 @@
     [keyboardToolBar setItems: [NSArray arrayWithObjects:flexibleSpace,doneButton,nil]];
     
     textView.inputAccessoryView = keyboardToolBar;
+    
+    // Resize the height of the text view if needed
+    
     return YES;
 }
+
+- (void)textViewDidChange:(UITextView *)textView {
+    CGFloat heightBeforeResize = self.discussionTextHeight.constant;
+    [self.handler resizeTextViewWithAnimation:YES];
+    CGFloat heightAfterResize = self.discussionTextHeight.constant;
+    
+    // Resize views if needed
+    if((textView == self.discussTextView) && (heightBeforeResize != heightAfterResize)){
+        CGFloat heightChange = heightAfterResize - heightBeforeResize;
+
+        self.discussBaseHeight.constant+=heightChange;
+        self.discussionBoardHeight.constant += heightChange;
+
+        [self resizeScrollViewContent];
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutIfNeeded];
+        }];
+    }
+}
+
 -(void)doneButtonClicked{
     
     [_currentTextView resignFirstResponder];
@@ -573,7 +591,7 @@
     if (![title isEqualToString:@""]) {
         title = [title stringByReplacingOccurrencesOfString:@" " withString:@""];
         UIButton *newButton =[[UIButton alloc]init];
-        [newButton setTitle:title.capitalizedString forState:UIControlStateNormal];
+        [newButton setTitle:title forState:UIControlStateNormal];
         
         if ([_eventDetail.event.hostId isEqualToNumber:currentUser.endPointUser.identifier] || (![_eventDetail.event.hostId isEqualToNumber:currentUser.endPointUser.identifier] && [_defaultTagsForUser isFollowing:tag])) {
             
@@ -607,14 +625,15 @@
             UIView *lastView =(UIView *)[_tagsTempArray lastObject];
             [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width+2*PADDING,textSize.height+2*PADDING)];
             
-            if (newView.frame.origin.x+newButton.frame.size.width>300) {
-                newView.frame =CGRectMake(PADDING, newView.frame.origin.y+newView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
-                [self updateAllViewsFramesUsingTagButtonBaseView:newView withCounter:0];
-                
+            if (newView.frame.origin.x+newButton.frame.size.width>self.view.frame.size.width) {
+                newView.frame =CGRectMake(0, newView.frame.origin.y+newView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
+                self.tagContainerHeight.constant += newView.frame.size.height;
+//                [self updateAllViewsFramesUsingTagButtonBaseView:newView withCounter:0];
             }
             
         }else{
-            [newView setFrame:CGRectMake(PADDING,PADDING,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            [newView setFrame:CGRectMake(0,0,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            self.tagContainerHeight.constant = newView.frame.size.height;
            // [self updateAllViewsFramesUsingTagButtonBaseView:newView withCounter:0];
         }
         
@@ -628,34 +647,13 @@
             [newButton addTarget:self action:@selector(otherEventTagButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         }
         
+        // Update the layout if needed
+        [self.view layoutIfNeeded];
     }
    // [self setCrossButton];
     
 }
--(void)updateAllViewsFramesUsingTagButtonBaseView:(UIView *)baseView withCounter:(NSInteger)count{
-    
 
-    
-    CGRect frame = _tagContainerView.frame;
-    if (count>0) {
-        frame.size.height = count * baseView.frame.size.height;
-        frame.origin.y = _view_BaseUserDetail.frame.size.height;
-    }else{
-        //frame.size.height = 2.0;
-        frame.size.height = _tagContainerView.frame.size.height + baseView.frame.size.height;
-        frame.origin.y = _view_BaseUserDetail.frame.size.height;
-    }
-    _tagContainerView.frame = frame;
-   
-    
-    _eventDetailView.frame = CGRectMake( _eventDetailView.frame.origin.x,  _tagContainerView.frame.origin.y +_tagContainerView.frame.size.height,  _eventDetailView.frame.size.width,  _eventDetailView.frame.size.height);
-    
-    _view_DiscussionLabel.frame = CGRectMake(_view_DiscussionLabel.frame.origin.x, _eventDetailView.frame.origin.y+_eventDetailView.frame.size.height, _view_DiscussionLabel.frame.size.width, _view_DiscussionLabel.frame.size.height);
-    
-    _discussionPostBaseView.frame = CGRectMake(_discussionPostBaseView.frame.origin.x, _view_DiscussionLabel.frame.origin.y+_view_DiscussionLabel.frame.size.height, _discussionPostBaseView.frame.size.width, _discussionPostBaseView.frame.size.height);
-    
-    _scollView_base.contentSize = CGSizeMake(0, _discussionPostBaseView.frame.origin.y+_discussionPostBaseView.frame.size.height+10);
-}
 
 ///*************************************************
 #pragma mark - Show Event Detail Private Method ..
@@ -665,29 +663,28 @@
     
     if(_eventDetail){
         
-//        NSInteger eventDescriptionHeight = _txtView_EventDescription.frame.size.height;
-//        [_txtView_EventDescription sizeToFit];
-//        NSInteger eventDescriptionHeightAfter = _txtView_EventDescription.frame.size.height;
-//        
-//        NSInteger heightExtended =eventDescriptionHeightAfter - eventDescriptionHeight;
-//        
-//        _qucikActionView.frame = CGRectMake(_qucikActionView.frame.origin.x, _qucikActionView.frame.origin.y+heightExtended, _qucikActionView.frame.size.width, _qucikActionView.frame.size.height);
-        
         if ([_eventDetail.event.hostId isEqualToNumber: currentUser.endPointUser.identifier]) {
             
+            
+            // Adjust relevant view constraints
+            self.eventOverviewHeightConstraint.constant-=self.quickActionHeight.constant;
+            self.quickActionHeight.constant=0;
             _qucikActionView.hidden = YES;
             
-            _view_BaseUserDetail.frame = CGRectMake(_view_BaseUserDetail.frame.origin.x, _view_BaseUserDetail.frame.origin.y,_view_BaseUserDetail.frame.size.width , _txtView_EventDescription.frame.size.height+_txtView_EventDescription.frame.origin.y);
             
             [self getTagsForCurrentUser];
             
+            // Hosts must attend activities
+            _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
+            
+            // Update title to reflect that current user hosts
+            self.title = [NSString stringWithFormat:@"My %@",self.title];
+            
         }else{
             
-            _qucikActionView.hidden = NO;
+            // Make sure the cancel option is hidden
             _cancelBarButton.enabled = NO;
             _cancelBarButton.tintColor = [UIColor clearColor];
-            
-            _view_BaseUserDetail.frame = CGRectMake(_view_BaseUserDetail.frame.origin.x, _view_BaseUserDetail.frame.origin.y,_view_BaseUserDetail.frame.size.width , _view_BaseUserDetail.frame.size.height);
             
             if (_isMinglerTag == YES) {
                 [self getTagsForMinglersScreen];
@@ -695,23 +692,51 @@
             
             [self getTagsOtherUserEvent];
             }
+            
+            // If guests may not send invites and this is a guest...
+            if ([_eventDetail.event.guestsMayInvite boolValue] == false) {
+                
+                // Remove the Invites option from the details view
+                self.eventDetailHeight.constant-=self.addInvitesBaseHeight.constant;
+                self.addInvitesBaseHeight.constant = 0;
+                [self.addInvitesSeperatorView setHidden:YES];
+                
+            }
+            
+            // Set attending/ watching button indication
+            if ([_eventDetail.relationship.isWatching boolValue] == true) {
+                [_watchButton setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
+            }
+            else{
+                [_watchButton setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
+            }
+            if ([_eventDetail.relationship.isAttending boolValue] == true) {
+                [_joinButton setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
+            }
+            else{
+                [_joinButton setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
+            }
         }
         
         
-        
-        if ([_eventDetail.event.guestsMayInvite boolValue] == false) {
-            _addInvitesView.hidden = YES;
-            _addInvitesSeperatorView.hidden = YES;
-            
-            _eventDetailView.frame = CGRectMake(_eventDetailView.frame.origin.x, _eventDetailView.frame.origin.y, _eventDetailView.frame.size.width, _eventDetailView.frame.size.height - _addInvitesView.frame.size.height);
-            
-            [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
-        }
-    
-        
-        
+        // Make sure you can see the whole title
         _lbl_EventTitle.text = _eventDetail.event.title;
+        // Set the height of the title as needed
+        CGFloat titleWidth = self.view.frame.size.width - (RIGHT_TITLE_STORYBOARD_OFFSET + LEFT_TITLE_STORYBOARD_OFFSET);
+        CGSize titleSize = [self.lbl_EventTitle sizeThatFits:CGSizeMake(titleWidth, MAXFLOAT)];
+        CGFloat titleResize = titleSize.height - self.titleHeight.constant;
+        if(titleResize> 0) {
+            self.eventOverviewHeightConstraint.constant+=titleResize;
+            self.userDetailHeightConstraint.constant +=titleResize;
+            self.titleHeight.constant = titleSize.height;
+        }
+        
+        
+        
+        // Set the duration of the activity
         _lbl_EventDuration.text = [[ZPADateHelper sharedHelper]getEventTimeDuration:_eventDetail.event.start withEndTime:_eventDetail.event.end];
+        
+        // set the display location of the activity
         _lbl_EventDisplayLocation.text = _eventDetail.event.displayLocation;
         
         id zeppaUser = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[_eventDetail.event.hostId longLongValue]];
@@ -725,13 +750,13 @@
                 
             }];
             
-            [_imageView_discussionUser setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image,NSError *error,SDImageCacheType cacheType){
-                
-            }];
+//            [_imageView_discussionUser setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image,NSError *error,SDImageCacheType cacheType){
+//                
+//            }];
             
             NSString * userName = [NSString stringWithFormat:@"%@ %@",_userInfo.zeppaUserInfo.givenName,_userInfo.zeppaUserInfo.familyName];
             
-            _lbl_discussionUserName.text = userName;
+//            _lbl_discussionUserName.text = userName;
             _lbl_EventHostName.text = userName;
             
             [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator withZeppaEvent:_eventDetail];
@@ -747,39 +772,49 @@
                 
             }];
             
-            [_imageView_discussionUser setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image,NSError *error,SDImageCacheType cacheType){
-                
-            }];
+//            [_imageView_discussionUser setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image,NSError *error,SDImageCacheType cacheType){
+//                
+//            }];
             
             NSString *userName = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
             
-            _lbl_discussionUserName.text = userName;
+//            _lbl_discussionUserName.text = userName;
             _lbl_EventHostName.text = userName;
             
-            _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
+            
             
             [self setAttendingUserButtonForOwnEvent:_invitedUserBtn];
         }
         
-        if ([_eventDetail.relationship.isWatching boolValue] == true) {
-            [_watchButton setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
+        
+        /**
+         * Adjust the description height
+         */
+        NSString * description = self.eventDetail.event.descriptionProperty;
+        CGFloat descriptionHeight = 0;
+        if(description.length>0) {
+        
+            // Set the appropriate height of the description
+            self.lbl_EventDescription.text = description;
+            CGSize desiredSize = [self.lbl_EventDescription sizeThatFits:CGSizeMake(_lbl_EventDescription.frame.size.width, CGFLOAT_MAX)];
+            CGFloat desiredHeight = desiredSize.height;
+            CGFloat lineHeight = self.lbl_EventDescription.font.lineHeight;
+            
+            descriptionHeight = 3 * lineHeight;
+            
+            if(desiredHeight<descriptionHeight) {
+                descriptionHeight = desiredHeight;
+                // Will not need to expand
+                [self.btn_eventDescription setEnabled:NO];
+            }
+
         }
-        else{
-            [_watchButton setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
-        }
-        if ([_eventDetail.relationship.isAttending boolValue] == true) {
-            [_joinButton setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
-        }
-        else{
-            [_joinButton setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
-        }
+        self.eventOverviewHeightConstraint.constant+=(descriptionHeight-self.descHeight.constant);
+        self.descHeight.constant = descriptionHeight;
         
-        
-        
-        _txtView_EventDescription.text = _eventDetail.event.descriptionProperty;
-        
-        
-        
+        // Layout the view if it's needed
+        [self.view layoutIfNeeded];
+        [self resizeScrollViewContent];
     }
 
     
@@ -795,20 +830,20 @@
 
 -(void)getMutualMinglerTags{
     
-   
-    
-    
     if (_eventDetail.getTagIds.count == 0 ) {
-        
-        _tagsArray = [[[ZPAZeppaEventTagSingleton sharedObject]getZeppaTagForUser:[_userInfo.zeppaUserInfo.key.parent.identifier longLongValue]]mutableCopy];
+        // Should never happen
+        _tagsArray = [[NSMutableArray alloc] init];
     }else{
         _tagsArray = [[[ZPAZeppaEventTagSingleton sharedObject]getTagsFromTagIdsArray:_eventDetail.getTagIds]mutableCopy];
     }
     
+    // There is a slight possibility the host attached tags to the event then deleted them before event ended.
+    // Must account for this
     _tagContainerView.hidden = (_tagsArray.count>0)?NO:YES;
     
     if (_tagContainerView.hidden == YES) {
-        [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
+        self.tagContainerHeight.constant = 0;
+        return;
     }
     
     
@@ -833,14 +868,14 @@
     _tagContainerView.hidden = (_tagsArray.count>0)?NO:YES;
     
     if (_tagContainerView.hidden == YES) {
-            [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
-        }
+        self.tagContainerHeight.constant = 0;
+        return;
+    }
 
     
     for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
         [self showTagButtonWithTitleString:tag.tagText andTag:tag];
-        [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
         
     }
 
@@ -853,7 +888,7 @@
     _tagContainerView.hidden = (_tagsArray.count>0)?NO:YES;
     
     if (_tagContainerView.hidden == YES) {
-        [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
+        self.tagContainerHeight.constant = 0;
     }
     
     
@@ -869,66 +904,38 @@
 #pragma mark - Private methods
 //****************************************************
 
--(void)showSmsWithRecepientsNumber:(NSString *)phoneNumber{
+- (void) resizeScrollViewContent {
     
-    
-    if(![MFMessageComposeViewController canSendText]){
-        UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [warningAlert show];
-        return;
-    }
-    NSArray * reciepients =[NSArray arrayWithObject:phoneNumber];
-    MFMessageComposeViewController * messageController = [[MFMessageComposeViewController alloc]init];
-    
-    messageController.messageComposeDelegate = self;
-    [messageController setRecipients:reciepients];
-    
-    [self presentViewController:messageController animated:YES completion:nil];
+    self.scollView_base.contentSize = CGSizeMake(self.view.frame.size.width, (self.userDetailHeightConstraint.constant + self.tagContainerHeight.constant + self.eventDetailHeight.constant + self.discussionBoardHeight.constant + PADDING));
 }
 
--(void)sendEmailWithRecipientsMail:(NSString *)emailId{
+/*
+ * Add a discussion view to a event view controller
+ */
+-(void)addDiscussionCellWithComment: (GTLZeppaclientapiEventComment *) comment {
     
-    NSString * mailSubject = @"";
-    NSString * mailBody = @"";
-    NSArray * mailRecepients = [NSArray arrayWithObject:emailId];
+    // Draw the discussion view cell
+    ZPADiscussionCell *discussionCell = [[[NSBundle mainBundle] loadNibNamed:@"Discussion_View" owner:self options:nil]firstObject];
+    CGRect frame = discussionCell.frame;
+    frame.size.width = _discussionContainerView.frame.size.width;
+    discussionCell.frame = frame;
     
-    MFMailComposeViewController * mailController = [[MFMailComposeViewController alloc]init];
-    
-    mailController.mailComposeDelegate = self;
-    
-    [mailController setSubject:mailSubject];
-    [mailController setMessageBody:mailBody isHTML:NO];
-    [mailController setToRecipients:mailRecepients];
-    
-    [self presentViewController:mailController animated:YES completion:nil];
-}
+    [discussionCell defineCellWidth:_discussionContainerView.frame.size.width];
+    [discussionCell showEventCommentDetail:comment];
 
+    // Add view to the discussion container
+    [_discussionContainerView addSubview:discussionCell];
 
--(void)insertNewDiscussionCell{
+    // Reframe the cell
+    discussionCell.frame = CGRectMake(0, _discussionContainerHeight.constant, discussionCell.frame.size.width, discussionCell.frame.size.height);
     
-   
-    [_tableView_discussion beginUpdates];
-    NSIndexPath * indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     
-    [_tableView_discussion insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    // extend container cells
+    _discussionBoardHeight.constant+=discussionCell.frame.size.height;
+    _discussionContainerHeight.constant+=discussionCell.frame.size.height;
     
-    [_tableView_discussion endUpdates];
-    
-}
-
--(void)setTableViewHeightAccordingToCells{
-    
-    CGFloat height = _tableView_discussion.rowHeight;
-    height *= eventCommentArray.count;
-    
-    CGRect tableFrame = _tableView_discussion.frame;
-    
-    tableFrame.size.height = height;
-    
-    _tableView_discussion.frame = tableFrame;
-    
-    _discussionPostBaseView.frame = CGRectMake(_discussionPostBaseView.frame.origin.x, _discussionPostBaseView.frame.origin.y, _discussionPostBaseView.frame.size.width, _tableView_discussion.frame.origin.y+_tableView_discussion.frame.size.height);
-    
+    [self resizeScrollViewContent];
+    [self.view layoutIfNeeded];
 }
 
 
@@ -950,7 +957,7 @@
                 if ([attendingUser containsObject:currentUser.endPointUser.identifier]) {
                     attendingSize -=1;
                 }
-                [sender setTitle:[NSString stringWithFormat:@"You mingle with %d / %d other people going",attendingMinglerArr.count,attendingSize] forState:UIControlStateNormal];
+                [sender setTitle:[NSString stringWithFormat:@"Friends with %ldl / %ldl people going",(unsigned long)attendingMinglerArr.count,(long)attendingSize] forState:UIControlStateNormal];
             }
         }else{
             
@@ -962,7 +969,7 @@
                 if ([attendingUser containsObject:currentUser.endPointUser.identifier]) {
                     attendingSize -=1;
                 }
-                [sender setTitle:[NSString stringWithFormat:@"You mingle with %d / %d other people going",attendingMinglerArr.count,attendingSize] forState:UIControlStateNormal];
+                [sender setTitle:[NSString stringWithFormat:@"Friends with %ldl / %ldl people going",(unsigned long)attendingMinglerArr.count,(long)attendingSize] forState:UIControlStateNormal];
             }
             
         }
@@ -1097,49 +1104,14 @@
             
             eventCommentArray = [response.items mutableCopy];
             
-            [_tableView_discussion reloadData];
-            [self setTableViewHeightAccordingToCells];
-            [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
             
-#warning  to be done after
-            
-//            for (GTLZeppaclientapiEventComment *eventComment in response.items) {
-//                
-//                if ([[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[eventComment.commenterId longLongValue]] == nil) {
-//                    ZPADefaulZeppatUserInfo * userInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[eventComment.commenterId longLongValue ]];
-//                    
-//                     
-//                }
-//            }
-            
-        
-            
-            
-            
-            
-//            while (iterator.hasNext()) {
-//                EventComment comment = iterator.next();
-//                
-//                try {
-//                    
-//                    if (ZeppaUserSingleton.getInstance()
-//                        .getAbstractUserMediatorById(
-//                                                     comment.getCommenterId()) == null) {
-//                            ZeppaUserInfo info = buildUserInfoEndpoint()
-//                            .getZeppaUserInfo(
-//                                              comment.getCommenterId()
-//                                              .longValue()).execute();
-//                            ZeppaUserSingleton
-//                            .getInstance()
-//                            .addDefaultZeppaUserMediator(info, null);
-//                        }
-//                    
-//                    result.add(comment);
-//                    
-//
-//            
-//            
-            
+            for (GTLZeppaclientapiEventComment *eventComment in response.items) {
+                
+                
+                [eventCommentArray addObject:eventComment];
+                [self addDiscussionCellWithComment:eventComment];
+                
+            }
             
             
         }
@@ -1158,21 +1130,19 @@
     [eventComment setText:_discussTextView.text];
     [eventComment setEventId:_eventDetail.event.identifier];
     
+    // Set the text color to indicate posting
+    _discussTextView.textColor = [UIColor grayColor];
+    
     GTLQueryZeppaclientapi *inserComment = [GTLQueryZeppaclientapi queryForInsertEventCommentWithObject:eventComment idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [[self eventCommentService] executeQuery:inserComment completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiEventComment * object, NSError *error) {
 
         if (error) {
             NSLog(@"Error inserting Comment %@",error.description);
+            _discussTextView.textColor = [UIColor blackColor];
         }else if (object.identifier){
             
-            [eventCommentArray insertObject:object atIndex:0];
-           // [eventCommentArray addObject:object];
-            
-            //[self insertNewDiscussionCell];
-            _discussTextView.text = @"";
-            [_tableView_discussion reloadData];
-            [self setTableViewHeightAccordingToCells];
-            [self updateAllViewsFramesUsingTagButtonBaseView:nil withCounter:0];
+            [eventCommentArray addObject:object];
+            [self addDiscussionCellWithComment:object];
 
         }
         
@@ -1267,6 +1237,30 @@
         }
         
     }];
+}
+
+- (void) notificationReceived: (NSNotification*) notification {
+    
+    if([notification.name isEqualToString:@"ZeppaNotification"]){
+        GTLZeppaclientapiZeppaNotification *notif = notification.object;
+        
+        if(notif.eventId && [self.eventDetail doesMatchEventId:notif.eventId.longLongValue]){
+        
+            switch ([[ZPANotificationSingleton sharedObject] getNotificationTypeOrder:notif.type]){
+                
+                case 4: // Someone commented on this event
+                    [self executeListEventComment];
+                    break;
+                    
+                case 6: // Someone joined
+                case 7: // Or someone left
+                    // TODO: update event to user relationships
+                    break;
+            }
+            
+        }
+    }
+    
 }
 
 -(GTLServiceZeppaclientapi *)zeppaEventService{

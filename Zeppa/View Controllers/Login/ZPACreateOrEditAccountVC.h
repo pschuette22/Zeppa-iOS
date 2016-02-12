@@ -42,6 +42,8 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UIView *view_TagContainer;
 @property (weak, nonatomic) IBOutlet UIScrollView *baseScrollView;
 
+// Layout Constraints
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tcHeightConstraint;
 
 - (IBAction)btnCancelTapped:(UIBarButtonItem *)sender;
 - (IBAction)btnDoneTapped:(UIBarButtonItem *)sender;

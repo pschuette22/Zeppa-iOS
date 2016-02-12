@@ -68,7 +68,23 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
  * Assumes user is signed in
  */
 -(NSString*)authToken {
-    return [[GIDSignIn sharedInstance] currentUser].authentication.idToken;
+    NSString *authToken = nil;
+    GIDGoogleUser *googleUser = [[GIDSignIn sharedInstance] currentUser];
+    if(googleUser && googleUser.authentication){
+        // Set the auth token of the current, legitimate google user
+        authToken = [[googleUser authentication] idToken];
+        
+        NSDate *now = [[NSDate alloc] init];
+        NSDate *expires = [googleUser authentication].accessTokenExpirationDate;
+        
+        // Token has expired
+        if([now compare:expires] == NSOrderedDescending){
+            NSLog(@"Token has expired");
+            authToken=nil;
+        }
+    }
+    
+    return authToken;
 }
 
 
@@ -82,18 +98,15 @@ typedef void(^fetchGoogleCalendar)(BOOL success,NSError *errr);
 ///**********************************************
 #pragma mark - Google Login Authentication
 ///**********************************************
--(void)signInWithGoogleSilently:(BOOL) silently {
-    // Check to see if already signed in
-    if([[GIDSignIn sharedInstance] currentUser]){
-        return;
-    }
+-(void)signInWithGoogle {
     
-    //
-    if(silently) {
-        [[GIDSignIn sharedInstance] signInSilently];
-    } else {
-        [[GIDSignIn sharedInstance] signIn];
-    }
+    [[GIDSignIn sharedInstance] signIn];
+    
+}
+
+-(void)signInWithGoogleSilently {
+    
+    [[GIDSignIn sharedInstance] signInSilently];
     
 }
 //
@@ -108,14 +121,9 @@ didSignInForUser:(GIDGoogleUser *)user
     if(error){
         NSLog(@"Loggin Error: %@", error);
         // Fuck an error
-        return;
+    } else if(user) {
+        NSLog(@"Logged In For User: %@",user);
     }
-    
-    NSLog(@"Logged In For User: %@",user);
-
-    
-    /// TODO: anythin once the signin has gone through
-    /// I think the UI delegate feels this first
     
 }
 

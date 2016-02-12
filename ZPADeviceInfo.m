@@ -39,7 +39,7 @@
         [deviceInfo setLastLogin:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]];
         [deviceInfo setVersion:[NSNumber numberWithInt:1]];
         [deviceInfo setUpdate:[NSNumber numberWithInt:0]];
-        [deviceInfo setBugfix:[NSNumber numberWithInt:0]];
+        [deviceInfo setBugfix:[NSNumber numberWithInt:9]];
         
         [self getDeviceInfoWithObject:deviceInfo withCursor:nil];
     }
@@ -69,7 +69,7 @@
                 }
             }
             NSString *cursor = response.nextPageToken;
-            if(cursor){
+            if(response.items.count >=25 && cursor){
                 [weakSelf getDeviceInfoWithObject:deviceInfo withCursor:cursor];
             }else{
                 [weakSelf insertDeviceInfoWithObject:deviceInfo];
@@ -149,6 +149,7 @@
     
     }
 }
+
 -(GTLServiceZeppaclientapi *)deviceInfoService {
     static GTLServiceZeppaclientapi *service = nil;
     

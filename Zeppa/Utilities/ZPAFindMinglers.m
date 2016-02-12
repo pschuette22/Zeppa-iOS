@@ -193,7 +193,7 @@
                 
                 _defaultZeppaUser.zeppaUserInfo = userInfo;
                 [_uniqueInfoItems addObject:userInfo];
-                [_recognizedEmails addObject:userInfo.googleAccountEmail];
+//                [_recognizedEmails addObject:userInfo.googleAccountEmail];
                 
                 [weakSelf getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:nil anduserId:userInfo.key.parent.identifier];
                 
@@ -228,7 +228,7 @@
                 
                 _defaultZeppaUser.zeppaUserInfo = userInfo;
                 [_uniqueInfoItems addObject:userInfo];
-                [_recognizedNumbers addObject:userInfo.primaryUnformattedNumber];
+//                [_recognizedNumbers addObject:userInfo.primaryUnformattedNumber];
                 [weakSelf getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:nil anduserId:userInfo.key.parent.identifier];
                
             }

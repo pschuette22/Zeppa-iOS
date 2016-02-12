@@ -61,7 +61,6 @@
 		268150DA19F4E862009D51DF /* DFDatePickerDayHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 268150D919F4E862009D51DF /* DFDatePickerDayHeader.m */; };
 		268150E419F4E9D7009D51DF /* ZPAMyProfileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 268150E319F4E9D7009D51DF /* ZPAMyProfileVC.m */; };
 		268150E719F4E9F5009D51DF /* ZPAFriendListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 268150E619F4E9F5009D51DF /* ZPAFriendListVC.m */; };
-		268150EA19F4EA0C009D51DF /* ZPAExtendABidVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 268150E919F4EA0C009D51DF /* ZPAExtendABidVC.m */; };
 		268150ED19F4EA22009D51DF /* ZPAFeedbackVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 268150EC19F4EA22009D51DF /* ZPAFeedbackVC.m */; };
 		268150F019F4EA41009D51DF /* ZPASettingsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 268150EF19F4EA41009D51DF /* ZPASettingsVC.m */; };
 		26AC1EF41A08CF06006380B3 /* ZPAMinglerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26AC1EF31A08CF06006380B3 /* ZPAMinglerCell.m */; };
@@ -130,44 +129,43 @@
 		A2F141361AEE68DB0032165E /* ZPAFetchEventsForMingler.m in Sources */ = {isa = PBXBuildFile; fileRef = A2F141351AEE68DB0032165E /* ZPAFetchEventsForMingler.m */; };
 		A2F141391AEE692B0032165E /* ZPAFetchDefaultTagsForUser.m in Sources */ = {isa = PBXBuildFile; fileRef = A2F141381AEE692B0032165E /* ZPAFetchDefaultTagsForUser.m */; };
 		A2F1E7E31A135F1300DB5324 /* ZPAEventDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A2F1E7E21A135F1300DB5324 /* ZPAEventDetailVC.m */; };
-		A2F1E7E81A135F9F00DB5324 /* ZPARepostEventVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A2F1E7E71A135F9F00DB5324 /* ZPARepostEventVC.m */; };
-		CE1080C51B75FCC000A56432 /* ZPAFetchNotificationOnAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1080C41B75FCC000A56432 /* ZPAFetchNotificationOnAuth.m */; };
+		CE1080C51B75FCC000A56432 /* ZPAFetchNotificationTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1080C41B75FCC000A56432 /* ZPAFetchNotificationTask.m */; };
 		CE3B1CE21B5EC9FD0057120E /* libPods-ZeppaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3B1CE11B5EC9FD0057120E /* libPods-ZeppaTests.a */; };
-		CE4D20AB1BCF139100FB31C6 /* GTLQueryZeppaclientapi.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20701BCF139100FB31C6 /* GTLQueryZeppaclientapi.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20AC1BCF139100FB31C6 /* GTLServiceZeppaclientapi.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20721BCF139100FB31C6 /* GTLServiceZeppaclientapi.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20AE1BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20761BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20AF1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20781BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B01BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D207A1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B11BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D207C1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B21BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D207E1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B31BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20801BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B41BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20821BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B51BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20841BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B61BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20861BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B71BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20881BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B81BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D208A1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20B91BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D208C1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20BA1BCF139100FB31C6 /* GTLZeppaclientapiConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D208E1BCF139100FB31C6 /* GTLZeppaclientapiConstants.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20BB1BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20901BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20BC1BCF139100FB31C6 /* GTLZeppaclientapiEventComment.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20921BCF139100FB31C6 /* GTLZeppaclientapiEventComment.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20BD1BCF139100FB31C6 /* GTLZeppaclientapiEventTag.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20941BCF139100FB31C6 /* GTLZeppaclientapiEventTag.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20BE1BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20961BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20BF1BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20981BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C01BCF139100FB31C6 /* GTLZeppaclientapiKey.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D209A1BCF139100FB31C6 /* GTLZeppaclientapiKey.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C11BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D209C1BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C21BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D209E1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C31BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20A01BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C41BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20A21BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C51BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20A41BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C61BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20A61BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C71BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20A81BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.m */; settings = {ASSET_TAGS = (); }; };
-		CE4D20C81BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D20AA1BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.m */; settings = {ASSET_TAGS = (); }; };
+		CE4E65161C53222E00E3D2F1 /* GTLQueryZeppaclientapi.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64DD1C53222E00E3D2F1 /* GTLQueryZeppaclientapi.m */; };
+		CE4E65171C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64E11C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.m */; };
+		CE4E65181C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64E31C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m */; };
+		CE4E65191C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64E51C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.m */; };
+		CE4E651A1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64E71C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.m */; };
+		CE4E651B1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64E91C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m */; };
+		CE4E651C1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64EB1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.m */; };
+		CE4E651D1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64ED1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m */; };
+		CE4E651E1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64EF1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m */; };
+		CE4E651F1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64F11C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m */; };
+		CE4E65201C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64F31C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m */; };
+		CE4E65211C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64F51C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m */; };
+		CE4E65221C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64F71C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m */; };
+		CE4E65231C53222E00E3D2F1 /* GTLZeppaclientapiConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64F91C53222E00E3D2F1 /* GTLZeppaclientapiConstants.m */; };
+		CE4E65241C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64FB1C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.m */; };
+		CE4E65251C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64FD1C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.m */; };
+		CE4E65261C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E64FF1C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.m */; };
+		CE4E65271C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65011C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.m */; };
+		CE4E65281C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65031C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.m */; };
+		CE4E65291C53222E00E3D2F1 /* GTLZeppaclientapiKey.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65051C53222E00E3D2F1 /* GTLZeppaclientapiKey.m */; };
+		CE4E652A1C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65071C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.m */; };
+		CE4E652B1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65091C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.m */; };
+		CE4E652C1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E650B1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.m */; };
+		CE4E652D1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E650D1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.m */; };
+		CE4E652E1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E650F1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.m */; };
+		CE4E652F1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65111C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.m */; };
+		CE4E65301C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65131C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.m */; };
+		CE4E65311C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E65151C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.m */; };
 		CE8E6E0A1B78DD14008B49C8 /* ZPAFetchUserInfoTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8E6E091B78DD14008B49C8 /* ZPAFetchUserInfoTask.m */; };
 		CE8E6E0D1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8E6E0C1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m */; };
-		CE8E6E101B7AA245008B49C8 /* ZPANotificationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8E6E0F1B7AA245008B49C8 /* ZPANotificationDelegate.m */; };
 		CEA883021B7F36C700A8B9F9 /* ZPALogHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA883011B7F36C700A8B9F9 /* ZPALogHelper.m */; };
+		CECDEA991C6BF1C0004A631C /* Discussion_View.xib in Resources */ = {isa = PBXBuildFile; fileRef = CECDEA981C6BF1C0004A631C /* Discussion_View.xib */; };
 		CEEB22651B829AF10046CCCA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEEB22641B829AF10046CCCA /* GoogleService-Info.plist */; };
 		CEEB22661B829AF10046CCCA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEEB22641B829AF10046CCCA /* GoogleService-Info.plist */; };
+		CEEB229C1C228BA000495D38 /* GTLServiceZeppaclientapi.m in Sources */ = {isa = PBXBuildFile; fileRef = CEEB22621C228BA000495D38 /* GTLServiceZeppaclientapi.m */; };
 		D84EA6ED1AEA657000923F54 /* ZPAFindMinglers.m in Sources */ = {isa = PBXBuildFile; fileRef = D84EA6EC1AEA657000923F54 /* ZPAFindMinglers.m */; };
 		D84EA6F11AEA723200923F54 /* ZPAPhoneContact.m in Sources */ = {isa = PBXBuildFile; fileRef = D84EA6F01AEA723200923F54 /* ZPAPhoneContact.m */; };
 		D85E15D11B04DBB800F93C56 /* check_mark_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D85E15C91B04DBB800F93C56 /* check_mark_selected.png */; };
@@ -442,12 +440,10 @@
 		268150C919F4E6A9009D51DF /* ZPAFeedVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFeedVC.m; sourceTree = "<group>"; };
 		268150D819F4E862009D51DF /* DFDatePickerDayHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DFDatePickerDayHeader.h; sourceTree = "<group>"; };
 		268150D919F4E862009D51DF /* DFDatePickerDayHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DFDatePickerDayHeader.m; sourceTree = "<group>"; };
-		268150E219F4E9D7009D51DF /* ZPAMyProfileVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAMyProfileVC.h; sourceTree = "<group>"; };
+		268150E219F4E9D7009D51DF /* ZPAMyProfileVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAMyProfileVC.h; sourceTree = "<group>"; wrapsLines = 1; };
 		268150E319F4E9D7009D51DF /* ZPAMyProfileVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAMyProfileVC.m; sourceTree = "<group>"; };
 		268150E519F4E9F5009D51DF /* ZPAFriendListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAFriendListVC.h; sourceTree = "<group>"; };
 		268150E619F4E9F5009D51DF /* ZPAFriendListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFriendListVC.m; sourceTree = "<group>"; };
-		268150E819F4EA0C009D51DF /* ZPAExtendABidVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAExtendABidVC.h; sourceTree = "<group>"; };
-		268150E919F4EA0C009D51DF /* ZPAExtendABidVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAExtendABidVC.m; sourceTree = "<group>"; };
 		268150EB19F4EA22009D51DF /* ZPAFeedbackVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAFeedbackVC.h; sourceTree = "<group>"; };
 		268150EC19F4EA22009D51DF /* ZPAFeedbackVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFeedbackVC.m; sourceTree = "<group>"; };
 		268150EE19F4EA41009D51DF /* ZPASettingsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPASettingsVC.h; sourceTree = "<group>"; };
@@ -574,78 +570,75 @@
 		A2F141381AEE692B0032165E /* ZPAFetchDefaultTagsForUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZPAFetchDefaultTagsForUser.m; path = Singletons/ZPAFetchDefaultTagsForUser.m; sourceTree = "<group>"; };
 		A2F1E7E11A135F1300DB5324 /* ZPAEventDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAEventDetailVC.h; path = ../ZPAEventDetailVC.h; sourceTree = "<group>"; };
 		A2F1E7E21A135F1300DB5324 /* ZPAEventDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZPAEventDetailVC.m; path = ../ZPAEventDetailVC.m; sourceTree = "<group>"; };
-		A2F1E7E61A135F9F00DB5324 /* ZPARepostEventVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPARepostEventVC.h; sourceTree = "<group>"; };
-		A2F1E7E71A135F9F00DB5324 /* ZPARepostEventVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPARepostEventVC.m; sourceTree = "<group>"; };
-		CE1080C41B75FCC000A56432 /* ZPAFetchNotificationOnAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFetchNotificationOnAuth.m; sourceTree = "<group>"; };
-		CE1080C61B75FE7100A56432 /* ZPAFetchNotificationOnAuth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPAFetchNotificationOnAuth.h; sourceTree = "<group>"; };
+		CE1080C41B75FCC000A56432 /* ZPAFetchNotificationTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFetchNotificationTask.m; sourceTree = "<group>"; };
+		CE1080C61B75FE7100A56432 /* ZPAFetchNotificationTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPAFetchNotificationTask.h; sourceTree = "<group>"; };
 		CE3B1CE11B5EC9FD0057120E /* libPods-ZeppaTests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-ZeppaTests.a"; path = "Pods/../build/Debug-iphoneos/libPods-ZeppaTests.a"; sourceTree = "<group>"; };
-		CE4D206F1BCF139100FB31C6 /* GTLQueryZeppaclientapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLQueryZeppaclientapi.h; sourceTree = "<group>"; };
-		CE4D20701BCF139100FB31C6 /* GTLQueryZeppaclientapi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLQueryZeppaclientapi.m; sourceTree = "<group>"; };
-		CE4D20711BCF139100FB31C6 /* GTLServiceZeppaclientapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLServiceZeppaclientapi.h; sourceTree = "<group>"; };
-		CE4D20721BCF139100FB31C6 /* GTLServiceZeppaclientapi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLServiceZeppaclientapi.m; sourceTree = "<group>"; };
-		CE4D20741BCF139100FB31C6 /* GTLZeppaclientapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapi.h; sourceTree = "<group>"; };
-		CE4D20751BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiClientInfo.h; sourceTree = "<group>"; };
-		CE4D20761BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiClientInfo.m; sourceTree = "<group>"; };
-		CE4D20771BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseDeviceInfo.h; sourceTree = "<group>"; };
-		CE4D20781BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseDeviceInfo.m; sourceTree = "<group>"; };
-		CE4D20791BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseEventComment.h; sourceTree = "<group>"; };
-		CE4D207A1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseEventComment.m; sourceTree = "<group>"; };
-		CE4D207B1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseEventTag.h; sourceTree = "<group>"; };
-		CE4D207C1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseEventTag.m; sourceTree = "<group>"; };
-		CE4D207D1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseEventTagFollow.h; sourceTree = "<group>"; };
-		CE4D207E1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseEventTagFollow.m; sourceTree = "<group>"; };
-		CE4D207F1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseInviteGroup.h; sourceTree = "<group>"; };
-		CE4D20801BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseInviteGroup.m; sourceTree = "<group>"; };
-		CE4D20811BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponsePhotoInfo.h; sourceTree = "<group>"; };
-		CE4D20821BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponsePhotoInfo.m; sourceTree = "<group>"; };
-		CE4D20831BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaEvent.h; sourceTree = "<group>"; };
-		CE4D20841BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaEvent.m; sourceTree = "<group>"; };
-		CE4D20851BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h; sourceTree = "<group>"; };
-		CE4D20861BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m; sourceTree = "<group>"; };
-		CE4D20871BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaNotification.h; sourceTree = "<group>"; };
-		CE4D20881BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaNotification.m; sourceTree = "<group>"; };
-		CE4D20891BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaUserInfo.h; sourceTree = "<group>"; };
-		CE4D208A1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaUserInfo.m; sourceTree = "<group>"; };
-		CE4D208B1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h; sourceTree = "<group>"; };
-		CE4D208C1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m; sourceTree = "<group>"; };
-		CE4D208D1BCF139100FB31C6 /* GTLZeppaclientapiConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiConstants.h; sourceTree = "<group>"; };
-		CE4D208E1BCF139100FB31C6 /* GTLZeppaclientapiConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiConstants.m; sourceTree = "<group>"; };
-		CE4D208F1BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiDeviceInfo.h; sourceTree = "<group>"; };
-		CE4D20901BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiDeviceInfo.m; sourceTree = "<group>"; };
-		CE4D20911BCF139100FB31C6 /* GTLZeppaclientapiEventComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiEventComment.h; sourceTree = "<group>"; };
-		CE4D20921BCF139100FB31C6 /* GTLZeppaclientapiEventComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiEventComment.m; sourceTree = "<group>"; };
-		CE4D20931BCF139100FB31C6 /* GTLZeppaclientapiEventTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiEventTag.h; sourceTree = "<group>"; };
-		CE4D20941BCF139100FB31C6 /* GTLZeppaclientapiEventTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiEventTag.m; sourceTree = "<group>"; };
-		CE4D20951BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiEventTagFollow.h; sourceTree = "<group>"; };
-		CE4D20961BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiEventTagFollow.m; sourceTree = "<group>"; };
-		CE4D20971BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiInviteGroup.h; sourceTree = "<group>"; };
-		CE4D20981BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiInviteGroup.m; sourceTree = "<group>"; };
-		CE4D20991BCF139100FB31C6 /* GTLZeppaclientapiKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiKey.h; sourceTree = "<group>"; };
-		CE4D209A1BCF139100FB31C6 /* GTLZeppaclientapiKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiKey.m; sourceTree = "<group>"; };
-		CE4D209B1BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiPhotoInfo.h; sourceTree = "<group>"; };
-		CE4D209C1BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiPhotoInfo.m; sourceTree = "<group>"; };
-		CE4D209D1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaEvent.h; sourceTree = "<group>"; };
-		CE4D209E1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaEvent.m; sourceTree = "<group>"; };
-		CE4D209F1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaEventToUserRelationship.h; sourceTree = "<group>"; };
-		CE4D20A01BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaEventToUserRelationship.m; sourceTree = "<group>"; };
-		CE4D20A11BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaFeedback.h; sourceTree = "<group>"; };
-		CE4D20A21BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaFeedback.m; sourceTree = "<group>"; };
-		CE4D20A31BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaNotification.h; sourceTree = "<group>"; };
-		CE4D20A41BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaNotification.m; sourceTree = "<group>"; };
-		CE4D20A51BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaUser.h; sourceTree = "<group>"; };
-		CE4D20A61BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaUser.m; sourceTree = "<group>"; };
-		CE4D20A71BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaUserInfo.h; sourceTree = "<group>"; };
-		CE4D20A81BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaUserInfo.m; sourceTree = "<group>"; };
-		CE4D20A91BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaUserToUserRelationship.h; sourceTree = "<group>"; };
-		CE4D20AA1BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaUserToUserRelationship.m; sourceTree = "<group>"; };
+		CE4E64DC1C53222E00E3D2F1 /* GTLQueryZeppaclientapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLQueryZeppaclientapi.h; sourceTree = "<group>"; };
+		CE4E64DD1C53222E00E3D2F1 /* GTLQueryZeppaclientapi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLQueryZeppaclientapi.m; sourceTree = "<group>"; };
+		CE4E64DE1C53222E00E3D2F1 /* GTLServiceZeppaclientapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLServiceZeppaclientapi.h; sourceTree = "<group>"; };
+		CE4E64DF1C53222E00E3D2F1 /* GTLZeppaclientapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapi.h; sourceTree = "<group>"; };
+		CE4E64E01C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiClientInfo.h; sourceTree = "<group>"; };
+		CE4E64E11C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiClientInfo.m; sourceTree = "<group>"; };
+		CE4E64E21C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseDeviceInfo.h; sourceTree = "<group>"; };
+		CE4E64E31C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseDeviceInfo.m; sourceTree = "<group>"; };
+		CE4E64E41C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseEventComment.h; sourceTree = "<group>"; };
+		CE4E64E51C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseEventComment.m; sourceTree = "<group>"; };
+		CE4E64E61C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseEventTag.h; sourceTree = "<group>"; };
+		CE4E64E71C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseEventTag.m; sourceTree = "<group>"; };
+		CE4E64E81C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseEventTagFollow.h; sourceTree = "<group>"; };
+		CE4E64E91C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseEventTagFollow.m; sourceTree = "<group>"; };
+		CE4E64EA1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseInviteGroup.h; sourceTree = "<group>"; };
+		CE4E64EB1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseInviteGroup.m; sourceTree = "<group>"; };
+		CE4E64EC1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponsePhotoInfo.h; sourceTree = "<group>"; };
+		CE4E64ED1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponsePhotoInfo.m; sourceTree = "<group>"; };
+		CE4E64EE1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaEvent.h; sourceTree = "<group>"; };
+		CE4E64EF1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaEvent.m; sourceTree = "<group>"; };
+		CE4E64F01C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h; sourceTree = "<group>"; };
+		CE4E64F11C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m; sourceTree = "<group>"; };
+		CE4E64F21C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaNotification.h; sourceTree = "<group>"; };
+		CE4E64F31C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaNotification.m; sourceTree = "<group>"; };
+		CE4E64F41C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaUserInfo.h; sourceTree = "<group>"; };
+		CE4E64F51C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaUserInfo.m; sourceTree = "<group>"; };
+		CE4E64F61C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h; sourceTree = "<group>"; };
+		CE4E64F71C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m; sourceTree = "<group>"; };
+		CE4E64F81C53222E00E3D2F1 /* GTLZeppaclientapiConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiConstants.h; sourceTree = "<group>"; };
+		CE4E64F91C53222E00E3D2F1 /* GTLZeppaclientapiConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiConstants.m; sourceTree = "<group>"; };
+		CE4E64FA1C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiDeviceInfo.h; sourceTree = "<group>"; };
+		CE4E64FB1C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiDeviceInfo.m; sourceTree = "<group>"; };
+		CE4E64FC1C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiEventComment.h; sourceTree = "<group>"; };
+		CE4E64FD1C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiEventComment.m; sourceTree = "<group>"; };
+		CE4E64FE1C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiEventTag.h; sourceTree = "<group>"; };
+		CE4E64FF1C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiEventTag.m; sourceTree = "<group>"; };
+		CE4E65001C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiEventTagFollow.h; sourceTree = "<group>"; };
+		CE4E65011C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiEventTagFollow.m; sourceTree = "<group>"; };
+		CE4E65021C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiInviteGroup.h; sourceTree = "<group>"; };
+		CE4E65031C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiInviteGroup.m; sourceTree = "<group>"; };
+		CE4E65041C53222E00E3D2F1 /* GTLZeppaclientapiKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiKey.h; sourceTree = "<group>"; };
+		CE4E65051C53222E00E3D2F1 /* GTLZeppaclientapiKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiKey.m; sourceTree = "<group>"; };
+		CE4E65061C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiPhotoInfo.h; sourceTree = "<group>"; };
+		CE4E65071C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiPhotoInfo.m; sourceTree = "<group>"; };
+		CE4E65081C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaEvent.h; sourceTree = "<group>"; };
+		CE4E65091C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaEvent.m; sourceTree = "<group>"; };
+		CE4E650A1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaEventToUserRelationship.h; sourceTree = "<group>"; };
+		CE4E650B1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaEventToUserRelationship.m; sourceTree = "<group>"; };
+		CE4E650C1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaFeedback.h; sourceTree = "<group>"; };
+		CE4E650D1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaFeedback.m; sourceTree = "<group>"; };
+		CE4E650E1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaNotification.h; sourceTree = "<group>"; };
+		CE4E650F1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaNotification.m; sourceTree = "<group>"; };
+		CE4E65101C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaUser.h; sourceTree = "<group>"; };
+		CE4E65111C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaUser.m; sourceTree = "<group>"; };
+		CE4E65121C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaUserInfo.h; sourceTree = "<group>"; };
+		CE4E65131C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaUserInfo.m; sourceTree = "<group>"; };
+		CE4E65141C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLZeppaclientapiZeppaUserToUserRelationship.h; sourceTree = "<group>"; };
+		CE4E65151C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLZeppaclientapiZeppaUserToUserRelationship.m; sourceTree = "<group>"; };
 		CE8E6E081B78DD14008B49C8 /* ZPAFetchUserInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAFetchUserInfoTask.h; sourceTree = "<group>"; };
 		CE8E6E091B78DD14008B49C8 /* ZPAFetchUserInfoTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFetchUserInfoTask.m; sourceTree = "<group>"; };
 		CE8E6E0B1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAFetchEventInfoTask.h; sourceTree = "<group>"; };
 		CE8E6E0C1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFetchEventInfoTask.m; sourceTree = "<group>"; };
-		CE8E6E0E1B7AA245008B49C8 /* ZPANotificationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPANotificationDelegate.h; sourceTree = "<group>"; };
-		CE8E6E0F1B7AA245008B49C8 /* ZPANotificationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPANotificationDelegate.m; sourceTree = "<group>"; };
 		CEA883001B7F36C700A8B9F9 /* ZPALogHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPALogHelper.h; sourceTree = "<group>"; };
 		CEA883011B7F36C700A8B9F9 /* ZPALogHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPALogHelper.m; sourceTree = "<group>"; };
+		CECDEA981C6BF1C0004A631C /* Discussion_View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Discussion_View.xib; sourceTree = "<group>"; };
+		CEEB22621C228BA000495D38 /* GTLServiceZeppaclientapi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLServiceZeppaclientapi.m; sourceTree = "<group>"; };
 		CEEB22641B829AF10046CCCA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D84EA6EB1AEA657000923F54 /* ZPAFindMinglers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAFindMinglers.h; path = ../ZPAFindMinglers.h; sourceTree = "<group>"; };
 		D84EA6EC1AEA657000923F54 /* ZPAFindMinglers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZPAFindMinglers.m; path = ../ZPAFindMinglers.m; sourceTree = "<group>"; };
@@ -1085,7 +1078,6 @@
 				268150E019F4E984009D51DF /* My Profile Controler */,
 				2664FDCA19ACA40C009C43EE /* Swapper Controller */,
 				268150DF19F4E984009D51DF /* Friend List Controller */,
-				268150DD19F4E984009D51DF /* Extend Bid Controller */,
 				268150DE19F4E984009D51DF /* Feedback Controller */,
 				268150E119F4E984009D51DF /* Settings Controller */,
 				26ADAD931A0E2F9600EE91D4 /* Event Controllers */,
@@ -1146,8 +1138,6 @@
 			children = (
 				2664FD9B19ACA1E6009C43EE /* ZPAAppDelegate.h */,
 				2664FD9C19ACA1E6009C43EE /* ZPAAppDelegate.m */,
-				CE8E6E0E1B7AA245008B49C8 /* ZPANotificationDelegate.h */,
-				CE8E6E0F1B7AA245008B49C8 /* ZPANotificationDelegate.m */,
 			);
 			name = "App Delegate";
 			sourceTree = "<group>";
@@ -1221,15 +1211,6 @@
 				268150C319F4E6A9009D51DF /* NSCalendar+DFAdditions.m */,
 			);
 			name = "Month Flow";
-			sourceTree = "<group>";
-		};
-		268150DD19F4E984009D51DF /* Extend Bid Controller */ = {
-			isa = PBXGroup;
-			children = (
-				268150E819F4EA0C009D51DF /* ZPAExtendABidVC.h */,
-				268150E919F4EA0C009D51DF /* ZPAExtendABidVC.m */,
-			);
-			path = "Extend Bid Controller";
 			sourceTree = "<group>";
 		};
 		268150DE19F4E984009D51DF /* Feedback Controller */ = {
@@ -1461,6 +1442,7 @@
 			isa = PBXGroup;
 			children = (
 				A2808A281AD81A4E00D29D49 /* Dialog_iPhone.xib */,
+				CECDEA981C6BF1C0004A631C /* Discussion_View.xib */,
 			);
 			name = Xib;
 			sourceTree = "<group>";
@@ -1612,7 +1594,6 @@
 		A2F1E7E41A135F2600DB5324 /* Event Detail Controller */ = {
 			isa = PBXGroup;
 			children = (
-				A2F1E7E51A135F7C00DB5324 /* Repost Event Controller */,
 				A2F1E7E11A135F1300DB5324 /* ZPAEventDetailVC.h */,
 				A2F1E7E21A135F1300DB5324 /* ZPAEventDetailVC.m */,
 				D8E642841B2881A0006E2D86 /* ZPAInvitedUserVC.h */,
@@ -1621,20 +1602,11 @@
 			name = "Event Detail Controller";
 			sourceTree = "<group>";
 		};
-		A2F1E7E51A135F7C00DB5324 /* Repost Event Controller */ = {
-			isa = PBXGroup;
-			children = (
-				A2F1E7E61A135F9F00DB5324 /* ZPARepostEventVC.h */,
-				A2F1E7E71A135F9F00DB5324 /* ZPARepostEventVC.m */,
-			);
-			name = "Repost Event Controller";
-			sourceTree = "<group>";
-		};
 		CE1080B11B75F88300A56432 /* Zeppa Tasks */ = {
 			isa = PBXGroup;
 			children = (
-				CE1080C61B75FE7100A56432 /* ZPAFetchNotificationOnAuth.h */,
-				CE1080C41B75FCC000A56432 /* ZPAFetchNotificationOnAuth.m */,
+				CE1080C61B75FE7100A56432 /* ZPAFetchNotificationTask.h */,
+				CE1080C41B75FCC000A56432 /* ZPAFetchNotificationTask.m */,
 				CE8E6E081B78DD14008B49C8 /* ZPAFetchUserInfoTask.h */,
 				CE8E6E091B78DD14008B49C8 /* ZPAFetchUserInfoTask.m */,
 				CE8E6E0B1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.h */,
@@ -1646,65 +1618,65 @@
 		CEFD47691BC61D440082E28C /* ZeppaClientApis-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				CE4D206F1BCF139100FB31C6 /* GTLQueryZeppaclientapi.h */,
-				CE4D20701BCF139100FB31C6 /* GTLQueryZeppaclientapi.m */,
-				CE4D20711BCF139100FB31C6 /* GTLServiceZeppaclientapi.h */,
-				CE4D20721BCF139100FB31C6 /* GTLServiceZeppaclientapi.m */,
-				CE4D20741BCF139100FB31C6 /* GTLZeppaclientapi.h */,
-				CE4D20751BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.h */,
-				CE4D20761BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.m */,
-				CE4D20771BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.h */,
-				CE4D20781BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m */,
-				CE4D20791BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.h */,
-				CE4D207A1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.m */,
-				CE4D207B1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.h */,
-				CE4D207C1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.m */,
-				CE4D207D1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.h */,
-				CE4D207E1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m */,
-				CE4D207F1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.h */,
-				CE4D20801BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.m */,
-				CE4D20811BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.h */,
-				CE4D20821BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m */,
-				CE4D20831BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.h */,
-				CE4D20841BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m */,
-				CE4D20851BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h */,
-				CE4D20861BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m */,
-				CE4D20871BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.h */,
-				CE4D20881BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m */,
-				CE4D20891BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.h */,
-				CE4D208A1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m */,
-				CE4D208B1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h */,
-				CE4D208C1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m */,
-				CE4D208D1BCF139100FB31C6 /* GTLZeppaclientapiConstants.h */,
-				CE4D208E1BCF139100FB31C6 /* GTLZeppaclientapiConstants.m */,
-				CE4D208F1BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.h */,
-				CE4D20901BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.m */,
-				CE4D20911BCF139100FB31C6 /* GTLZeppaclientapiEventComment.h */,
-				CE4D20921BCF139100FB31C6 /* GTLZeppaclientapiEventComment.m */,
-				CE4D20931BCF139100FB31C6 /* GTLZeppaclientapiEventTag.h */,
-				CE4D20941BCF139100FB31C6 /* GTLZeppaclientapiEventTag.m */,
-				CE4D20951BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.h */,
-				CE4D20961BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.m */,
-				CE4D20971BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.h */,
-				CE4D20981BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.m */,
-				CE4D20991BCF139100FB31C6 /* GTLZeppaclientapiKey.h */,
-				CE4D209A1BCF139100FB31C6 /* GTLZeppaclientapiKey.m */,
-				CE4D209B1BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.h */,
-				CE4D209C1BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.m */,
-				CE4D209D1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.h */,
-				CE4D209E1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.m */,
-				CE4D209F1BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.h */,
-				CE4D20A01BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.m */,
-				CE4D20A11BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.h */,
-				CE4D20A21BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.m */,
-				CE4D20A31BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.h */,
-				CE4D20A41BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.m */,
-				CE4D20A51BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.h */,
-				CE4D20A61BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.m */,
-				CE4D20A71BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.h */,
-				CE4D20A81BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.m */,
-				CE4D20A91BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.h */,
-				CE4D20AA1BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.m */,
+				CE4E64DC1C53222E00E3D2F1 /* GTLQueryZeppaclientapi.h */,
+				CE4E64DD1C53222E00E3D2F1 /* GTLQueryZeppaclientapi.m */,
+				CE4E64DE1C53222E00E3D2F1 /* GTLServiceZeppaclientapi.h */,
+				CE4E64DF1C53222E00E3D2F1 /* GTLZeppaclientapi.h */,
+				CE4E64E01C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.h */,
+				CE4E64E11C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.m */,
+				CE4E64E21C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.h */,
+				CE4E64E31C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m */,
+				CE4E64E41C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.h */,
+				CE4E64E51C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.m */,
+				CE4E64E61C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.h */,
+				CE4E64E71C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.m */,
+				CE4E64E81C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.h */,
+				CE4E64E91C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m */,
+				CE4E64EA1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.h */,
+				CE4E64EB1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.m */,
+				CE4E64EC1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.h */,
+				CE4E64ED1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m */,
+				CE4E64EE1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.h */,
+				CE4E64EF1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m */,
+				CE4E64F01C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h */,
+				CE4E64F11C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m */,
+				CE4E64F21C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.h */,
+				CE4E64F31C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m */,
+				CE4E64F41C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.h */,
+				CE4E64F51C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m */,
+				CE4E64F61C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h */,
+				CE4E64F71C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m */,
+				CE4E64F81C53222E00E3D2F1 /* GTLZeppaclientapiConstants.h */,
+				CE4E64F91C53222E00E3D2F1 /* GTLZeppaclientapiConstants.m */,
+				CE4E64FA1C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.h */,
+				CE4E64FB1C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.m */,
+				CE4E64FC1C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.h */,
+				CE4E64FD1C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.m */,
+				CE4E64FE1C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.h */,
+				CE4E64FF1C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.m */,
+				CE4E65001C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.h */,
+				CE4E65011C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.m */,
+				CE4E65021C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.h */,
+				CE4E65031C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.m */,
+				CE4E65041C53222E00E3D2F1 /* GTLZeppaclientapiKey.h */,
+				CE4E65051C53222E00E3D2F1 /* GTLZeppaclientapiKey.m */,
+				CE4E65061C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.h */,
+				CE4E65071C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.m */,
+				CE4E65081C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.h */,
+				CE4E65091C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.m */,
+				CE4E650A1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.h */,
+				CE4E650B1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.m */,
+				CE4E650C1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.h */,
+				CE4E650D1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.m */,
+				CE4E650E1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.h */,
+				CE4E650F1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.m */,
+				CE4E65101C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.h */,
+				CE4E65111C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.m */,
+				CE4E65121C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.h */,
+				CE4E65131C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.m */,
+				CE4E65141C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.h */,
+				CE4E65151C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.m */,
+				CEEB22621C228BA000495D38 /* GTLServiceZeppaclientapi.m */,
 			);
 			path = "ZeppaClientApis-iOS";
 			sourceTree = "<group>";
@@ -1994,6 +1966,7 @@
 				2664FD8619ACA1E6009C43EE /* Frameworks */,
 				2664FD8719ACA1E6009C43EE /* Resources */,
 				E859B1A7F0776F4DA8751DB8 /* Copy Pods Resources */,
+				AB2EF5C22E5291D5F9C1882F /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2013,6 +1986,7 @@
 				2664FDAA19ACA1E6009C43EE /* Frameworks */,
 				2664FDAB19ACA1E6009C43EE /* Resources */,
 				DE614290518AC28062C07BD0 /* Copy Pods Resources */,
+				6D07B7FB4F59F72BFADEDC3F /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2031,7 +2005,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = ZPA;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Pete Schuette";
 				TargetAttributes = {
 					2664FD8819ACA1E6009C43EE = {
@@ -2208,6 +2182,7 @@
 				D8A63C2C1B2188380022F274 /* ic_calendar_empty.png in Resources */,
 				D86F17D31ACD5DA500CF53AC /* ic_home@3x.png in Resources */,
 				D8A63C341B2188380022F274 /* ic_feed_empty@3x.png in Resources */,
+				CECDEA991C6BF1C0004A631C /* Discussion_View.xib in Resources */,
 				D86F177E1ACD5DA500CF53AC /* small_circle_red@3x.png in Resources */,
 				D86F17B11ACD5DA500CF53AC /* accept_request_icon@2x.png in Resources */,
 				D86F17B81ACD5DA500CF53AC /* check_mark_selected@3x.png in Resources */,
@@ -2256,6 +2231,21 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		6D07B7FB4F59F72BFADEDC3F /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZeppaTests/Pods-ZeppaTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A1B9052F3CE9B72DD9A6FF11 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2269,6 +2259,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		AB2EF5C22E5291D5F9C1882F /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Zeppa/Pods-Zeppa-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DE614290518AC28062C07BD0 /* Copy Pods Resources */ = {
@@ -2308,143 +2313,141 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE4D20C21BCF139100FB31C6 /* GTLZeppaclientapiZeppaEvent.m in Sources */,
+				CE4E65291C53222E00E3D2F1 /* GTLZeppaclientapiKey.m in Sources */,
 				CEA883021B7F36C700A8B9F9 /* ZPALogHelper.m in Sources */,
+				CE4E65231C53222E00E3D2F1 /* GTLZeppaclientapiConstants.m in Sources */,
 				CE8E6E0A1B78DD14008B49C8 /* ZPAFetchUserInfoTask.m in Sources */,
 				268150D219F4E6A9009D51DF /* MFDatePickerView.m in Sources */,
 				26BCBB9E19E3F508005B9824 /* ZPAUserCalendarNameCell.m in Sources */,
 				A2733FB61ADBCCB5006B52CA /* ZPAZeppaEventTagSingleton.m in Sources */,
 				2664FDCF19ACA447009C43EE /* ZPAFakeSegue.m in Sources */,
-				CE4D20B41BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m in Sources */,
 				A2D9FC0D1A10B888002B3E2B /* ZPAUserProfileCell.m in Sources */,
 				A2DBC3641AE7B48E004E9C66 /* ZPADefaulZeppatEventInfo.m in Sources */,
 				2664FDD319ACA560009C43EE /* ZPARevealSplitMenuBaseVC.m in Sources */,
-				CE4D20C71BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserInfo.m in Sources */,
 				2623A7F119E695F500642B02 /* SDWebImageManager.m in Sources */,
 				A29490C81A11E70400EB7908 /* ZPARequsetMinglersVC.m in Sources */,
+				CE4E652A1C53222E00E3D2F1 /* GTLZeppaclientapiPhotoInfo.m in Sources */,
 				26D5287519B061BF000C3649 /* ZPACreateOrEditAccountVC.m in Sources */,
 				D8670F021AF787FE00FD1016 /* ZPARequestMinglersCell.m in Sources */,
 				A2F141391AEE692B0032165E /* ZPAFetchDefaultTagsForUser.m in Sources */,
 				A202E81F1AE1475D00A2B4BD /* ZPAFetchInitialEvents.m in Sources */,
 				D8B96C621B25AFCE00AF0783 /* ZPAZeppaCalendarSingleton.m in Sources */,
 				268150D019F4E6A9009D51DF /* MFDatePickerDayCell.m in Sources */,
+				CE4E652C1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEventToUserRelationship.m in Sources */,
 				26B0DAAB19BB1CC2008DBD2D /* ZPAEvent.m in Sources */,
 				A2ECEB4E1AE50F5E00CC8593 /* ZPADefaulZeppatUserInfo.m in Sources */,
 				A204E3F21ADE64DD00C95EFB /* ZPAZeppaUserSingleton.m in Sources */,
-				268150EA19F4EA0C009D51DF /* ZPAExtendABidVC.m in Sources */,
 				A225C88C1AEF93A80045C9C5 /* ZPADefaultZeppaEventTagInfo.m in Sources */,
 				D86F77DD1AF896C400EDFF18 /* ZPAMinglersEventCell.m in Sources */,
-				CE8E6E101B7AA245008B49C8 /* ZPANotificationDelegate.m in Sources */,
 				268150CA19F4E6A9009D51DF /* DaySlots.m in Sources */,
 				D85F5C5B1AE91EE6005A78A6 /* ZPAMyZeppaTag.m in Sources */,
-				CE4D20C41BCF139100FB31C6 /* GTLZeppaclientapiZeppaFeedback.m in Sources */,
 				A202E8191AE1069E00A2B4BD /* ZPAFetchInitialMinglers.m in Sources */,
 				268150E719F4E9F5009D51DF /* ZPAFriendListVC.m in Sources */,
-				CE4D20B01BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventComment.m in Sources */,
 				2623A7F419E695F500642B02 /* UIImage+GIF.m in Sources */,
 				2664FDD619ACA5D9009C43EE /* ZPASplitVC.m in Sources */,
+				CE4E65171C53222E00E3D2F1 /* GTLZeppaclientapiClientInfo.m in Sources */,
+				CE4E651B1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m in Sources */,
+				CE4E652F1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUser.m in Sources */,
 				A202E8221AE147BB00A2B4BD /* ZPAFetchInitialNotifications.m in Sources */,
 				26FFAEC419D1A46C005FAF3B /* ZeppaContent.xcdatamodeld in Sources */,
 				A29EBAC01AD6B164009BD80D /* ZPADeviceInfo.m in Sources */,
 				26ADA7DF19E5366400E63A7B /* iCalHelper.m in Sources */,
 				264BE5121A0A3FC700717DF5 /* ZPAExtendBidCell.m in Sources */,
 				A29EBABA1AD6741E009BD80D /* ZPAConfirmedMinglerCell.m in Sources */,
-				CE4D20BB1BCF139100FB31C6 /* GTLZeppaclientapiDeviceInfo.m in Sources */,
 				268150D319F4E6A9009D51DF /* MFDatePickerViewController.m in Sources */,
 				D8678B111AF5072E00C3ED87 /* ZPAMutualMinglerVC.m in Sources */,
-				A2F1E7E81A135F9F00DB5324 /* ZPARepostEventVC.m in Sources */,
 				A202E81C1AE106C800A2B4BD /* ZPAFetchMyEventTags.m in Sources */,
 				26B380D919B99AF40091EE5D /* ZPAStaticHelper.m in Sources */,
-				CE4D20AE1BCF139100FB31C6 /* GTLZeppaclientapiClientInfo.m in Sources */,
-				CE4D20B91BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m in Sources */,
 				2623A7ED19E695F500642B02 /* SDWebImageCompat.m in Sources */,
 				2627CCA219ADBF1E00C87461 /* ZPALeftMenuItemCell.m in Sources */,
 				2664FDD919ACA5F8009C43EE /* ZPASwapperVC.m in Sources */,
 				D84EA6ED1AEA657000923F54 /* ZPAFindMinglers.m in Sources */,
 				26ADAD921A0E1ADA00EE91D4 /* ZPAActivityNotificationCell.m in Sources */,
 				2623A7F019E695F500642B02 /* SDWebImageDownloaderOperation.m in Sources */,
+				CE4E65251C53222E00E3D2F1 /* GTLZeppaclientapiEventComment.m in Sources */,
 				CE8E6E0D1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m in Sources */,
+				CE4E65311C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserToUserRelationship.m in Sources */,
 				268150E419F4E9D7009D51DF /* ZPAMyProfileVC.m in Sources */,
 				A28623C21AE4CAF600C5DCAC /* ZPAUserInfoBaseClass.m in Sources */,
 				A2F1E7E31A135F1300DB5324 /* ZPAEventDetailVC.m in Sources */,
-				CE4D20BD1BCF139100FB31C6 /* GTLZeppaclientapiEventTag.m in Sources */,
 				26ADAD961A0E2FDA00EE91D4 /* ZPAAddEventVC.m in Sources */,
 				26BCBB9319E3C3FD005B9824 /* ZPAAuthenticatonHandler.m in Sources */,
-				CE4D20C31BCF139100FB31C6 /* GTLZeppaclientapiZeppaEventToUserRelationship.m in Sources */,
-				CE4D20C51BCF139100FB31C6 /* GTLZeppaclientapiZeppaNotification.m in Sources */,
-				CE4D20B71BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m in Sources */,
-				CE4D20BC1BCF139100FB31C6 /* GTLZeppaclientapiEventComment.m in Sources */,
 				26AF8A361A0CF87A00722DF8 /* ZPAMyEventAgendaCell.m in Sources */,
-				CE4D20AF1BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m in Sources */,
+				CE4E65181C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseDeviceInfo.m in Sources */,
 				2623A7F519E695F500642B02 /* UIImage+MultiFormat.m in Sources */,
 				26AF8A381A0CF87A00722DF8 /* ZPAMyEventFeedCell.m in Sources */,
+				CE4E65211C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m in Sources */,
+				CE4E651E1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m in Sources */,
+				CE4E651D1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponsePhotoInfo.m in Sources */,
 				268150CD19F4E6A9009D51DF /* DFDatePickerView.m in Sources */,
 				268150ED19F4EA22009D51DF /* ZPAFeedbackVC.m in Sources */,
-				CE4D20AC1BCF139100FB31C6 /* GTLServiceZeppaclientapi.m in Sources */,
+				CEEB229C1C228BA000495D38 /* GTLServiceZeppaclientapi.m in Sources */,
 				D892B4B61B26FA4000ED1CE8 /* ZPACalendarModel.m in Sources */,
 				26D5289919B08D58000C3649 /* ZPAConstants.m in Sources */,
-				CE4D20C81BCF139100FB31C6 /* GTLZeppaclientapiZeppaUserToUserRelationship.m in Sources */,
+				CE4E652B1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaEvent.m in Sources */,
+				CE4E651C1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseInviteGroup.m in Sources */,
+				CE4E65201C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaNotification.m in Sources */,
 				A2B7E6871AE6577C00750E8A /* ZPAMyZeppaEvent.m in Sources */,
 				A225C8881AEF5A760045C9C5 /* ZPAEventInfoBaseClass.m in Sources */,
 				2623A7F619E695F500642B02 /* UIImage+WebP.m in Sources */,
 				A2BC521E1ADEAD9500096AE6 /* Downloader.m in Sources */,
 				D8678B0E1AF4F37E00C3ED87 /* ZPAFetchMutualMingers.m in Sources */,
 				268150CF19F4E6A9009D51DF /* MFDatePickerCollectionView.m in Sources */,
-				CE4D20BA1BCF139100FB31C6 /* GTLZeppaclientapiConstants.m in Sources */,
+				CE4E65241C53222E00E3D2F1 /* GTLZeppaclientapiDeviceInfo.m in Sources */,
+				CE4E652D1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaFeedback.m in Sources */,
 				26AF8A371A0CF87A00722DF8 /* ZPAOtherEventAgendaCell.m in Sources */,
 				2664FD9D19ACA1E6009C43EE /* ZPAAppDelegate.m in Sources */,
 				2623A7EE19E695F500642B02 /* SDWebImageDecoder.m in Sources */,
-				CE1080C51B75FCC000A56432 /* ZPAFetchNotificationOnAuth.m in Sources */,
-				CE4D20B51BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEvent.m in Sources */,
+				CE1080C51B75FCC000A56432 /* ZPAFetchNotificationTask.m in Sources */,
 				A2B7E6E11AE67AD500750E8A /* ZPAZeppaEventSingleton.m in Sources */,
 				A2733FB31ADBCC30006B52CA /* ZPANotificationSingleton.m in Sources */,
 				268150D419F4E6A9009D51DF /* NSCalendar+DFAdditions.m in Sources */,
 				2623A7EC19E695F500642B02 /* SDImageCache.m in Sources */,
 				D871FD321B0B64FD000170FA /* Checkbox.m in Sources */,
 				A2808A311AD81AB200D29D49 /* ZPADateAndTimePicker.m in Sources */,
-				CE4D20B61BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m in Sources */,
 				A29EBABD1AD68377009BD80D /* ZPAApplication.m in Sources */,
+				CE4E652E1C53222E00E3D2F1 /* GTLZeppaclientapiZeppaNotification.m in Sources */,
 				26BCBB9419E3C3FD005B9824 /* ZPADateHelper.m in Sources */,
 				26B5454B1A10C1A5008F25F7 /* ZPAAddInviteCell.m in Sources */,
 				268150D719F4E6A9009D51DF /* ZPAFeedVC.m in Sources */,
 				A2D9FC091A109E54002B3E2B /* ZPAUserProfileVC.m in Sources */,
-				CE4D20BE1BCF139100FB31C6 /* GTLZeppaclientapiEventTagFollow.m in Sources */,
-				CE4D20B21BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTagFollow.m in Sources */,
 				26B45D1519FFCCB400E83530 /* ZPAMyBasicInfoCell.m in Sources */,
 				268150DA19F4E862009D51DF /* DFDatePickerDayHeader.m in Sources */,
 				D89E23681B427C6800A2DB93 /* ZPAMapViewController.m in Sources */,
 				26BCBB9719E3C44A005B9824 /* ZPAAppData.m in Sources */,
-				CE4D20B11BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseEventTag.m in Sources */,
 				A2BF9A7E1AD7B7C000F91712 /* ZPAUserDefault.m in Sources */,
 				26B0DAA519BB1C1C008DBD2D /* ZPAMyZeppaUser.m in Sources */,
 				D8678B0B1AF4D05E00C3ED87 /* MBProgressHUD.m in Sources */,
+				CE4E65261C53222E00E3D2F1 /* GTLZeppaclientapiEventTag.m in Sources */,
 				26B0DAA819BB1CAB008DBD2D /* ZPACalendar.m in Sources */,
 				2627CC9F19ADBF0500C87461 /* ZPALeftMenuProfileCell.m in Sources */,
-				CE4D20AB1BCF139100FB31C6 /* GTLQueryZeppaclientapi.m in Sources */,
 				A2808A301AD81AB200D29D49 /* ZPACustomPicker.m in Sources */,
 				26B45D1819FFD05800E83530 /* ZPAMyPlannedEventCell.m in Sources */,
+				CE4E65161C53222E00E3D2F1 /* GTLQueryZeppaclientapi.m in Sources */,
 				26AC1EF41A08CF06006380B3 /* ZPAMinglerCell.m in Sources */,
+				CE4E651A1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventTag.m in Sources */,
 				26BCBB9B19E3F4A7005B9824 /* ZPAUserInfoCell.m in Sources */,
 				2623A7F219E695F500642B02 /* SDWebImagePrefetcher.m in Sources */,
 				2623A7FB19E6962300642B02 /* NSFileManager+DoNotBackUp.m in Sources */,
+				CE4E65271C53222E00E3D2F1 /* GTLZeppaclientapiEventTagFollow.m in Sources */,
 				2623A7EB19E695F500642B02 /* NSData+ImageContentType.m in Sources */,
 				268150CB19F4E6A9009D51DF /* DFDatePickerCollectionView.m in Sources */,
 				D8B96C651B25B1C600AF0783 /* ZPACalendarCell.m in Sources */,
+				CE4E65281C53222E00E3D2F1 /* GTLZeppaclientapiInviteGroup.m in Sources */,
+				CE4E65191C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseEventComment.m in Sources */,
 				268150D119F4E6A9009D51DF /* MFDatePickerMonthHeader.m in Sources */,
 				268150CC19F4E6A9009D51DF /* DFDatePickerDayCell.m in Sources */,
 				D8A63C3A1B21D42C0022F274 /* BRStaticHelper.m in Sources */,
+				CE4E65221C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.m in Sources */,
 				268150D619F4E6A9009D51DF /* ZPAAgendaVC.m in Sources */,
-				CE4D20B31BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseInviteGroup.m in Sources */,
 				2664FDDC19ACA727009C43EE /* ZPALeftMenuVC.m in Sources */,
 				A2D2A6BA1AD3E9CB00E3DB95 /* ZPAPushNotifCell.m in Sources */,
 				A2F141361AEE68DB0032165E /* ZPAFetchEventsForMingler.m in Sources */,
-				CE4D20BF1BCF139100FB31C6 /* GTLZeppaclientapiInviteGroup.m in Sources */,
 				2623A7EF19E695F500642B02 /* SDWebImageDownloader.m in Sources */,
 				268150F019F4EA41009D51DF /* ZPASettingsVC.m in Sources */,
-				CE4D20C61BCF139100FB31C6 /* GTLZeppaclientapiZeppaUser.m in Sources */,
 				26B545471A10C170008F25F7 /* ZPAAddInvitesVC.m in Sources */,
 				26AF8A391A0CF87A00722DF8 /* ZPAOtherEventFeedCell.m in Sources */,
-				CE4D20B81BCF139100FB31C6 /* GTLZeppaclientapiCollectionResponseZeppaUserInfo.m in Sources */,
+				CE4E65301C53222E00E3D2F1 /* GTLZeppaclientapiZeppaUserInfo.m in Sources */,
 				D86F93BC1AFCC33A00FE38CF /* ZPACommonMinglersCell.m in Sources */,
 				D8E642861B2881A0006E2D86 /* ZPAInvitedUserVC.m in Sources */,
 				2623A7F719E695F500642B02 /* UIImageView+WebCache.m in Sources */,
@@ -2452,12 +2455,11 @@
 				2623A7EA19E695F500642B02 /* MKAnnotationView+WebCache.m in Sources */,
 				268150D519F4E6A9009D51DF /* ZPAActivityVC.m in Sources */,
 				268150CE19F4E6A9009D51DF /* DFDatePickerViewController.m in Sources */,
-				CE4D20C01BCF139100FB31C6 /* GTLZeppaclientapiKey.m in Sources */,
 				26D5287219B06186000C3649 /* ZPALoginVC.m in Sources */,
 				D84EA6F11AEA723200923F54 /* ZPAPhoneContact.m in Sources */,
 				2664FD9919ACA1E6009C43EE /* main.m in Sources */,
 				D892B4B31B26F84C00ED1CE8 /* ZPADiscussionCell.m in Sources */,
-				CE4D20C11BCF139100FB31C6 /* GTLZeppaclientapiPhotoInfo.m in Sources */,
+				CE4E651F1C53222E00E3D2F1 /* GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.m in Sources */,
 				A24AD82E1AD4136600D969CC /* ZPAManageCalendarSyncCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2536,6 +2538,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Peter Schuette (GJ8Y7H8WU4)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2660,6 +2663,7 @@
 				);
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zeppamobile.zeppaios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "708792a7-58b0-4bf1-964d-716f4bc492e3";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
@@ -2677,7 +2681,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2722,6 +2726,7 @@
 				);
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zeppamobile.zeppaios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "a099771b-f11f-4768-9ee3-9f41c29b2529";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
@@ -2751,6 +2756,7 @@
 				INFOPLIST_FILE = "ZeppaTests/ZeppaTests-Info.plist";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zeppamobile.zeppaios.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -2778,6 +2784,7 @@
 				INFOPLIST_FILE = "ZeppaTests/ZeppaTests-Info.plist";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zeppamobile.zeppaios.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUNDLE_LOADER)";

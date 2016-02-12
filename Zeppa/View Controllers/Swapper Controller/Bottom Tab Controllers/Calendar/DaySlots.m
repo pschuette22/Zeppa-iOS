@@ -165,10 +165,10 @@
             UIView *view1=(UIView *)[temp lastObject];
             UIView *view2 =(UIView *)[verticalViewArray objectAtIndex:k];
             if (view2.frame.origin.y>=view1.frame.origin.y && view2.frame.origin.y<=view1.frame.origin.y+view1.frame.size.height) {
-                if ([[verticalViewArray objectAtIndex:k] tag]==0) {
-                    [temp addObject:view2];
-                    [[verticalViewArray objectAtIndex:k] setTag:1];
-                }
+//                if ([[verticalViewArray objectAtIndex:k] tag]==0) {
+//                    [temp addObject:view2];
+//                    [[verticalViewArray objectAtIndex:k] setTag:1];
+//                }
             }
         }
         [self makeFramewithArrayWithAllDayEvent:temp];
@@ -187,10 +187,10 @@
             UIView *view1=(UIView *)[temp lastObject];
             UIView *view2 =(UIView *)[verticalViewArray objectAtIndex:j];
             if (view2.frame.origin.y>=view1.frame.origin.y && view2.frame.origin.y<=view1.frame.origin.y+view1.frame.size.height) {
-                if ([[verticalViewArray objectAtIndex:j] tag]==0) {
-                    [temp addObject:view2];
-                    [[verticalViewArray objectAtIndex:j] setTag:1];
-                }
+//                if ([[verticalViewArray objectAtIndex:j] tag]==0) {
+//                    [temp addObject:view2];
+//                    [[verticalViewArray objectAtIndex:j] setTag:1];
+//                }
             }
         }
         [self makeFramewithArray:temp];

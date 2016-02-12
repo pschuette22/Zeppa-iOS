@@ -18,7 +18,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblEventHostName;
 @property (weak, nonatomic) IBOutlet UILabel *lblEventTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_ConflictIndicator;
-@property (weak, nonatomic) IBOutlet UILabel *lblEventDescription;
 @property (weak, nonatomic) IBOutlet UIButton *btnEventDuration;
 @property (weak, nonatomic) IBOutlet UIButton *btnEventLocation;
 @property (weak, nonatomic) IBOutlet UIView *view_BaseEvent;

@@ -71,6 +71,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 //****************************************************
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
+    NSLog(@"Init with name %@", nibBundleOrNil);
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -80,6 +81,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 
 - (void)viewDidLoad
 {
+    NSLog(@"View did load");
     [super viewDidLoad];
     [self initialization];
     [self configure];
@@ -88,16 +90,17 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 -(void)viewWillAppear:(BOOL)animated{
     
     if (_vcDisplayMode == VCDisplayModeEditAccount) {
+        // This is an edit account situation
         self.title = @"Edit Account";
        _tagsArray = [[[ZPAZeppaEventTagSingleton sharedObject] getMyTags] mutableCopy];
         _view_TagContainer.hidden = (_tagsArray.count>0)?NO:YES;
-        
         for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
             
             [self showTagButtonWithTitleString:tag.tagText];
            
         }
     }else{
+        // this is a create account situation
         self.title = @"Create Account";
         _view_TagContainer.hidden = YES;
     }
@@ -246,26 +249,56 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     
     ///Reset CalendarFetchStatus
     self.calendarFetchStatus = CalendarFecthedStatusNone;
-    GIDGoogleUser *currentUser = [[GIDSignIn sharedInstance] currentUser];
     
-    NSString *name = currentUser.profile.name;
+    // Determine if the user is creating or editing account
+    if (_vcDisplayMode == VCDisplayModeEditAccount) {
+        // Set values based on Zeppa's held object
+        _giveName_Txt.text = _user.endPointUser.userInfo.givenName;
+        _familyName_Txt.text = _user.endPointUser.userInfo.familyName;
+        _email_Txt.text = _user.endPointUser.authEmail;
+        _contactNo_Txt.text = [self getFormattedNumber:_user.endPointUser.phoneNumber];
     
-    
-    _giveName_Txt.text = name;
-    _familyName_Txt.text = _user.endPointUser.userInfo.familyName;
-    _email_Txt.text = _user.endPointUser.userInfo.googleAccountEmail;
-    
-    _contactNo_Txt.text = [self getFormattedNumber:_user.endPointUser.userInfo.primaryUnformattedNumber];
-    
-    _imageUrl = _user.endPointUser.userInfo.imageUrl;
-    
-    
-    NSURL *profileImageURL = [NSURL URLWithString:_imageUrl];
-    [_userImageView setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        ///Write any image related code here
-    }];
-    
-    
+        _imageUrl = _user.endPointUser.userInfo.imageUrl;
+        if(_imageUrl){
+            NSURL *profileImageURL = [NSURL URLWithString:_imageUrl];
+            [_userImageView setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                ///Write any image related code here
+            }];
+        }
+        
+    } else {
+        // This is a create account instance
+        GIDGoogleUser *currentUser = [[GIDSignIn sharedInstance] currentUser];
+        
+        // Set the auth email, this is definitely known
+        _email_Txt.text = currentUser.profile.email;
+        
+        // Set the user's name, if possible
+        NSString *name = currentUser.profile.name;
+        if(name && name.length>0){
+            // Identify the first space
+            
+            NSRange range = [name rangeOfString:@" "];
+            NSString *givenName = [name substringToIndex:range.length];
+            _giveName_Txt.text = givenName;
+            if(range.length > 0 && range.length < name.length){
+                NSString *familyName = [name substringFromIndex:range.length];
+                _familyName_Txt.text = familyName;
+            }
+        }
+        
+        // If this user has an associated image
+        if(currentUser.profile.hasImage) {
+            NSURL *profileImageURL = [currentUser.profile imageURLWithDimension:_userImageView.frame.size.height];
+            [_userImageView setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                ///Write any image related code here
+            }];
+            // Hang onto the url
+            _imageUrl = profileImageURL.absoluteString;
+        }
+        
+    }
+
     
     [self registerForNotifications];
 }
@@ -316,18 +349,19 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
         
         UIView *newView =[[UIView alloc]init];
         
+        self.tcHeightConstraint.constant = 0;
         if (_tagsTempArray.count!=0) {
             UIView *lastView =(UIView *)[_tagsTempArray lastObject];
             [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width+2*PADDING,textSize.height+2*PADDING)];
             
-            if (newView.frame.origin.x+newButton.frame.size.width>300) {
+            if (newView.frame.origin.x+newButton.frame.size.width>self.view.frame.size.width) {
                 newView.frame =CGRectMake(PADDING, newView.frame.origin.y+newView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
-                [self updateAllViewsFramesUsingTagButtonBaseView:newView withCounter:0];
-                
+                self.tcHeightConstraint.constant += newView.frame.size.height;
             }
             
         }else{
             [newView setFrame:CGRectMake(PADDING,PADDING,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            self.tcHeightConstraint.constant = newView.frame.size.height;
         }
         
         //newButton.tag = DELETE_BUTTON_TAG;
@@ -335,8 +369,11 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
         [_view_TagContainer addSubview:newView];
         [_tagsTempArray addObject:newView];
     }
+    
     [self setCrossButton];
     
+    [self updateContentViewSize];
+
 }
 
 -(void)setCrossButton
@@ -352,7 +389,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
         [crossButton setImage:[UIImage imageNamed:@"cross.png"] forState:UIControlStateNormal];
         crossButton.center=CGPointMake(button.frame.origin.x, button.frame.origin.y);
         
-       [crssBtn addTarget:self action:@selector(deleteButton:) forControlEvents:UIControlEventTouchUpInside];
+        [crssBtn addTarget:self action:@selector(deleteButton:) forControlEvents:UIControlEventTouchUpInside];
         
         [view addSubview:crossButton];
         [view addSubview:crssBtn];
@@ -390,7 +427,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
         
         if ([tag.tagText isEqualToString:deleteButton.titleLabel.text]) {
             
-            NSLog(@"%@",deleteButton.titleLabel.text);
+            NSLog(@"Delete: %@",deleteButton.titleLabel.text);
            [[ZPAZeppaEventTagSingleton sharedObject]executeRemoveRequestWithIdentifier:[tag.identifier longLongValue]];
             [[ZPAZeppaEventTagSingleton sharedObject]removeZeppaEventTag:tag];
             break;
@@ -409,6 +446,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     NSMutableArray *tempArray = [NSMutableArray array];
     tempArray = [_tagsTempArray mutableCopy];
     UIView *view;
+    self.tcHeightConstraint.constant = 0;
     for (int j=0; j<tempArray.count; j++) {
          view =[tempArray objectAtIndex:j];
         UIButton *button = (UIButton *)[view viewWithTag:TAGS_BUTTON_TAG];
@@ -416,32 +454,30 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
         
         if (j==0) {
             view.frame=CGRectMake(PADDING, PADDING, frame.size.width+PADDING, frame.size.height+PADDING);
+            self.tcHeightConstraint.constant = view.frame.size.height;
         }
         else{
             UIView *preView =[tempArray objectAtIndex:j-1];
             view.frame=CGRectMake(preView.frame.origin.x+preView.frame.size.width, preView.frame.origin.y, frame.size.width+PADDING, frame.size.height+PADDING);
-            if (view.frame.origin.x+view.frame.size.width>300) {
+            if (view.frame.origin.x+view.frame.size.width>self.view.frame.size.width) {
                 view.frame=CGRectMake(PADDING, view.frame.origin.y+view.frame.size.height, frame.size.width+PADDING, frame.size.height+PADDING);
-                
-                
+                self.tcHeightConstraint.constant += view.frame.size.height;
             }
         }
         
     }
-    NSInteger counter = ([[tempArray lastObject] frame].origin.y/32.7)+2;
-    [self updateAllViewsFramesUsingTagButtonBaseView:view withCounter:counter];
+    
+    [self updateContentViewSize];
 }
--(void)updateAllViewsFramesUsingTagButtonBaseView:(UIView *)baseView withCounter:(NSInteger)count{
+-(void)updateContentViewSize{
     
-    
-    CGRect frame = _view_TagContainer.frame;
-        if (count>0) {
-        frame.size.height = count * baseView.frame.size.height;
-    }else{
-        frame.size.height = _view_TagContainer.frame.size.height + baseView.frame.size.height;
-    }
-    _view_TagContainer.frame = frame;
+    // Update the frame constraints and animate the changes
+    _view_TagContainer.frame = CGRectMake(_view_TagContainer.frame.origin.x, _view_TagContainer.frame.origin.y, self.view.frame.size.width, self.tcHeightConstraint.constant);
     _baseScrollView.contentSize = CGSizeMake(0, _view_TagContainer.frame.origin.y+_view_TagContainer.frame.size.height);
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.view layoutIfNeeded];
+    }];
     
 }
 //****************************************************
@@ -638,8 +674,8 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     [userInfo setGivenName:_giveName_Txt.text];
     [userInfo setFamilyName:_familyName_Txt.text];
     [userInfo setImageUrl:_imageUrl];
-    [userInfo setPrimaryUnformattedNumber:phoneStr];
-    [userInfo setGoogleAccountEmail:_user.endPointUser.userInfo.googleAccountEmail];
+    [zeppaUser setAuthEmail:_user.endPointUser.authEmail];
+    [zeppaUser setPhoneNumber:phoneStr];
     [zeppaUser setUserInfo:userInfo];
     
     GTLQueryZeppaclientapi *insertZeppaUser = [GTLQueryZeppaclientapi queryForInsertZeppaUserWithObject:zeppaUser idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
@@ -691,7 +727,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     [userInfo setGivenName:_giveName_Txt.text];
     [userInfo setFamilyName:_familyName_Txt.text];
     [userInfo setImageUrl:_imageUrl];
-    [userInfo setPrimaryUnformattedNumber:phoneStr];
+    [zeppaUser setPhoneNumber:phoneStr];
     
     // Cannot update email
     
@@ -739,7 +775,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
 -(void)uploadPhotoToUser:(UIImage *)loginpic
 {
     [self showActivity];
-    NSURL *pasturl = [NSURL URLWithString:@"http://zeppa-cloud-1821.appspot.com/getuploadurl"];
+    NSURL *pasturl = [NSURL URLWithString:@"https://1-dot-zeppa-frontend-dot-zeppa-cloud-1821.appspot.com/getuploadurl"];
     NSData *data = [NSData dataWithContentsOfURL:pasturl];
     NSString *newUrl = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if (newUrl) {

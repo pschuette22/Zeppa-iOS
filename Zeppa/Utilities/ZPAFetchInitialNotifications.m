@@ -36,8 +36,8 @@
     GTLQueryZeppaclientapi *notificationQuery = [GTLQueryZeppaclientapi queryForListZeppaNotificationWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [notificationQuery setFilter:filterString];
     [notificationQuery setCursor:cursorValue];
-   // [notificationQuery setOrdering:ordering];
-    //[notificationQuery setLimit:[limit integerValue]];
+    [notificationQuery setOrdering:@"expires asc"];
+    [notificationQuery setLimit:25];
     
     [self.zeppaNotificationService executeQuery:notificationQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaNotification *response, NSError *error) {
         //
@@ -80,7 +80,7 @@
                 }
                 
                 NSString *nextCursor = response.nextPageToken;
-                if (nextCursor) {
+                if (response.items.count >= 25 && nextCursor) {
                     [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nextCursor];
                 }
             

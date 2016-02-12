@@ -39,5 +39,6 @@ typedef void (^FetchZeppaEventCompletionBlock) (GTLServiceTicket *ticket, id obj
 -(void) executeWithCompletionBlock: (FetchZeppaEventCompletionBlock) completionBlock;
 -(GTLServiceTicket *) fetchEvent;
 -(GTLServiceTicket *) fetchEventRelationship;
+-(void) onCompletionWithTicket: (GTLServiceTicket*) ticket withEvent: (id) eventObject withError: (NSError*) error;
 
 @end

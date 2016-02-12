@@ -30,5 +30,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnActivity;
 
 -(void) onEventsChanged;
-
+-(void) updateNotificationNumber;
 @end

@@ -71,6 +71,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
             
             
             [removeArr addObject:myZeppaEvent];
+            // TODO: remove notifications send regarding this event
            // NotificationSingleton.getInstance().removeNotificationsForEvent(mediator.getEventId().longValue());
             
         }
@@ -86,14 +87,15 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
     
     if (_zeppaEvents.count>0) {
         
-        NSMutableArray *arr = [NSMutableArray arrayWithArray:_zeppaEvents];
+        NSMutableArray *arr = [[NSMutableArray alloc] init];
         long long currentTime = (long long)[ZPADateHelper currentTimeMillis];
         
        
         for (ZPAMyZeppaEvent *myZeppaEvent in arr) {
             
-            if ([myZeppaEvent.event.end isEqualToNumber:[NSNumber numberWithLongLong:currentTime]] ) {
-                [_zeppaEvents removeObject:myZeppaEvent];
+            // If the end time is less than the current time (in millis since epoch) remove it
+            if (myZeppaEvent.event.end.longLongValue <=  currentTime) {
+                [_zeppaEvents addObject:myZeppaEvent];
             }
            /* NotificationSingleton.getInstance()
             .removeNotificationsForEvent(
@@ -202,7 +204,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
     
     for (ZPAMyZeppaEvent *myZeppaEvent in _zeppaEvents) {
         
-        if (myZeppaEvent.isAgenda == YES || [myZeppaEvent.relationship.isAttending boolValue] == YES || [myZeppaEvent hostIdDoesMatch:[[self getUserId] longLongValue]] ) {
+        if ([myZeppaEvent.relationship.isWatching boolValue] == YES || [myZeppaEvent.relationship.isAttending boolValue] == YES || [myZeppaEvent hostIdDoesMatch:[[self getUserId] longLongValue]] ) {
             [interestingEventMediators addObject:myZeppaEvent];
         }
         

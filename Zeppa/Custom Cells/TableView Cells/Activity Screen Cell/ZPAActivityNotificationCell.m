@@ -87,9 +87,9 @@
 //      //  _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
 //    }
     
-    _lblNotificatonTitle.text = [[ZPANotificationSingleton sharedObject]getNotificationTitle:notification];
+    _lblNotificatonTitle.text = notification.title;
     
-    _lblNotificationSubtitle.text = [[ZPANotificationSingleton sharedObject]getNotificationMessage:notification];
+    _lblNotificationSubtitle.text = notification.message;
     
     NSString *activtyTimeStr = [[ZPADateHelper sharedHelper]getEventTimeDuration:notification.created withEndTime:nil];
     

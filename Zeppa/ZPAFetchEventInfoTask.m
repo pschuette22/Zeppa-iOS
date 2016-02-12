@@ -35,14 +35,14 @@
         
         if(error){
             NSLog(@"Error fetching event: %@", error);
-            self.completionBlock(ticket,nil,error);
+            [self onCompletionWithTicket:ticket withEvent:nil withError:error];
         } else if (event.identifier) {
             NSLog(@"Did Fetch Event");
             [self setZeppaEvent:event];
             [self fetchEventRelationship];
         } else {
             NSLog(@"Nil object returned");
-            self.completionBlock(ticket,nil,error);
+            [self onCompletionWithTicket:ticket withEvent:nil withError:error];
         }
        
     }];
@@ -66,7 +66,8 @@
     GTLServiceTicket *ticket = [self.relationshipService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship *response, NSError *error) {
         if(error){
             NSLog(@"Error Fetching Event Relationship");
-            self.completionBlock(ticket,nil,error);
+            [self onCompletionWithTicket:ticket withEvent:nil withError:error];
+            
         } else if(response && response.items && response.items.count > 0){
             // Valid response returned. Event has a relationship
             GTLZeppaclientapiZeppaEventToUserRelationship * relationship = [response.items objectAtIndex:0];
@@ -77,10 +78,9 @@
             [event setRelationship:relationship];
             [[ZPAZeppaEventSingleton sharedObject] addZeppaEvents:event];
             
-            self.completionBlock(ticket, event, error);
-                
+            [self onCompletionWithTicket:ticket withEvent:event withError:error];
         } else {
-            self.completionBlock(ticket,nil,error);
+            [self onCompletionWithTicket:ticket withEvent:nil withError:error];
         }
         
     }];
@@ -110,6 +110,16 @@
     }
     
     return relationshipService;
+}
+
+/**
+ * What to do when the task is finished
+ */
+-(void) onCompletionWithTicket: (GTLServiceTicket*) ticket withEvent: (id) eventObject withError: (NSError*) error {
+    // Verify there is a completion block
+    if(self.completionBlock){
+        self.completionBlock(ticket, eventObject,error);
+    }
 }
 
 @end

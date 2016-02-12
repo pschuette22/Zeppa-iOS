@@ -67,12 +67,12 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     
     NSMutableArray *emailList = [NSMutableArray array];
     
-    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
-        
-        if (userInfo.zeppaUserInfo.googleAccountEmail.length>0) {
-            [emailList addObject:userInfo.zeppaUserInfo.googleAccountEmail];
-        }
-    }
+//    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
+//        
+//        if (userInfo.zeppaUserInfo.googleAccountEmail.length>0) {
+//            [emailList addObject:userInfo.zeppaUserInfo.googleAccountEmail];
+//        }
+//    }
     return emailList;
     
 }
@@ -81,12 +81,12 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     
     NSMutableArray *numberList = [NSMutableArray array];
     
-    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
-        
-        if (userInfo.zeppaUserInfo.primaryUnformattedNumber.length>0) {
-            [numberList addObject:userInfo.zeppaUserInfo.primaryUnformattedNumber];
-        }
-    }
+//    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
+//        
+//        if (userInfo.zeppaUserInfo.primaryUnformattedNumber.length>0) {
+//            [numberList addObject:userInfo.zeppaUserInfo.primaryUnformattedNumber];
+//        }
+//    }
     return numberList;
 }
 
@@ -244,10 +244,7 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     
     GTLServiceTicket *ticket =[[self zeppaUserService] executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUser *zeppaUser, NSError *error) {
         
-        if(error) {
-            // [_delegate showLoginError];
-            completion(ticket, nil, error);
-        } else if (zeppaUser){
+        if (zeppaUser && zeppaUser.key){
             if (completion != NULL) {
                 
                 GTLZeppaclientapiZeppaUser *response = zeppaUser;
@@ -276,8 +273,9 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
         
         zeppaUserService = [[GTLServiceZeppaclientapi alloc]init];
         zeppaUserService.retryEnabled = YES;
+        
     }
-    
+ 
     return zeppaUserService;
 }
 

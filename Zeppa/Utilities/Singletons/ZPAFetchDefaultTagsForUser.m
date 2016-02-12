@@ -70,7 +70,7 @@
             [_followList addObjectsFromArray:response.items];
             
             NSString *currentCursor = response.nextPageToken;
-            if (currentCursor) {
+            if (response.items.count >= 25 && currentCursor) {
                 [weakSelf executeZeppaEventListUsingUserIdWithCursor:currentCursor];
             }else{
                 [weakSelf executeEventTagListQueryWithCursor:nil];
@@ -87,7 +87,7 @@
     
     __weak typeof(self) weakSelf = self;
     GTLQueryZeppaclientapi *tagQuery = [GTLQueryZeppaclientapi queryForListEventTagWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    [tagQuery setFilter:[NSString stringWithFormat: @"userId == %lld",_userIdMingler]];
+    [tagQuery setFilter:[NSString stringWithFormat: @"ownerId == %lld",_userIdMingler]];
     [tagQuery setCursor: cursorValue];
     [tagQuery setOrdering:@"created desc"];
     [tagQuery setLimit:[[NSNumber numberWithInt:25] integerValue]];
@@ -119,7 +119,7 @@
                 [_tagIdsArray addObject:eventTag.identifier];
             }
             NSString *currentCursor = response.nextPageToken;
-            if (cursorValue) {
+            if (response.items.count >= 25 && currentCursor) {
                 [weakSelf executeEventTagListQueryWithCursor:currentCursor];
             }else{
                 [[ZPAZeppaEventTagSingleton sharedObject] updateEventTagsForUserId:_userIdMingler andZeppaEventTagsArray:_result];
@@ -208,11 +208,8 @@
         
     }
     
-
-    
-   
-    
 }
+
 -(GTLServiceZeppaclientapi *)evetTagFollowService{
     
     static GTLServiceZeppaclientapi *service = nil;

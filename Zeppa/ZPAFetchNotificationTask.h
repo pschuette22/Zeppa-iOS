@@ -27,38 +27,31 @@
 #import "ZPAConstants.h"
 
 
-@interface ZPAFetchNotificationOnAuth: ZPAUserInfoBaseClass
+@interface ZPAFetchNotificationTask: ZPAUserInfoBaseClass
 
 // Authed service objects
-@property (nonatomic, strong)GTLServiceZeppaclientapi * zeppaNotificationService;
-@property (nonatomic,strong)GTLServiceZeppaclientapi * zeppaEventRelationshipService;
+@property (nonatomic, strong)GTLServiceZeppaclientapi * service;
 
-
-// Notification information
-@property (nonatomic, strong)NSNumber *notificationId;
-@property (nonatomic, retain)GTLZeppaclientapiZeppaNotification *notification;
-//// Sender info
-
+// Notification information / related objects
+@property (nonatomic, strong) NSNumber *notificationId;
+@property (nonatomic, retain) GTLZeppaclientapiZeppaNotification *notification;
 @property (nonatomic, retain) ZPAMyZeppaEvent *eventInfo;
 @property (nonatomic, retain) ZPADefaulZeppatUserInfo *senderInfo;
 
 typedef void(^FetchSenderInfoCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
 @property (nonatomic, copy) FetchSenderInfoCompletionBlock fetchSenderInfoCompletionBlock;
 
+// Task completion handler
+@property (nonatomic, copy) void (^completionHandler)(UIBackgroundFetchResult);
+
 
 // initialize the fetch task with notification ID embedded
--(id) initWithNotificationId: (NSNumber*) notificationId;
+-(id) initWithNotificationId: (NSNumber*) notificationId withCompletionHandler: (void (^)(UIBackgroundFetchResult))handler;
 
 // Start the process of fetching information and showing notification
 -(void)execute;
 
-// Make sure all information has been fetched before dispatching
--(void)doNotificationPreprocessing;
-
-// Handles displaying information, assuming is has been fetched by the system
--(void)dispatchNotification;
-
-
-
+// When the task has successfully completed
+-(void)onTaskCompletedWithError: (NSError*) error;
 
 @end

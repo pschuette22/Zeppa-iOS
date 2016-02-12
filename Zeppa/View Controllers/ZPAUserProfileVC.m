@@ -32,9 +32,9 @@
 
 #define HEADER_HEIGHT 32.0f
 
-#define USER_PROFILE_CELL_HEIGHT 210
+#define USER_PROFILE_CELL_HEIGHT 99
 #define MINGELS_CELL_HEIGHT 36
-#define USER_EVENT_CELL_HEIGHT 135
+#define USER_EVENT_CELL_HEIGHT 136
 
 #define TABLE_ROW_INDEX_MINGLERS 0
 
@@ -45,7 +45,7 @@
 #define WIDTHPADDING 5
 #define TAGS_BASEVIEW_TAG_VALUE 100
 
-@interface ZPAUserProfileVC ()<MutualMinglerDelegate,MutualMinglerTagDelegate,MutualMinglerEventDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate>
+@interface ZPAUserProfileVC ()<MutualMinglerDelegate,MutualMinglerTagDelegate,MutualMinglerEventDelegate>
 @property (nonatomic, strong) ZPAFetchMutualMingers *muturalMingler;
 @property (nonatomic, strong) ZPAFetchDefaultTagsForUser *defaultTagsForUser;
 @property (nonatomic, strong) ZPAFetchEventsForMingler *eventForMingler;
@@ -66,12 +66,12 @@ NSArray *minglerTagsArray;
     ZPAMyZeppaEvent *zeppaEvent;
     ZPADefaultZeppaEventTagInfo *tagInfo;
     
-    int counter;
+//    int counter;
     NSString *_mutualMinglerStr;
     
     NSMutableArray *_tempArray;
-    NSInteger _counter;
-    NSInteger _heightExtend;
+//    NSInteger _counter;
+//    NSInteger _heightExtend;
     
 }
 
@@ -103,7 +103,7 @@ NSArray *minglerTagsArray;
     currentUser.tagsArray = [[NSMutableArray alloc]init];
     currentUser.tagsArray = _userTagArray;
     
-    _mutualMinglerStr = @"Loading Minglers...";
+    _mutualMinglerStr = @"Loading Friends...";
     
     
     NSLog(@"%@",_userProfileInfo.userId);
@@ -146,7 +146,7 @@ NSArray *minglerTagsArray;
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
     
     
-    if (![_mutualMinglerStr isEqualToString:@"No Mutual Minglers"]  && ![_mutualMinglerStr isEqualToString:@"Loading Minglers..."]) {
+    if (![_mutualMinglerStr isEqualToString:@"No Mutual Friends"]  && ![_mutualMinglerStr isEqualToString:@"Loading Friends..."]) {
         return YES;
     }
     return NO;
@@ -179,14 +179,14 @@ NSArray *minglerTagsArray;
          [_userProfileCell showZeppaMinglersInfoOnCell:_userProfileInfo];
         
         ///This is For Tag Framing
-        CGRect frame = _userProfileCell.contentView.frame;
-        frame.size.height = USER_PROFILE_CELL_HEIGHT + (_counter * _heightExtend);
-        _userProfileCell.contentView.frame = frame;
+//        CGRect frame = _userProfileCell.contentView.frame;
+//        frame.size.height = USER_PROFILE_CELL_HEIGHT + (_counter * _heightExtend);
+//        _userProfileCell.contentView.frame = frame;
         [_userProfileCell.commonMinglerButton setTitle:_mutualMinglerStr forState:UIControlStateNormal];
         
-        CGRect viewFrame = _userProfileCell.tagBaseView.frame;
-        viewFrame.size.height = _counter * _heightExtend+15;
-        _userProfileCell.tagBaseView.frame = viewFrame;
+//        CGRect viewFrame = _userProfileCell.tagBaseView.frame;
+//        viewFrame.size.height = _counter * _heightExtend+15;
+//        _userProfileCell.tagBaseView.frame = viewFrame;
        
         [self arrangeButtonWhenCallCellForRowAtIndex];
         
@@ -218,10 +218,8 @@ NSArray *minglerTagsArray;
     
     if (indexSex == TABLE_SEC_INDEX_USERPROFILE) {
         
-       
-        return USER_PROFILE_CELL_HEIGHT + ((_counter-1) * _heightExtend);
-        //return 350;
-        
+        // The height of this cell is equal to the info height dynamic height of the tag container
+        return USER_PROFILE_CELL_HEIGHT + self.userProfileCell.tcHeightConstraint.constant;
     }
     if (indexSex == TABLE_SEC_INDEX_USEREVENT) {
         return USER_EVENT_CELL_HEIGHT;
@@ -280,58 +278,7 @@ NSArray *minglerTagsArray;
     }
     
 }
-//****************************************************
-#pragma mark - UIMessage Controller Delegate
-//****************************************************
--(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    
-    switch (result) {
-        case MessageComposeResultCancelled:
-            
-            break;
-        case MessageComposeResultFailed:
-        {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            
-            break;
-        }
-        case MessageComposeResultSent:
-            break;
-        default:
-            break;
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-}
-//****************************************************
-#pragma mark - Mail Controller Delegate
-//****************************************************
--(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    switch (result) {
-        case MFMailComposeResultCancelled:
-            NSLog(@"mail cancelled");
-            
-            break;
-        case MFMailComposeResultFailed:
-            
-            NSLog(@"Mail failed %@",[error localizedDescription]);
-            
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Mail succcessfuly sent");
-            
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Mail saved");
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
+
 
 
 ///*************************************************
@@ -354,7 +301,7 @@ NSArray *minglerTagsArray;
     
 }
 - (IBAction)commonMinglersBtnTapped:(UIButton *)sender {
-    
+    // TODO: show a list of people user and selected user have in common
     
 }
 
@@ -372,34 +319,32 @@ NSArray *minglerTagsArray;
     [[ZPADefaulZeppatEventInfo sharedObject]onWatchButtonClicked:zeppaEvent.relationship];
     
     [_tableView reloadData];
-    
 
-    
 }
 
-- (IBAction)textBtnTapped:(UIButton *)sender {
-    
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    zeppaEvent = [minglersEventArray objectAtIndex:indexPath.row];
-    
-    ZPADefaulZeppatUserInfo * eventMediatorInfo = [ZPADefaulZeppatUserInfo sharedObject];
-    
-    id eventHostMediator = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaEvent.event.hostId longLongValue]];
-    
-    if ([eventHostMediator isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        eventMediatorInfo = eventHostMediator;
-    }else{
-        
-    }
-    
-    if (eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber) {
-        [self showSmsWithRecepientsNumber:eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber];
-    }else{
-        [self sendEmailWithRecipientsMail:eventMediatorInfo.zeppaUserInfo.googleAccountEmail];
-    }
-
-    
-}
+//- (IBAction)textBtnTapped:(UIButton *)sender {
+//    
+//    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
+//    zeppaEvent = [minglersEventArray objectAtIndex:indexPath.row];
+//    
+//    ZPADefaulZeppatUserInfo * eventMediatorInfo = [ZPADefaulZeppatUserInfo sharedObject];
+//    
+//    id eventHostMediator = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaEvent.event.hostId longLongValue]];
+//    
+//    if ([eventHostMediator isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
+//        eventMediatorInfo = eventHostMediator;
+//    }else{
+//        
+//    }
+//    
+////    if (eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber) {
+////        [self showSmsWithRecepientsNumber:eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber];
+////    }else{
+////        [self sendEmailWithRecipientsMail:eventMediatorInfo.zeppaUserInfo.googleAccountEmail];
+////    }
+//
+//    
+//}
 
 - (IBAction)joinBtnTapped:(UIButton *)sender {
     
@@ -454,15 +399,14 @@ NSArray *minglerTagsArray;
     
     if(_userProfileInfo.minglersIds.count==0){
         
-        _mutualMinglerStr = @"No Mutual Minglers";
+        _mutualMinglerStr = @"No Mutual Friends";
         
     }else if (_userProfileInfo.minglersIds.count == 1){
         
-       ZPADefaulZeppatUserInfo *user = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_userProfileInfo.minglersIds objectAtIndex:0] longLongValue]];
-        _mutualMinglerStr = [NSString stringWithFormat:@"You both mingle with %@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
+        _mutualMinglerStr = [NSString stringWithFormat:@"1 Mutual Friend"];
         
     }else{
-        _mutualMinglerStr = [NSString stringWithFormat:@"%lu Mutual Minglers",(unsigned long)_userProfileInfo.minglersIds.count];
+        _mutualMinglerStr = [NSString stringWithFormat:@"%lu Mutual Friends",(unsigned long)_userProfileInfo.minglersIds.count];
     }
     [self.tableView reloadData];
 }
@@ -480,7 +424,7 @@ NSArray *minglerTagsArray;
     }
     
     
-    _counter = (minglerTagsArray.count>0)?1:0;
+//    _counter = (minglerTagsArray.count>0)?1:0;
 
     
     for (GTLZeppaclientapiEventTag *tag in minglerTagsArray) {
@@ -523,7 +467,7 @@ NSArray *minglerTagsArray;
         
         UIButton *newButton =[[UIButton alloc]init];
         
-        [newButton setTitle:title.capitalizedString forState:UIControlStateNormal];
+        [newButton setTitle:title forState:UIControlStateNormal];
         [newButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
         
         if ([_defaultTagsForUser isFollowing:tag]) {
@@ -553,22 +497,23 @@ NSArray *minglerTagsArray;
         [newButton setTag:TAGS_BUTTON_TAG];
         
         
-        _heightExtend = textSize.height+2*PADDING;
+//        _heightExtend = textSize.height+2*PADDING;
         
         UIView *newView =[[UIView alloc]init];
         
         if (_tempArray.count!=0) {
             UIView *lastView =(UIView *)[_tempArray lastObject];
-            [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width,textSize.height)];
             
-            if (newView.frame.origin.x+newButton.frame.size.width>300) {
-                newView.frame =CGRectMake(PADDING, newView.frame.origin.y+newView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
-                _counter++;
-                [self resizeTagviewAndTableCell];
+            if (newView.frame.origin.x+newButton.frame.size.width>self.view.frame.size.width) {
+                newView.frame =CGRectMake(0, lastView.frame.origin.y+lastView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
+//                _counter++;
+                self.userProfileCell.tcHeightConstraint.constant+= newView.frame.size.height;
             }
             
         }else{
-            [newView setFrame:CGRectMake(PADDING,PADDING,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            [newView setFrame:CGRectMake(0,0,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            self.userProfileCell.tcHeightConstraint.constant = newView.frame.size.height;
         }
         [newView addSubview:newButton];
         [_userProfileCell.tagBaseView addSubview:newView];
@@ -614,24 +559,33 @@ NSArray *minglerTagsArray;
         }
     }
     
+    self.userProfileCell.tcHeightConstraint.constant = 0;
     for (int j=0; j<_tempArray.count; j++) {
         UIView *view =[_tempArray objectAtIndex:j];
         UIButton *button = (UIButton *)[view viewWithTag:TAGS_BUTTON_TAG];
         CGRect frame = button.frame;
         
         if (j==0) {
-            view.frame=CGRectMake(PADDING, PADDING, frame.size.width+PADDING, frame.size.height+PADDING);
+            view.frame=CGRectMake(view.frame.origin.x, view.frame.origin.y, frame.size.width+PADDING, frame.size.height+PADDING);
+            self.userProfileCell.tcHeightConstraint.constant = view.frame.size.height;
         }
         else{
             UIView *preView =[_tempArray objectAtIndex:j-1];
             view.frame=CGRectMake(preView.frame.origin.x+preView.frame.size.width, preView.frame.origin.y, frame.size.width+PADDING, frame.size.height+PADDING);
-            if (view.frame.origin.x+view.frame.size.width>300) {
-                view.frame=CGRectMake(PADDING, view.frame.origin.y+view.frame.size.height, view.frame.size.width, view.frame.size.height);
+            if (view.frame.origin.x+view.frame.size.width>self.view.frame.size.width) {
+                view.frame=CGRectMake(0, view.frame.origin.y+view.frame.size.height, view.frame.size.width, view.frame.size.height);
+                self.userProfileCell.tcHeightConstraint.constant += view.frame.size.height;
             }
         }
         [_userProfileCell.tagBaseView addSubview:view];
     }
     
+    // Set the frame size
+    CGRect frame = self.userProfileCell.tagBaseView.frame;
+    self.userProfileCell.tagBaseView.frame = CGRectMake(0, 0, frame.size.width, self.userProfileCell.tcHeightConstraint.constant);
+//    [UIView animateWithDuration:0 animations:^{
+//        [self.view layoutIfNeeded];
+//    }];
 }
 
 -(IBAction)newButtonAction:(UIButton *)sender{
@@ -705,24 +659,19 @@ NSArray *minglerTagsArray;
 -(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
     
     
-    GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForRemoveZeppaUserToUserRelationshipWithRelationshipId:[userInfo.relationship.identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForRemoveZeppaUserToUserRelationshipWithIdentifier:[userInfo.relationship.identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserToUserRelationship  *response, NSError *error) {
         //
         
         if(error){
-            
-        } else if ( response.identifier){
+            // TODO: notify the user an error occured
+        } else {
             
             //            [resultView setText:[NSString stringWithFormat:@"ZeppaUserToUserRelationship: {\n   identifier: %@\n   created: %@\n   updated: %@\n   creatorId: %@\n   subjectId: %@\n   relationshipType: %@\n   }", response.identifier, response.created, response.updated, response.creatorId, response.subjectId, response.relationshipType]];
             
             [self performSegueWithIdentifier:@"unwindFromUserProfile" sender:self];
             
-
-            //
-            
-        } else {
-            //            [resultView setText:@"Error Inserting ZeppaUserToUserRelationship"];
         }
         
     }];
@@ -751,43 +700,9 @@ NSArray *minglerTagsArray;
     return indexPath;
     
 }
-//****************************************************
-#pragma mark - Private methods
-//****************************************************
-
--(void)showSmsWithRecepientsNumber:(NSString *)phoneNumber{
-    
-    
-    if(![MFMessageComposeViewController canSendText]){
-        UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [warningAlert show];
-        return;
-    }
-    NSArray * reciepients =[NSArray arrayWithObject:phoneNumber];
-    MFMessageComposeViewController * messageController = [[MFMessageComposeViewController alloc]init];
-    
-    messageController.messageComposeDelegate = self;
-    [messageController setRecipients:reciepients];
-    
-    [self presentViewController:messageController animated:YES completion:nil];
-}
-
--(void)sendEmailWithRecipientsMail:(NSString *)emailId{
-    
-    NSString * mailSubject = @"";
-    NSString * mailBody = @"";
-    NSArray * mailRecepients = [NSArray arrayWithObject:emailId];
-    
-    MFMailComposeViewController * mailController = [[MFMailComposeViewController alloc]init];
-    
-    mailController.mailComposeDelegate = self;
-    
-    [mailController setSubject:mailSubject];
-    [mailController setMessageBody:mailBody isHTML:NO];
-    [mailController setToRecipients:mailRecepients];
-    
-    [self presentViewController:mailController animated:YES completion:nil];
-}
+////****************************************************
+//#pragma mark - Private methods
+////****************************************************
 
 
 -(void)showProgressHUD{

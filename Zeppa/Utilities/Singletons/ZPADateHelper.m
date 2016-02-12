@@ -264,13 +264,26 @@ static ZPADateHelper *dateHelper;
     return (long long)([[NSDate date]timeIntervalSince1970]*1000.0);
 }
 
+/*
+ *
+ */
 -(NSString *)getEventTimeDuration:(NSNumber *)startTime withEndTime:(NSNumber *)endTime{
     
+    NSString *endTimeString;
+    
+    if((endTime.integerValue - startTime.integerValue) < (24*60*60)) {
+        // If it ends less than a day later, don't include end day designation
+        endTimeString = [self changeTimeAndFindTimeInterval:endTime];
+        
+    } else {
+        endTimeString = [self changeTimeAndFindTimeInterval:endTime];
+    }
+    
        
-    NSString * eventDuration = [NSString stringWithFormat:@"%@ - %@",[self changeTimeAndFindTimeInterval:startTime],[self changeTimeAndFindTimeInterval:endTime]];
+    NSString * eventDuration = [NSString stringWithFormat:@"%@ - %@",[self changeTimeAndFindTimeInterval:startTime],endTimeString];
     
     return eventDuration;
-}
+} 
 
 
 -(NSString *)changeTimeAndFindTimeInterval:(NSNumber *)inputTime{
@@ -315,31 +328,37 @@ static ZPADateHelper *dateHelper;
     minutes = minutes + (hours*60);
     
     if ([inputStr isEqualToString:todayStr]) {
-        
-        if (minutes >=0 ) {
-            
-            if (minutes<1) {
-                timeToDisplayString = [NSString stringWithFormat:@"Right Now"];
-            }else if (minutes<3){
-                timeToDisplayString = [NSString stringWithFormat:@"A few moments ago"];
-            }else if (minutes<30){
-                timeToDisplayString = [NSString stringWithFormat:@"%d minutes ago",minutes];
-            }else{
-                timeToDisplayString = [self stringFromDate:inputDate withFormat:@" hh:mm a"];
-            }
-            
-        }else{
-            minutes *= -1;
-            if (minutes<1) {
-                timeToDisplayString = [NSString stringWithFormat:@"Right Now"];
-            }else if (minutes<3){
-                timeToDisplayString = [NSString stringWithFormat:@"A few moments from now"];
-            }else if (minutes<30){
-                timeToDisplayString = [NSString stringWithFormat:@"%d minutes from now",minutes];
-            }else{
-                timeToDisplayString = [self stringFromDate:inputDate withFormat:@" hh:mm a"];
-            }
+        timeToDisplayString = [self stringFromDate:inputDate withFormat:@" hh:mm a"];
+
+//        if (minutes >=0 ) {
+//            
+//            if (minutes<1) {
+//                timeToDisplayString = [NSString stringWithFormat:@"Right Now"];
+//            }else if (minutes<3){
+//                timeToDisplayString = [NSString stringWithFormat:@"A few moments ago"];
+//            }else if (minutes<30){
+//                timeToDisplayString = [NSString stringWithFormat:@"%d minutes ago",minutes];
+//            }else{
+//                timeToDisplayString = [self stringFromDate:inputDate withFormat:@" hh:mm a"];
+//            }
+//            
+//        }else{
+//            minutes *= -1;
+//            if (minutes<1) {
+//                timeToDisplayString = [NSString stringWithFormat:@"Right Now"];
+//            }else if (minutes<3){
+//                timeToDisplayString = [NSString stringWithFormat:@"A few moments from now"];
+//            }else if (minutes<30){
+//                timeToDisplayString = [NSString stringWithFormat:@"%d minutes from now",minutes];
+//            }else{
+//                timeToDisplayString = [self stringFromDate:inputDate withFormat:@" hh:mm a"];
+//            }
+//        }
+        // If the first character is a 0, get rid of it
+        if([timeToDisplayString characterAtIndex:0]=='0'){
+            timeToDisplayString = [timeToDisplayString substringFromIndex:1];
         }
+        
     }else if([inputStr isEqualToString:tommorowStr]){
         
         timeToDisplayString = [NSString stringWithFormat:@"Tomorrow %@",[self stringFromDate:inputDate withFormat:@"hh:mm a"]];
@@ -348,7 +367,7 @@ static ZPADateHelper *dateHelper;
         
         timeToDisplayString = [NSString stringWithFormat:@"Yesterday %@",[self stringFromDate:inputDate withFormat:@"hh:mm a"]];
         
-    }else if ([inputTime longLongValue] - currentTimeInMills < (1000 * 60 * 60 * 24 * 7) ){
+    }else if ([inputTime longLongValue] - currentTimeInMills < (1000 * 60 * 60 * 24 * 6) ){
         
         timeToDisplayString = [NSString stringWithFormat:@"%@ %@",[self stringFromDate:inputDate withFormat:@"EEEE"],[self stringFromDate:inputDate withFormat:@"hh:mm a"]];
         
@@ -357,5 +376,6 @@ static ZPADateHelper *dateHelper;
     }
     return timeToDisplayString;
 }
+
 
 @end

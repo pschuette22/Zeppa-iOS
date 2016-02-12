@@ -66,11 +66,11 @@ typedef enum {
     [self.view setBackgroundColor:[ZPAStaticHelper backgroundTextureColor]];
     _btnLoginWithGoogle.hidden = NO;
     
-    // If Auth is stored, sign in silently
-    if([[GIDSignIn sharedInstance] hasAuthInKeychain]){
+    // If User is signed in, sign in automatically
+    if([ZPAUserDefault getValueFromUserDefaultUsingKey:kCurrentZeppaUserEmail]){
         _btnLoginWithGoogle.hidden = YES;
         [self showActivity];
-        [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogleSilently:YES];
+        [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogle];
     }
     
 }
@@ -102,7 +102,7 @@ typedef enum {
 - (IBAction)btnLoginWithGoogleTapped:(UIButton *)sender {
     sender.hidden = YES;
     [self showActivity];
-    [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogleSilently:NO];
+    [[ZPAAuthenticatonHandler sharedAuth] signInWithGoogle];
 }
 
 
@@ -116,7 +116,7 @@ typedef enum {
     // This is what gets called when auth process has completed
     
     // There was an error with login... try again
-    if(error){
+    if(error || !signIn.currentUser){
         [self hideActivity];
         _btnLoginWithGoogle.hidden = NO;
         

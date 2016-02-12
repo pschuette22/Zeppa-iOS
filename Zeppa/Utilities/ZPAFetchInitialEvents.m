@@ -28,13 +28,12 @@
 }
 -(void)executeZeppaEventListQueryWithCursor:(NSString *)cursorValue{
     
-    __weak typeof(self) weakSelf = self;
     
     if (![self getUserId]) {
         _isNewUser = YES;
     }
     
-    GTLQueryZeppaclientapi *eventQuery = [GTLQueryZeppaclientapi queryForListZeppaEvent];
+    GTLQueryZeppaclientapi *eventQuery = [GTLQueryZeppaclientapi queryForListZeppaEventWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     
     [eventQuery setFilter:[NSString stringWithFormat:@"hostId == %@ && end > %lld",[self getUserId],[ZPADateHelper currentTimeMillis]]];
@@ -58,27 +57,27 @@
                 myevent.isAgenda = YES;
                 [[ZPAZeppaEventSingleton sharedObject] addZeppaEvents:myevent];
                 
-                [weakSelf executeZeppaEventRelationshipListQuerywithZeppaEvent:myevent];
+                [self executeZeppaEventRelationshipListQuerywithZeppaEvent:myevent];
                 
             }
             // get cursor to query for next page
             NSString *nextCursor = response.nextPageToken;
-            if (nextCursor) {
-                [weakSelf executeZeppaEventListQueryWithCursor:nextCursor];
+            if (response.items.count >= 25 && nextCursor) {
+                [self executeZeppaEventListQueryWithCursor:nextCursor];
             }else{
                 
-                [weakSelf executeZeppaEventRelationshipListQueryForAttendingWithCursor:nil];
+                [self executeZeppaEventRelationshipListQueryForAttendingWithCursor:nil];
             }
         }else{
             
-            [weakSelf executeZeppaEventRelationshipListQueryForAttendingWithCursor:nil];
+            [self executeZeppaEventRelationshipListQueryForAttendingWithCursor:nil];
         }
         
     }];
 }
 -(void)fetchZeppaEventWithIdentifier:(NSNumber *)identifier  withCompletion:(getZeppaEventOject)completion{
     
-    GTLQueryZeppaclientapi *eventQuery = [GTLQueryZeppaclientapi queryForGetZeppaEventWithIdentifier:[identifier longLongValue]];
+    GTLQueryZeppaclientapi *eventQuery = [GTLQueryZeppaclientapi queryForGetZeppaEventWithIdentifier:[identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
 //    [eventQuery setFilter: [NSString stringWithFormat:@"hostId == %@",identifier]];
 //    [eventQuery setCursor: nil];
@@ -98,8 +97,7 @@
 -(void)executeZeppaEventRelationshipListQueryForAttendingWithCursor:(NSString *)cursorValue{
     
     
-    __weak typeof(self) weakSelf = self;
-    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationship];
+    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [e2uRelationshipQuery setFilter:[NSString stringWithFormat:@"userId == %@ && isAttending == true && expires > %lld",[self getUserId],[ZPADateHelper currentTimeMillis]]];
     [e2uRelationshipQuery setCursor:cursorValue];
@@ -116,12 +114,12 @@
             
             for (GTLZeppaclientapiZeppaEventToUserRelationship *eventToUserRelation in response.items) {
                 
-                [weakSelf fetchZeppaEventWithIdentifier:eventToUserRelation.eventId withCompletion:^(GTLZeppaclientapiZeppaEvent *zeppaEvent) {
+                [self fetchZeppaEventWithIdentifier:eventToUserRelation.eventId withCompletion:^(GTLZeppaclientapiZeppaEvent *zeppaEvent) {
                     
                     if([[ZPAZeppaUserSingleton sharedObject] getZPAUserMediatorById:[zeppaEvent.hostId longLongValue]]){
                         
                         
-                        [weakSelf fetchZeppaUserInfoWithParentIdentifier:eventToUserRelation.userId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
+                        [self fetchZeppaUserInfoWithParentIdentifier:eventToUserRelation.userId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
                             
                             [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:nil];
                         }];
@@ -140,14 +138,14 @@
                 }];
             }
             NSString *currentCursor = response.nextPageToken;
-            if (currentCursor) {
-                [weakSelf executeZeppaEventRelationshipListQueryForAttendingWithCursor:currentCursor];
+            if (response.items.count >= 25 && currentCursor) {
+                [self executeZeppaEventRelationshipListQueryForAttendingWithCursor:currentCursor];
             }else{
-                [weakSelf executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:nil];
+                [self executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:nil];
             }
             
         } else {
-            [weakSelf executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:nil];
+            [self executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:nil];
         }
         
     }];
@@ -161,8 +159,7 @@
 -(void)executeZeppaEventRelationshipListQuerywithZeppaEvent:(ZPAMyZeppaEvent *)zeppaEvent{
     
     
-    __weak typeof(self) weakSelf = self;
-    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationship];
+    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [e2uRelationshipQuery setFilter:[NSString stringWithFormat:@"eventId == %@",zeppaEvent.event.identifier]];
     //[e2uRelationshipQuery setCursor:cursorValue];
@@ -201,8 +198,7 @@
 -(void)executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:(NSString *)cursorValue{
     
     
-    __weak typeof(self) weakSelf = self;
-    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationship];
+    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [e2uRelationshipQuery setFilter:[NSString stringWithFormat:@"userId == %@ && isWatching == false && isAttending == false && expires > %lld",[self getUserId],[ZPADateHelper currentTimeMillis]]];
     [e2uRelationshipQuery setCursor:cursorValue];
@@ -225,12 +221,12 @@
             
                 if (![[ZPAZeppaEventSingleton sharedObject] relationshipAlreadyHeld:eventToUserRelation]) {
                     
-                    [weakSelf fetchZeppaEventWithIdentifier:eventToUserRelation.eventId withCompletion:^(GTLZeppaclientapiZeppaEvent *zeppaEvent) {
+                    [self fetchZeppaEventWithIdentifier:eventToUserRelation.eventId withCompletion:^(GTLZeppaclientapiZeppaEvent *zeppaEvent) {
                         
                         if([[ZPAZeppaUserSingleton sharedObject] getZPAUserMediatorById:[zeppaEvent.hostId longLongValue]]){
                             
                             
-                            [weakSelf fetchZeppaUserInfoWithParentIdentifier:eventToUserRelation.userId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
+                            [self fetchZeppaUserInfoWithParentIdentifier:eventToUserRelation.userId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
                                 
                                 [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:nil];
                             }];
@@ -250,15 +246,15 @@
             }
             
             NSString *currentCursor = response.nextPageToken;
-            if (currentCursor) {
-                [weakSelf executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:currentCursor];
+            if (response.items.count >= 25 && currentCursor) {
+                [self executeZeppaEventRelationshipListQueryForWatchingAndAttendingWithCursor:currentCursor];
             }else{
-                [weakSelf fetchInitialNotification];
+                [self fetchInitialNotification];
             }
             
         } else {
             
-            [weakSelf fetchInitialNotification];
+            [self fetchInitialNotification];
         }
         
     }];
