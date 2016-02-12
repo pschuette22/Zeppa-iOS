@@ -11,4 +11,8 @@
 @interface ZPAActivityVC : ZPARevealSplitMenuBaseVC<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong)NSMutableArray *arrNotifications;
+
+
+- (void) notificationReceived:(NSNotification*) notification;
+
 @end

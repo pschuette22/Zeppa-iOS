@@ -16,15 +16,12 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_minglerImage;
 @property (weak, nonatomic) IBOutlet UIButton *btn_EventDuration;
 @property (weak, nonatomic) IBOutlet UIButton *btn_EventLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_EventDescription;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_conflictIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *lbl_minglerUserName;
 @property (weak, nonatomic) IBOutlet UIButton *btn_join;
-@property (weak, nonatomic) IBOutlet UIButton *btn_text;
 @property (weak, nonatomic) IBOutlet UIButton *btn_watch;
 
 - (IBAction)watchButtonTapped:(UIButton *)sender;
-- (IBAction)textButtonTapped:(UIButton *)sender;
 - (IBAction)joinButtonTapped:(UIButton *)sender;
 
 -(void)showEventDetailOnCell:(ZPADefaulZeppatUserInfo *)userInfo withZeppaEvents:(ZPAMyZeppaEvent *)zeppaEvent;

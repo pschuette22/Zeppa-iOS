@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "ZPAUserInfoBaseClass.h"
 
-#import "GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship.h"
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
-#import "GTLServiceZeppausertouserrelationshipendpoint.h"
-#import "GTLQueryZeppausertouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 #import "ZPADefaulZeppatUserInfo.h"
 
@@ -25,7 +25,7 @@
 @end
 
 @interface ZPAFetchMutualMingers : NSObject
-@property (nonatomic, strong)GTLServiceZeppausertouserrelationshipendpoint *zeppaUserToUserRelationship;
+@property (nonatomic, strong)GTLServiceZeppaclientapi *zeppaUserToUserRelationship;
 @property (nonatomic, assign)id<MutualMinglerDelegate>delegate;
 
 -(void)executeZeppaMinglerApiWithZeppaUser:(ZPADefaulZeppatUserInfo *)zeppaUser withUserIndetifier:(long long)identifier;

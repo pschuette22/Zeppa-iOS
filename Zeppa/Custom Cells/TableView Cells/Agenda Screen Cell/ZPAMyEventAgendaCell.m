@@ -65,8 +65,6 @@
     // _imageView_ConflictIndicator = zeppaEvent.;
     NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvents.event.start withEndTime:zeppaEvents.event.end];
     
-    _lblEventDescription.text = zeppaEvents.event.descriptionProperty;
-    
     [_btnEventDuration.titleLabel setNumberOfLines:0];
     [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];
     

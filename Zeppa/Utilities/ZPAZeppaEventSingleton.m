@@ -48,12 +48,15 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
             }
     }
     [_zeppaEvents addObject:event];
+    [self notificationChangeForEvents];
     
 }
 -(BOOL)removeMediator:(ZPAMyZeppaEvent *)event{
     
     if ([_zeppaEvents containsObject:event]) {
         [_zeppaEvents removeObject:event];
+        [self notificationChangeForEvents];
+        
         return YES;
     }
     return NO;
@@ -68,33 +71,42 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
             
             
             [removeArr addObject:myZeppaEvent];
+            // TODO: remove notifications send regarding this event
            // NotificationSingleton.getInstance().removeNotificationsForEvent(mediator.getEventId().longValue());
             
         }
     }
-    [_zeppaEvents removeObjectsInArray:removeArr];
+    if(removeArr.count > 0){
+        [_zeppaEvents removeObjectsInArray:removeArr];
+        [self notificationChangeForEvents];
+
+    }
+    
 }
 -(void)clearOldEvents{
     
     if (_zeppaEvents.count>0) {
         
-        NSMutableArray *arr = [NSMutableArray arrayWithArray:_zeppaEvents];
+        NSMutableArray *arr = [[NSMutableArray alloc] init];
         long long currentTime = (long long)[ZPADateHelper currentTimeMillis];
         
        
         for (ZPAMyZeppaEvent *myZeppaEvent in arr) {
             
-            if ([myZeppaEvent.event.end isEqualToNumber:[NSNumber numberWithLongLong:currentTime]] ) {
-                [_zeppaEvents removeObject:myZeppaEvent];
+            // If the end time is less than the current time (in millis since epoch) remove it
+            if (myZeppaEvent.event.end.longLongValue <=  currentTime) {
+                [_zeppaEvents addObject:myZeppaEvent];
             }
            /* NotificationSingleton.getInstance()
             .removeNotificationsForEvent(
                                          mediator.getEventId().longValue());
             */
         }
-//        if (arr.count>0) {
-//            [_zeppaEvents removeObjectsInArray:arr];
-//        }
+        if (arr.count>0) {
+            [_zeppaEvents removeObjectsInArray:arr];
+            [self notificationChangeForEvents];
+
+        }
     }
     
     
@@ -115,11 +127,12 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
         }
         if (removeEvent) {
             [_zeppaEvents removeObject:removeEvent];
+            [self notificationChangeForEvents];
         }
     }
     
 }
--(BOOL)relationshipAlreadyHeld:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relation{
+-(BOOL)relationshipAlreadyHeld:(GTLZeppaclientapiZeppaEventToUserRelationship *)relation{
     
     
     for (ZPAMyZeppaEvent *myZeppaEvent in _zeppaEvents) {
@@ -191,7 +204,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
     
     for (ZPAMyZeppaEvent *myZeppaEvent in _zeppaEvents) {
         
-        if (myZeppaEvent.isAgenda == YES || [myZeppaEvent.relationship.isAttending boolValue] == YES || [myZeppaEvent hostIdDoesMatch:[[self getUserId] longLongValue]] ) {
+        if ([myZeppaEvent.relationship.isWatching boolValue] == YES || [myZeppaEvent.relationship.isAttending boolValue] == YES || [myZeppaEvent hostIdDoesMatch:[[self getUserId] longLongValue]] ) {
             [interestingEventMediators addObject:myZeppaEvent];
         }
         
@@ -205,7 +218,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
 }
 
 
--(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaeventendpointZeppaEvent *)event{
+-(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaclientapiZeppaEvent *)event{
     
     NSString *eTitle = event.title;
     long long eStart = [event.start longLongValue];
@@ -343,7 +356,7 @@ static ZPAZeppaEventSingleton *zeppaEventSingleton = nil;
     //_relationships = [NSMutableArray array];
     NSMutableArray *attendingUserIds = [NSMutableArray array];
     
-    for (GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship * relation in _relationships) {
+    for (GTLZeppaclientapiZeppaEventToUserRelationship * relation in _relationships) {
         if ([relation.isAttending boolValue] && [relation.eventId isEqualToNumber:zeppaEvent.event.identifier]) {
             [attendingUserIds addObject:relation.userId];
         }

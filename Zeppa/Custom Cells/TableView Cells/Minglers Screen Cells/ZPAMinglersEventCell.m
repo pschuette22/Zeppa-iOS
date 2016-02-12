@@ -56,7 +56,6 @@
     
     NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.event.start withEndTime:zeppaEvent.event.end];
     
-    _lbl_EventDescription.text = zeppaEvent.event.descriptionProperty;
     [_btn_EventDuration setTitle:durationString forState:UIControlStateNormal];
     
     [_btn_EventLocation setTitle:zeppaEvent.event.displayLocation forState:UIControlStateNormal];

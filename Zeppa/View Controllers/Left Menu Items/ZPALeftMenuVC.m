@@ -10,7 +10,7 @@
 #import "ZPALeftMenuProfileCell.h"
 #import "ZPALeftMenuItemCell.h"
 #import "ZPAAppData.h"
-#import "GTLZeppauserendpoint.h"
+#import "GTLZeppaclientapi.h"
 #import "UIImageView+WebCache.h"
 
 
@@ -100,7 +100,8 @@
                 [leftMenuProfileCell.imageView_Profile setImage:[UIImage imageNamed:@"default_user_image.png"]];
             }
         }
-        leftMenuProfileCell.lblZeppaUserName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
+        NSString *displayName = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
+        leftMenuProfileCell.lblZeppaUserName.text = displayName;
         
         
         return leftMenuProfileCell;

@@ -9,7 +9,7 @@
 #import "ZPAFetchMutualMingers.h"
 #import "ZPAAuthenticatonHandler.h"
 #import "ZPADefaulZeppatUserInfo.h"
-#import "GTLZeppauserinfoendpointKey.h"
+#import "GTLZeppaclientapiKey.h"
 
 @implementation ZPAFetchMutualMingers{
     
@@ -27,13 +27,13 @@
 -(void)executeZeppaUserToUserRelationshipListQueryForCreatorId:(NSString *)cursorValue{
         
        __weak typeof(self) weakSelf = self;
-        GTLQueryZeppausertouserrelationshipendpoint *u2uRelationshipQuery = [GTLQueryZeppausertouserrelationshipendpoint queryForListZeppaUserToUserRelationship];
+        GTLQueryZeppaclientapi *u2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
         
      [u2uRelationshipQuery setFilter:[NSString stringWithFormat:@"creatorId == %@ && subjectId != %lld && relationshipType == 'MINGLING'",_mingler.zeppaUserInfo.key.parent.identifier,_userId]];
         [u2uRelationshipQuery setCursor:cursorValue];
         [u2uRelationshipQuery setLimit:[[NSNumber numberWithInt:50] integerValue]];
         
-        [self.zeppaUserToUserRelationship executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
+        [self.zeppaUserToUserRelationship executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
             //
             if(error){
                 // error
@@ -42,7 +42,7 @@
                 
                NSString *currentCursor = response.nextPageToken;
                 
-                for (GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relation in response.items) {
+                for (GTLZeppaclientapiZeppaUserToUserRelationship *relation in response.items) {
                     
                     if (relation.subjectId>0) {
                         
@@ -66,18 +66,18 @@
     
     
     __weak typeof(self) weakSelf = self;
-    GTLQueryZeppausertouserrelationshipendpoint *u2uRelationshipQuery = [GTLQueryZeppausertouserrelationshipendpoint queryForListZeppaUserToUserRelationship];
+    GTLQueryZeppaclientapi *u2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [u2uRelationshipQuery setFilter:[NSString stringWithFormat:@"subjectId == %@ && creatorId != %lld && relationshipType == 'MINGLING'",_mingler.zeppaUserInfo.key.parent.identifier,_userId]];
     [u2uRelationshipQuery setCursor:cursorValue];
     [u2uRelationshipQuery setLimit:[[NSNumber numberWithInt:50] integerValue]];
     
-    [self.zeppaUserToUserRelationship executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
+    [self.zeppaUserToUserRelationship executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
         //
         if(error){
             // error
         } else if(response && response.items && response.items.count > 0){
-            for (GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relation in response.items) {
+            for (GTLZeppaclientapiZeppaUserToUserRelationship *relation in response.items) {
                 
                 if (relation.creatorId>0) {
                     
@@ -121,15 +121,13 @@
 
     
 }
--(GTLServiceZeppausertouserrelationshipendpoint *)zeppaUserToUserRelationship{
+-(GTLServiceZeppaclientapi *)zeppaUserToUserRelationship{
     
-    static GTLServiceZeppausertouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
         if(!service){
-        service = [[GTLServiceZeppausertouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

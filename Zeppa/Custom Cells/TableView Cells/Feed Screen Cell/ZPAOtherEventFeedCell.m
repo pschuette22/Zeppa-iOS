@@ -79,10 +79,6 @@
         _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
     }
     
-    
-    
-    
-    
         _lblEventTitle.text = zeppaEvent.event.title;
         
         
@@ -94,7 +90,6 @@
         
         NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.event.start withEndTime:zeppaEvent.event.end];
         
-        _lblEventDescription.text = zeppaEvent.event.descriptionProperty;
     
         [_btnEventDuration.titleLabel setNumberOfLines:0];
         [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];

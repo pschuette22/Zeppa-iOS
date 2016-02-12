@@ -30,11 +30,56 @@ BOOL hasLoadedInitial;
     notif = nil;
 }
 
+// Auth object for executing authenticated queries
+-(GTLServiceZeppaclientapi *) notificationService {
+    static GTLServiceZeppaclientapi *service = nil;
+    
+    if(!service){
+        service = [[GTLServiceZeppaclientapi alloc] init];
+        service.retryEnabled = YES;
+    }
+    
+    return service;
+}
+
+/**
+ * Did receive notification from app engine backend
+ * This method dispatches notification information appropriately
+ *
+ */
+-(void)didReceiveNotification:(NSNumber *)notificationId
+{
+    // Fetch the current
+    [self fetchNotificationById:notificationId];
+}
+                                                            
+-(void)fetchNotificationById:(NSNumber *)notificationId
+{
+
+    // If logged in, fetch event
+    GTLQueryZeppaclientapi *notificationQuery = [GTLQueryZeppaclientapi queryForGetZeppaNotificationWithIdentifier:notificationId.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+
+    // Execute the retrieval query
+    [[self notificationService] executeQuery:notificationQuery completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        
+        // If there was an error, handle it
+        if(error){
+            
+        } else if (object){
+            GTLZeppaclientapiZeppaNotification *notification = object;
+            [self addZeppaNotification:notification];
+        }
+        
+    } ];
+    
+}
+
+
 -(void)removeNotificationForEvent:(long long)eventId{
 
     NSMutableArray * arr = [NSMutableArray array];
     
-    for (GTLZeppanotificationendpointZeppaNotification * notification in _notificationArray) {
+    for (GTLZeppaclientapiZeppaNotification * notification in _notificationArray) {
         if (notification.eventId != nil && [notification.eventId longLongValue] == eventId) {
             [arr addObject:notification];
         }
@@ -45,9 +90,9 @@ BOOL hasLoadedInitial;
 
 -(void)removeNotification:(long long)notificationId{
     
-    GTLZeppanotificationendpointZeppaNotification * notification = nil;
+    GTLZeppaclientapiZeppaNotification * notification = nil;
     
-    for (GTLZeppanotificationendpointZeppaNotification * n in _notificationArray) {
+    for (GTLZeppaclientapiZeppaNotification * n in _notificationArray) {
         if ([n.identifier longLongValue] == notificationId) {
             notification = n;
             break;
@@ -58,11 +103,11 @@ BOOL hasLoadedInitial;
     }
 }
 
--(BOOL)alreadyHoldingNotification:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(BOOL)alreadyHoldingNotification:(GTLZeppaclientapiZeppaNotification *)notification{
     
     
     if (_notificationArray.count > 0) {
-        for (GTLZeppanotificationendpointZeppaNotification *notifi in _notificationArray) {
+        for (GTLZeppaclientapiZeppaNotification *notifi in _notificationArray) {
             if ([notifi.identifier isEqualToNumber:notification.identifier]) {
                 return true;
             }
@@ -89,9 +134,8 @@ BOOL hasLoadedInitial;
     //notifyObserver;
 }
 
--(NSInteger)getNotificationTypeOrder:(GTLZeppanotificationendpointZeppaNotification *)notification{
-    
-    NSString *notificationType = notification.type;
+// Get an application wide ordinal for the notification type
+-(NSInteger)getNotificationTypeOrder:(NSString *)notificationType {
     
     if ([notificationType isEqualToString:@"MINGLE_REQUEST"]) {
         return 0;
@@ -119,11 +163,17 @@ BOOL hasLoadedInitial;
     
 }
 
--(NSString *)getNotificationTitle:(GTLZeppanotificationendpointZeppaNotification *)notification{
+// Conveninence from prior implementation
+-(NSString *)getNotificationTitle:(GTLZeppaclientapiZeppaNotification *)notification{
     
+    return [self getNotificationTitleForKey:[notification type]];
+}
+
+// Return the title of a notification to be sent provided the notification type
+-(NSString *) getNotificationTitleForKey:(NSString*) notificationType {
     NSString *notificationTitle ;
     
-    switch ([self getNotificationTypeOrder:notification]) {
+    switch ([self getNotificationTypeOrder:notificationType]) {
         case 0:
             notificationTitle = @"New Request To Mingle";
             break;
@@ -140,7 +190,7 @@ BOOL hasLoadedInitial;
             notificationTitle = @"Unread Comment";
             break;
         case 5:
-            notificationTitle = @"Event Cancelation";
+            notificationTitle = @"Event Canceled";
             break;
         case 6:
             notificationTitle = @"Event Updated";
@@ -161,7 +211,7 @@ BOOL hasLoadedInitial;
     return notificationTitle;
 }
 
--(NSString *)getNotificationMessage:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(NSString *)getNotificationMessage:(GTLZeppaclientapiZeppaNotification *)notification{
     
     NSString *notificationMessage;
     ZPADefaulZeppatEventInfo *eventMediator = [ZPADefaulZeppatEventInfo sharedObject] ;
@@ -200,7 +250,7 @@ BOOL hasLoadedInitial;
             notificationMessage = [NSString stringWithFormat:@"%@ %@ left %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
             break;
         case 9:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ repossted %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
+            notificationMessage = [NSString stringWithFormat:@"%@ %@ reposted %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
             break;
             
         default:
@@ -210,16 +260,18 @@ BOOL hasLoadedInitial;
     
 }
 
--(void)addZeppaNotification:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(void)addZeppaNotification:(GTLZeppaclientapiZeppaNotification *)notification{
     
     if (![self alreadyHoldingNotification:notification]) {
         [_notificationArray addObject:notification];
+        // Post a notification that a ZeppaNotification has been received
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ZeppaNotification" object:notification];
     }
     
     
 }
 
--(void)fetchNotification:(long long)userId{
+-(void)fetchInitialNotifications:(long long)userId{
     
     ZPAFetchInitialNotifications * initialNotification = [[ZPAFetchInitialNotifications alloc]init];
     

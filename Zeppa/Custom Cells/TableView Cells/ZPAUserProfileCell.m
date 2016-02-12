@@ -47,11 +47,11 @@
 
 -(void)showZeppaMinglersInfoOnCell:(ZPADefaulZeppatUserInfo *)zeppaUser{
     
-    if(zeppaUser.zeppaUserInfo.primaryUnformattedNumber.length >0){
-        _btnContactNumber.hidden = NO;
-    }else{
-        _btnContactNumber.hidden = YES;
-    }
+//    if(zeppaUser.zeppaUserInfo.primaryUnformattedNumber.length >0){
+//        _btnContactNumber.hidden = NO;
+//    }else{
+//        _btnContactNumber.hidden = YES;
+//    }
     
     NSURL *minglerImageUrl = [NSURL URLWithString:zeppaUser.zeppaUserInfo.imageUrl];
     [_imageView_UserProfile setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -61,9 +61,9 @@
     }];
     _lblUserName.text = [NSString stringWithFormat:@"%@ %@",zeppaUser.zeppaUserInfo.givenName,zeppaUser.zeppaUserInfo.familyName];
     
-    //[_btnContactNumber setTitle:zeppaUser.zeppaUserInfo.primaryUnformattedNumber forState:UIControlStateNormal];
-    [_btnEmail setTitle:zeppaUser.zeppaUserInfo.googleAccountEmail forState:UIControlStateNormal];
-    [_btnContactNumber setTitle:[self getFormattedNumber:zeppaUser.zeppaUserInfo.primaryUnformattedNumber] forState:UIControlStateNormal];
+//    //[_btnContactNumber setTitle:zeppaUser.zeppaUserInfo.primaryUnformattedNumber forState:UIControlStateNormal];
+//    [_btnEmail setTitle:zeppaUser.zeppaUserInfo.googleAccountEmail forState:UIControlStateNormal];
+//    [_btnContactNumber setTitle:[self getFormattedNumber:zeppaUser.zeppaUserInfo.primaryUnformattedNumber] forState:UIControlStateNormal];
    
 }
 

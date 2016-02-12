@@ -19,18 +19,18 @@
 
 
 
-- (void) insertZeppaTagFollow:(GTLEventtagfollowendpointEventTagFollow *)tagFollow{
+- (void) insertZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow{
     
     
-    GTLEventtagfollowendpointEventTagFollow *follow = [[GTLEventtagfollowendpointEventTagFollow alloc] init];
+    GTLZeppaclientapiEventTagFollow *follow = [[GTLZeppaclientapiEventTagFollow alloc] init];
     
     [follow setTagId:tagFollow.tagId];
     [follow setTagOwnerId:tagFollow.tagOwnerId];
     [follow setFollowerId:tagFollow.followerId];
     
-    GTLQueryEventtagfollowendpoint *insertFollowTask = [GTLQueryEventtagfollowendpoint queryForInsertEventTagFollowWithObject:follow];
+    GTLQueryZeppaclientapi *insertFollowTask = [GTLQueryZeppaclientapi queryForInsertEventTagFollowWithObject:follow idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.evetTagFollowService executeQuery:insertFollowTask completionHandler:^(GTLServiceTicket *ticket, GTLEventtagfollowendpointEventTagFollow *response, NSError *error) {
+    [self.evetTagFollowService executeQuery:insertFollowTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiEventTagFollow *response, NSError *error) {
         //
         
         if(error){
@@ -46,18 +46,18 @@
     
 }
 
--(void)removeZeppaTagFollow:(GTLEventtagfollowendpointEventTagFollow *)tagFollow{
-    
+-(void)removeZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow{
+    // Wut iz dis?
     
 }
--(GTLServiceEventtagfollowendpoint *)evetTagFollowService{
+
+-(GTLServiceZeppaclientapi *)evetTagFollowService{
     
-    static GTLServiceEventtagfollowendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceEventtagfollowendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

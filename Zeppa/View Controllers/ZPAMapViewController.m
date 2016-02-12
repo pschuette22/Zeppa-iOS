@@ -83,9 +83,9 @@
             
     
         MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(location.coordinate, latitude, longitutde);
-       // [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+        [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
         
-         [_mapView setRegion:MKCoordinateRegionMakeWithDistance(location.coordinate, 200.0 , 200.0) animated:NO];
+//         [_mapView setRegion:MKCoordinateRegionMakeWithDistance(location.coordinate, 200.0 , 200.0) animated:NO];
         
         // 3
         [point setCoordinate:location.coordinate];

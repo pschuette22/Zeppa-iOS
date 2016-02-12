@@ -8,19 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLZeppaeventendpointCollectionResponseZeppaEvent.h"
-#import "GTLServiceZeppaeventendpoint.h"
-#import "GTLQueryZeppaeventendpoint.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEvent.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 
-typedef void(^getZeppaEventInfoOject)(GTLZeppaeventendpointZeppaEvent * event);
+typedef void(^getZeppaEventInfoOject)(GTLZeppaclientapiZeppaEvent * event);
 typedef void(^getZeppaEventInfoOjectArray)(NSArray * events);
 
 @interface ZPAEventInfoBaseClass : NSObject
-@property (nonatomic, strong) GTLServiceZeppaeventendpoint *zeppaEventService;
+@property (nonatomic, strong) GTLServiceZeppaclientapi *zeppaEventService;
 
--(void)executeInsertZeppaEventWithAuth:(GTLZeppaeventendpointZeppaEvent *)zeppaEvent withCompletion:(getZeppaEventInfoOject)completion;
+-(void)executeInsertZeppaEventWithAuth:(GTLZeppaclientapiZeppaEvent *)zeppaEvent withCompletion:(getZeppaEventInfoOject)completion;
 -(void)removeZeppaEventWithIdentifier:(long long) identifier;
 -(void)fetchZeppaEventWithIdentifier:(long long)identifier withCompletion:(getZeppaEventInfoOject)completion;
 @end

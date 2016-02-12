@@ -12,10 +12,10 @@
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAMyZeppaEvent.h"
 
-#import "GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship.h"
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 @protocol MutualMinglerEventDelegate <NSObject>
 @required
@@ -28,7 +28,7 @@
 
 @property (nonatomic, assign)id<MutualMinglerEventDelegate>delegate;
 
-@property (nonatomic,readonly)GTLServiceZeppaeventtouserrelationshipendpoint *zeppaEventToUserRelationshipService;
+@property (nonatomic,readonly)GTLServiceZeppaclientapi *zeppaEventToUserRelationshipService;
 
 -(void)executeZeppaApiWithMinglerId:(long long)mingleIdentifier;
 @end

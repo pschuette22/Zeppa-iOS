@@ -8,19 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GTLZeppauserinfoendpointCollectionResponseZeppaUserInfo.h"
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
-#import "GTLQueryZeppauserinfoendpoint.h"
-#import "GTLServiceZeppauserinfoendpoint.h"
-#import "GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
 
-typedef void(^getZeppaUserInfoOject)(GTLZeppauserinfoendpointZeppaUserInfo * info);
+typedef void(^getZeppaUserInfoOject)(GTLZeppaclientapiZeppaUserInfo * info);
 typedef void(^getZeppaUserInfoOjectArray)(NSArray * info);
 
 
 
 @interface ZPAUserInfoBaseClass : NSObject
-@property (readonly) GTLServiceZeppauserinfoendpoint *zeppaUserInfoService;
+@property (readonly) GTLServiceZeppaclientapi *zeppaUserInfoService;
 
 -(void)fetchZeppaUserInfoWithParentIdentifier:(NSNumber *)identifier withCompletion:(getZeppaUserInfoOject)completion;
 
@@ -28,5 +28,5 @@ typedef void(^getZeppaUserInfoOjectArray)(NSArray * info);
 
 -(void)executeZeppaUserInfoListQueryWithAuthWithFilter:(NSString *)filter withCompletion:(getZeppaUserInfoOjectArray)completion;
 
--(void)setZepppUserToUserRelationship:(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier;
+-(void)setZeppaUserToUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation WithIdentifier:(long long)identifier;
 @end

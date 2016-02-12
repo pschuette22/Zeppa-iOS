@@ -16,8 +16,8 @@
 
 #import "MBProgressHUD.h"
 
-#import "GTLQueryZeppauserendpoint.h"
-#import "GTLServiceZeppauserendpoint.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 
 
 #define TOTAL_SECTIONS 1
@@ -282,7 +282,7 @@
     [self showActivityIndicator];
     
     NSNumber *num = [ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier;
-    GTLQueryZeppauserendpoint *removeZeppaUser = [GTLQueryZeppauserendpoint queryForRemoveZeppaUserWithIdentifier:[num longLongValue]];
+    GTLQueryZeppaclientapi *removeZeppaUser = [GTLQueryZeppaclientapi queryForRemoveCurrentZeppaUserWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken] ];
     
     [[self zeppaUserService] executeQuery:removeZeppaUser completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         if(error){
@@ -293,16 +293,14 @@
         }
     }];
 }
--(GTLServiceZeppauserendpoint *)zeppaUserService
+-(GTLServiceZeppaclientapi *)zeppaUserService
 {
     ///Create ZeppaUserEndPoint Service
-    static GTLServiceZeppauserendpoint *zeppaUserService = nil;
+    static GTLServiceZeppaclientapi *zeppaUserService = nil;
     if (!zeppaUserService) {
         
-        zeppaUserService = [[GTLServiceZeppauserendpoint alloc]init];
-        zeppaUserService.retryEnabled = YES;
-        [zeppaUserService setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
-        
+        zeppaUserService = [[GTLServiceZeppaclientapi alloc]init];
+        zeppaUserService.retryEnabled = YES;        
     }
     return zeppaUserService;
 }

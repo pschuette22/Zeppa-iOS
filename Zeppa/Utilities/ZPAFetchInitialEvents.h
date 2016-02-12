@@ -10,23 +10,23 @@
 
 #import "ZPAUserInfoBaseClass.h"
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLZeppaeventendpointCollectionResponseZeppaEvent.h"
-#import "GTLQueryZeppaeventendpoint.h"
-#import "GTLServiceZeppaeventendpoint.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEvent.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 
-#import "GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship.h"
-#import "GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship.h"
-#import "GTLQueryZeppaeventtouserrelationshipendpoint.h"
-#import "GTLServiceZeppaeventtouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 
-typedef void(^getZeppaEventOject)(GTLZeppaeventendpointZeppaEvent * zeppaEvent);
+typedef void(^getZeppaEventOject)(GTLZeppaclientapiZeppaEvent * zeppaEvent);
 
 @interface ZPAFetchInitialEvents : ZPAUserInfoBaseClass
 
 
-@property (readonly) GTLServiceZeppaeventendpoint *zeppaEventService;
-@property (readonly) GTLServiceZeppaeventtouserrelationshipendpoint *zeppaEventToUserRelationshipService;
+@property (readonly) GTLServiceZeppaclientapi *zeppaEventService;
+@property (readonly) GTLServiceZeppaclientapi *zeppaEventToUserRelationshipService;
 
 @property BOOL isNewUser;
 

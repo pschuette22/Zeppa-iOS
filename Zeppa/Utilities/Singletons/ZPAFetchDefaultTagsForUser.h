@@ -8,15 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GTLEventtagendpointCollectionResponseEventTag.h"
-#import "GTLEventtagendpointEventTag.h"
-#import "GTLServiceEventtagendpoint.h"
-#import "GTLQueryEventtagendpoint.h"
+#import "GTLZeppaclientapiCollectionResponseEventTag.h"
+#import "GTLZeppaclientapiEventTag.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
-#import "GTLEventtagfollowendpointEventTagFollow.h"
-#import "GTLEventtagfollowendpointCollectionResponseEventTagFollow.h"
-#import "GTLServiceEventtagfollowendpoint.h"
-#import "GTLQueryEventtagfollowendpoint.h"
+#import "GTLZeppaclientapiEventTagFollow.h"
+#import "GTLZeppaclientapiCollectionResponseEventTagFollow.h"
 
 @protocol MutualMinglerTagDelegate <NSObject>
 
@@ -31,16 +29,16 @@
 @property (nonatomic,assign)id<MutualMinglerTagDelegate>delgate;
 
 
-@property (nonatomic,readonly) GTLServiceEventtagfollowendpoint *evetTagFollowService;
-@property (nonatomic,readonly) GTLServiceEventtagendpoint *evetTagService;
+@property (nonatomic,readonly) GTLServiceZeppaclientapi *evetTagFollowService;
+@property (nonatomic,readonly) GTLServiceZeppaclientapi *evetTagService;
 
 //@property (nonatomic,strong) NSMutableArray * followList;
 
--(BOOL)isFollowing:(GTLEventtagendpointEventTag *)tag;
+-(BOOL)isFollowing:(GTLZeppaclientapiEventTag *)tag;
 
-- (void) insertZeppaTagFollow:(GTLEventtagfollowendpointEventTagFollow *)tagFollow;
+- (void) insertZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow;
 
--(void)removeZeppaTagFollow:(GTLEventtagendpointEventTag *)tagFollow;
+-(void)removeZeppaTagFollow:(GTLZeppaclientapiEventTag *)tagFollow;
 
 -(void)executeZeppaApiWithUserId:(long long)userId  andMinglerId:(long long)minglerId;
 @end

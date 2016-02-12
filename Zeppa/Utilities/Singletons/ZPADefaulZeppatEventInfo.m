@@ -44,14 +44,14 @@ static ZPADefaulZeppatEventInfo *defaultEventInfo = nil;
     return [_relationship.isAttending boolValue];
     
 }
--(BOOL)relationshipDoesMatch:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship*)relationShip{
+-(BOOL)relationshipDoesMatch:(GTLZeppaclientapiZeppaEventToUserRelationship*)relationShip{
     
     return ([relationShip.identifier longLongValue] == [_relationship.identifier longLongValue]);
 }
 
 
 
--(void)onWatchButtonClicked:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relationship{
+-(void)onWatchButtonClicked:(GTLZeppaclientapiZeppaEventToUserRelationship *)relationship{
     
     _relationship = relationship;
     
@@ -77,7 +77,7 @@ static ZPADefaulZeppatEventInfo *defaultEventInfo = nil;
     
 }
 
--(void)onJoinButtonClicked:(GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relationship{
+-(void)onJoinButtonClicked:(GTLZeppaclientapiZeppaEventToUserRelationship *)relationship{
     
     _relationship = relationship;
     
@@ -97,10 +97,10 @@ static ZPADefaulZeppatEventInfo *defaultEventInfo = nil;
 
 
 
--(void) updateEventRelationshipWithRelationship:( GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *)relationship {
+-(void) updateEventRelationshipWithRelationship:( GTLZeppaclientapiZeppaEventToUserRelationship *)relationship {
     
     
-    GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *eventRelationship = [[GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship alloc] init];
+    GTLZeppaclientapiZeppaEventToUserRelationship *eventRelationship = [[GTLZeppaclientapiZeppaEventToUserRelationship alloc] init];
     
     
         eventRelationship = relationship;
@@ -112,9 +112,9 @@ static ZPADefaulZeppatEventInfo *defaultEventInfo = nil;
 //    [eventRelationship setIsAttending:[NSNumber numberWithInt:1]]; // 1 for true, 0 for false
 //    [eventRelationship setIsWatching:[NSNumber numberWithInt:1]]; // 1 for true, 0 for false;
     
-    GTLQueryZeppaeventtouserrelationshipendpoint *updateEventRelationshipTask = [GTLQueryZeppaeventtouserrelationshipendpoint queryForUpdateZeppaEventToUserRelationshipWithObject:eventRelationship];
+    GTLQueryZeppaclientapi *updateEventRelationshipTask = [GTLQueryZeppaclientapi queryForUpdateZeppaEventToUserRelationshipWithObject:eventRelationship idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [self.zeppaEventToUserRelationshipService executeQuery:updateEventRelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *response, NSError *error) {
+    [self.zeppaEventToUserRelationshipService executeQuery:updateEventRelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEventToUserRelationship *response, NSError *error) {
         //
         if(error){
             // error
@@ -129,14 +129,13 @@ static ZPADefaulZeppatEventInfo *defaultEventInfo = nil;
     
 }
 
--(GTLServiceZeppaeventtouserrelationshipendpoint *)zeppaEventToUserRelationshipService{
+-(GTLServiceZeppaclientapi *)zeppaEventToUserRelationshipService{
     
-    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     if(!service){
-        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
     
 }

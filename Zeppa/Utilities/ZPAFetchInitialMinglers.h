@@ -13,13 +13,13 @@
 #import "ZPAAuthenticatonHandler.h"
 #import "ZPAZeppaUserSingleton.h"
 
-#import "GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship.h"
-#import "GTLZeppausertouserrelationshipendpointCollectionResponseZeppaUserToUserRelationship.h"
-#import "GTLServiceZeppausertouserrelationshipendpoint.h"
-#import "GTLQueryZeppausertouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 
 @interface ZPAFetchInitialMinglers : ZPAUserInfoBaseClass
-@property (strong,readonly)GTLServiceZeppausertouserrelationshipendpoint *zeppaUserRelationshipService;
+@property (strong,readonly)GTLServiceZeppaclientapi *zeppaUserRelationshipService;
 @property (nonatomic, strong) ZPAFetchInitialEvents *fetchInitial;
 -(void)executeZeppaApi;
 

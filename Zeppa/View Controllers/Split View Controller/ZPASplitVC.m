@@ -12,7 +12,6 @@
 #import "ZPASwapperVC.h"
 #import "ZPAMyProfileVC.h"
 #import "ZPAFriendListVC.h"
-#import "ZPAExtendABidVC.h"
 #import "ZPAFeedbackVC.h"
 #import "ZPASettingsVC.h"
 
@@ -30,7 +29,6 @@
 @property (nonatomic, strong) ZPALeftMenuVC         * leftMenuVC;
 @property (nonatomic, strong) ZPASwapperVC          * swapperVC;
 @property (nonatomic, strong) ZPAMyProfileVC        * myProfileVC;
-@property (nonatomic, strong) ZPAExtendABidVC       * extendABidVC;
 @property (nonatomic, strong) ZPAFriendListVC       * minglersVC;
 @property (nonatomic, strong) ZPAFeedbackVC         * feedbackVC;
 @property (nonatomic, strong) ZPASettingsVC         * settingsVC;
@@ -571,31 +569,8 @@
         }
             
             break;
-//        case TABLE_ROW_INDEX_EXTEND_BID:
-//        {
-//            if (_selectedMenuIndex == TABLE_ROW_INDEX_EXTEND_BID) {
-//                
-//                ///Simply close the menu panel
-//                [self movePanelToOriginalPosition:nil];
-//                
-//            }
-//            else{
-//                ///Replace Minglers view with the currently displayed View behind Menu
-//                if (!self.extendABidVC) {
-//                    self.extendABidNavC = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAExtendABidNavC"];
-//                    self.extendABidVC = [[self.extendABidNavC viewControllers]firstObject];
-//                    self.extendABidVC.splitViewDelegate = self;
-//                }
-//                
-//                [self swapFromViewController:[self.childViewControllers firstObject] toViewController:self.extendABidNavC];
-//                [self movePanelToOriginalPosition:nil];
-//
-//            }
-//            
-//        }
 
             
-            break;
         case TABLE_ROW_INDEX_FEEDBACK:
         {
             if (_selectedMenuIndex == TABLE_ROW_INDEX_FEEDBACK) {

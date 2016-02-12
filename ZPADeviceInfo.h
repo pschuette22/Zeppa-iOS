@@ -10,18 +10,19 @@
 #import "ZPAAppDelegate.h"
 #import "ZPAAuthenticatonHandler.h"
 #import "ZPAMyZeppaUser.h"
-#import "GTLDeviceinfoendpointDeviceInfo.h"
-#import "GTLQueryDeviceinfoendpoint.h"
-#import "GTLServiceDeviceinfoendpoint.h"
-#import "GTLDeviceinfoendpointCollectionResponseDeviceInfo.h"
+#import "GTLZeppaclientapiDeviceInfo.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLZeppaclientapiCollectionResponseDeviceInfo.h"
 @interface ZPADeviceInfo : NSObject
 
-@property (readonly)GTLServiceDeviceinfoendpoint *deviceInfoService;
-@property(nonatomic, strong) GTLDeviceinfoendpointDeviceInfo *currentDevice;
+@property (readonly)GTLServiceZeppaclientapi *deviceInfoService;
+@property(nonatomic, strong) GTLZeppaclientapiDeviceInfo *currentDevice;
+@property(readwrite) BOOL doUpdateToken;
 
 +(ZPADeviceInfo *)sharedObject;
 -(void)setLoginDeviceForUser:(ZPAMyZeppaUser *)user;
-- (void)updateDeviceInfoWithObject:(GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
--(void)insertDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
--(void)removeDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo;
+-(void)updateDeviceInfoWithObject:(GTLZeppaclientapiDeviceInfo *)deviceInfo;
+-(void)insertDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo;
+-(void)removeDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo;
 @end

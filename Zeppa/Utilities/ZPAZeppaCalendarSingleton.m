@@ -8,7 +8,7 @@
 
 #import "ZPAZeppaCalendarSingleton.h"
 //#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
+//#import <GooglePlus/GooglePlus.h>
 #import "GTLCalendar.h"
 #import "ZPACalendarModel.h"
 #import "ZPAUserDefault.h"
@@ -191,7 +191,6 @@ static ZPAZeppaCalendarSingleton * zeppaCalendarSingleton = nil;
         service = [[GTLServiceCalendar alloc] init];
         service.shouldFetchNextPages = YES;
         service.retryEnabled = YES;
-        [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     }
     return service;
 }

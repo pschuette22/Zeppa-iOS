@@ -30,26 +30,26 @@ static ZPADefaulZeppatUserInfo *defaultUserInfo = nil;
 }
 -(BOOL)isMingling{
     
-    if (_relationShip) {
+    if (_relationship) {
         
-        return [_relationShip.relationshipType isEqualToString:@"MINGLING"];
+        return [_relationship.relationshipType isEqualToString:@"MINGLING"];
     }
     return NO;
     
 }
 -(BOOL)requestPending{
     
-    if (_relationShip) {
+    if (_relationship) {
         
-        return [_relationShip.relationshipType isEqualToString:@"PENDING_REQUEST"];
+        return [_relationship.relationshipType isEqualToString:@"PENDING_REQUEST"];
     }
     return NO;
 }
 -(BOOL)didSendRequest{
     
-    if (_relationShip) {
+    if (_relationship) {
         
-        return ([_relationShip.creatorId longLongValue] == [[ZPAZeppaUserSingleton sharedObject].userId longLongValue])?YES:NO;
+        return ([_relationship.creatorId longLongValue] == [[ZPAZeppaUserSingleton sharedObject].userId longLongValue])?YES:NO;
     }
     return NO;
     
@@ -60,8 +60,8 @@ static ZPADefaulZeppatUserInfo *defaultUserInfo = nil;
 }
 
 
--(void)setUserRelationship:(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *)relationship{
-    relationship = _relationShip;
+-(void)setUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relationship{
+    self.relationship = relationship;
 }
 
 

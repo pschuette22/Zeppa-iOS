@@ -11,8 +11,8 @@
 #import "ZPADeviceInfo.h"
 #import "ZPAUserDefault.h"
 
-#import "GTLZeppauserendpointZeppaUserInfo.h"
-#import "GTLZeppauserendpointZeppaUser.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUser.h"
 #import "GTLCalendarCalendarListEntry.h"
 
 
@@ -36,8 +36,6 @@
     ///// Set User Default
     [self setLoggedInUserIdInUserDefault];
     [self setLoggedInAccountEmailInUserDefault];
-    
-    
     
     
     //Get all mingle for this user
@@ -68,7 +66,7 @@
 }
 -(void)setLoggedInAccountEmailInUserDefault{
     
-    [ZPAUserDefault storedObject:loggedInUser.endPointUser.userInfo.googleAccountEmail withKey:kCurrentZeppaUserEmail];
+    [ZPAUserDefault storedObject:loggedInUser.endPointUser.authEmail withKey:kCurrentZeppaUserEmail];
 }
 -(void)fetchInitialMinglers{
     _fetchIntialMinglers = [[ZPAFetchInitialMinglers alloc]init];

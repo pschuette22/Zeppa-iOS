@@ -37,6 +37,18 @@
     return size;
 }
 
+// dynamically calculate the number of lines needed to fit all label text
++ (int)lineCountForLabel:(UILabel *)label
+{
+    CGFloat labelWidth = label.frame.size.width;
+    int lineCount = 0;
+    CGSize textSize = CGSizeMake(labelWidth, MAXFLOAT);
+    long rHeight = lroundf([label sizeThatFits:textSize].height);
+    long charSize = lroundf(label.font.leading);
+    lineCount = (int)( rHeight / charSize );
+    return lineCount;
+}
+
 //****************************************************
 #pragma mark - Add Event Screen
 //****************************************************
@@ -165,5 +177,7 @@
     [array sortUsingDescriptors:[NSArray arrayWithObject:sortDiscriptor]];
     
 }
+
+
 
 @end

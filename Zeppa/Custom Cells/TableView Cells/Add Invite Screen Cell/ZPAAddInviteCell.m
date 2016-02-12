@@ -7,7 +7,7 @@
 //
 
 #import "ZPAAddInviteCell.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 #import "UIImageView+WebCache.h"
 
 

@@ -23,7 +23,7 @@
 +(BOOL)canUseWebObject:(id)webObject;
 
 +(CGSize)calculateSizeWithFont:(UIFont *)font constraintSize:(CGSize)constraintSize andText:(NSString *)text;
-
++ (int)lineCountForLabel:(UILabel *)label;
 
 //****************************************************
 #pragma mark - Add Event Screen

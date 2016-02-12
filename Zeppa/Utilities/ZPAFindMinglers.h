@@ -11,12 +11,10 @@
 #import "ZPAUserInfoBaseClass.h"
 #import "ZPADefaulZeppatUserInfo.h"
 
-#import "GTLZeppauserendpointZeppaUserInfo.h"
-#import "GTLZeppauserinfoendpointCollectionResponseZeppaUserInfo.h"
-#import "GTLQueryZeppauserinfoendpoint.h"
-#import "GTLServiceZeppauserinfoendpoint.h"
-
-#import "GTLServiceZeppausertouserrelationshipendpoint.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiCollectionResponseZeppaUserInfo.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
 
 
 @protocol FindMinglerDelegate <NSObject>
@@ -27,13 +25,13 @@
 
 @interface ZPAFindMinglers : ZPAUserInfoBaseClass
 
-@property (strong,readonly)GTLServiceZeppausertouserrelationshipendpoint *zeppaUserRelationshipService;
+@property (strong,readonly)GTLServiceZeppaclientapi *zeppaUserRelationshipService;
 
 @property (nonatomic,strong) NSMutableArray *uniqueInfoItems;
 @property (nonatomic,strong) NSMutableArray *recognizedEmails;
 @property (nonatomic,strong) NSMutableArray *recognizedNumbers;
 
-@property (strong,readonly)GTLServiceZeppauserinfoendpoint *zeppaUserInfoService;
+@property (strong,readonly)GTLServiceZeppaclientapi *zeppaUserInfoService;
 @property (strong,readonly)ZPADefaulZeppatUserInfo *defaultZeppaUser;
 @property (nonatomic, strong) id<FindMinglerDelegate>delegate;
 

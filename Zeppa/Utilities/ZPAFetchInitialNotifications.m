@@ -33,13 +33,13 @@
     NSString * filterString= [NSString stringWithFormat:@"recipientId == %lld && expires > %lld",_userId,[ZPADateHelper currentTimeMillis]];
     
 
-    GTLQueryZeppanotificationendpoint *notificationQuery = [GTLQueryZeppanotificationendpoint queryForListZeppaNotification];
+    GTLQueryZeppaclientapi *notificationQuery = [GTLQueryZeppaclientapi queryForListZeppaNotificationWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [notificationQuery setFilter:filterString];
     [notificationQuery setCursor:cursorValue];
-   // [notificationQuery setOrdering:ordering];
-    //[notificationQuery setLimit:[limit integerValue]];
+    [notificationQuery setOrdering:@"expires asc"];
+    [notificationQuery setLimit:25];
     
-    [self.zeppaNotificationService executeQuery:notificationQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppanotificationendpointCollectionResponseZeppaNotification *response, NSError *error) {
+    [self.zeppaNotificationService executeQuery:notificationQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaNotification *response, NSError *error) {
         //
         
         if(error){
@@ -47,11 +47,11 @@
         } else if(response && response.items && response.items.count > 0){
                 
             
-                for (GTLZeppanotificationendpointZeppaNotification * zeppaNotification in response.items) {
+                for (GTLZeppaclientapiZeppaNotification * zeppaNotification in response.items) {
                  
                     if ([[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaNotification.senderId longLongValue]]== nil) {
                         
-                        [weakSelf fetchZeppaUserInfoWithParentIdentifier:zeppaNotification.senderId withCompletion:^(GTLZeppauserinfoendpointZeppaUserInfo *info) {
+                        [weakSelf fetchZeppaUserInfoWithParentIdentifier:zeppaNotification.senderId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
                             
                             
                             [[ZPAZeppaUserSingleton sharedObject]addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:nil];
@@ -80,12 +80,15 @@
                 }
                 
                 NSString *nextCursor = response.nextPageToken;
-                if (nextCursor) {
+                if (response.items.count >= 25 && nextCursor) {
                     [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nextCursor];
-                }else{
-                    [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nil];
                 }
-                
+            
+            // Unnecessary infinite loop
+//                else{
+//                    [weakSelf executeZeppaNotificationListQueryWithUserIdandCursorValue:nil];
+//                }
+            
             
                 
             }
@@ -102,7 +105,7 @@
 
 -(void)executeZeppaEventToUserRelationShipList:(ZPAMyZeppaEvent *)zeppaEvent{
     
-    GTLQueryZeppaeventtouserrelationshipendpoint *e2uRelationshipQuery = [GTLQueryZeppaeventtouserrelationshipendpoint queryForListZeppaEventToUserRelationship];
+    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     NSString * filter = [NSString stringWithFormat:@"eventId == %@ && userId == %lld",zeppaEvent.event.identifier ,_userId ];
     
@@ -111,7 +114,7 @@
 //    [e2uRelationshipQuery setOrdering:ordering];
 //    [e2uRelationshipQuery setLimit:[limit integerValue]];
     
-    [self.zeppaEventToUserRelationship executeQuery: e2uRelationshipQuery completionHandler: ^(GTLServiceTicket *ticket,  GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship *response, NSError *error) {
+    [self.zeppaEventToUserRelationship executeQuery: e2uRelationshipQuery completionHandler: ^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship *response, NSError *error) {
         //
         
         if(error){
@@ -139,7 +142,7 @@
 //                
 //                for(int i = 0; i < count; i++){
 //                    
-//                    GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *relationship = [items objectAtIndex: i];
+//                    GTLZeppaclientapiZeppaEventToUserRelationship *relationship = [items objectAtIndex: i];
 //                    
 //                    
 //                
@@ -163,7 +166,7 @@
 
 -(void)executeZeppaNotificationRemoveQuery:(long long)notificationId{
     
-    GTLQueryZeppanotificationendpoint * removeQuery = [GTLQueryZeppanotificationendpoint queryForRemoveZeppaNotificationWithIdentifier:notificationId];
+    GTLQueryZeppaclientapi * removeQuery = [GTLQueryZeppaclientapi queryForRemoveZeppaNotificationWithIdentifier:notificationId idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     [self.zeppaNotificationService executeQuery:removeQuery completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error) {
         if (!error) {
@@ -177,30 +180,26 @@
 }
 
 
--(GTLServiceZeppanotificationendpoint *) zeppaNotificationService {
-    static GTLServiceZeppanotificationendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaNotificationService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppanotificationendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 
 
--(GTLServiceZeppaeventtouserrelationshipendpoint *) zeppaEventRelationshipService {
-    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaEventRelationshipService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
-    // Set Auth that is held in the delegate
-    [service setAuthorizer: [ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 

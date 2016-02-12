@@ -11,12 +11,12 @@
 
 #import "BRStaticHelper.h"
 
-#import "GTLZeppaeventendpointZeppaEvent.h"
-#import "GTLQueryZeppaeventendpoint.h"
-#import "GTLServiceZeppaeventendpoint.h"
-#import "GTLEventtagendpointEventTag.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
+#import "GTLQueryZeppaclientapi.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLZeppaclientapiEventTag.h"
 
-#import "GTLEventtagfollowendpointEventTagFollow.h"
+#import "GTLZeppaclientapiEventTagFollow.h"
 
 #import "ZPAAuthenticatonHandler.h"
 
@@ -24,51 +24,58 @@
 #import "ZPAMyZeppaEvent.h"
 #import "ZPAZeppaEventTagSingleton.h"
 #import "ZPAFetchDefaultTagsForUser.h"
+#import "GrowingTextViewHandler.h"
 
 #define SEGUE_ID_ADD_INVITES @"addInvitesSegue"
 
-#define SCROLLVIEW_HEIGHT 505
-#define VIEW_SECONDINITIAL 405
+//#define SCROLLVIEW_HEIGHT 505
+//#define VIEW_SECONDINITIAL 405
 #define VIEW_BASE_TAGFEATURE 80
-
+//
 #define RADIANS(degrees) ((degrees * M_PI) / 180.0)
 #define PADDING 8
 #define TAGS_BUTTON_TAG 100
-#define HEIGHTEXTEND 33
+#define DESCRIPTION_DESIGN_HEIGHT 54
+//#define HEIGHTEXTEND 33
+//#define MAX_HEIGHT 2000
 
 typedef NS_ENUM(NSInteger, selectedBtn){
     startDate=0,
     endDate
 };
 
-@interface ZPAAddEventVC ()<CustomPickerDelegate,DateAndTimePickerDelegate,UITextViewDelegate,addInvitesDelegate>
+@interface ZPAAddEventVC ()<CustomPickerDelegate,UIPickerViewDataSource, UIPickerViewDelegate,UITextViewDelegate,addInvitesDelegate>
 @property (nonatomic, strong)NSMutableArray *tagsArray;
 @property (nonatomic, assign,getter = isFirstTime) BOOL firstTime;
 @property (nonatomic, strong)NSMutableArray *arrInvitedUsers;
 @property (nonatomic, strong) ZPAFetchDefaultTagsForUser *defaultTagsForUser;
 @property (nonatomic,strong)ZPADefaulZeppatUserInfo *userProfileInfo;
+@property (strong, nonatomic) GrowingTextViewHandler *handler;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagContainerHeightConstraint;
 
 @end
 
 @implementation ZPAAddEventVC
 {
-    ZPADateAndTimePicker *dateAndTimePicker;
+//    ZPADateAndTimePicker *dateAndTimePicker;
     ZPACustomPicker *customPicker;
-    NSString *dateAndTimeValue;
+//    NSString *dateAndTimeValue;
     selectedBtn selectedButton;
     NSString * mapLocationStr;
     NSMutableArray *temp;
     NSMutableArray *testArray;
     NSMutableArray *invitedUserIdArray;
     ZPAMyZeppaUser *currentUser;
-   // NSMutableArray *eventTagIdsArray;
+//    NSMutableArray *eventTagIdsArray;
     int counter;
     UIAlertView * alertWithTextField;
-   ZPAAddInvitesVC *addInvitesVC;
+    ZPAAddInvitesVC *addInvitesVC;
     NSMutableArray *tagBtnArray;
     NSMutableArray * selectedTagBtn;
-    NSString * startTime;
-    NSString * endTime;
+
+    NSDate * startTime;
+    NSDate *endTime;
     NSInteger noOfLines;
 }
 
@@ -92,17 +99,25 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     [self initialization];
 
     [_navigationBar setFrame:CGRectMake(0, 0, self.view.frame.size.width, 64)];
+    
+    
     _checkBox.tintColor = [UIColor darkGrayColor];
     _checkBox.checkMarkColor = [ZPAStaticHelper zeppaThemeColor];
     _checkBox.checked = YES;
     currentUser = [ZPAAppData sharedAppData].loggedInUser;
     currentUser.tagsArray = [[NSMutableArray alloc]init];
+    
+    // set the description label handler
+    self.handler = [[GrowingTextViewHandler alloc]initWithTextView:self.textView_Description withHeightConstraint:self.heightConstraint];
+    [self.handler updateMinimumNumberOfLines:2 andMaximumNumberOfLine:8];
+    
+    // set the tags array and tags to display
     _tagsArray = [[[ZPAZeppaEventTagSingleton sharedObject] getMyTags] mutableCopy];
     _arrInvitedUsers = [NSMutableArray array];
     testArray = [NSMutableArray array];
     counter = 1;
     
-    for (GTLEventtagendpointEventTag *tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
         UIButton *newButton =[[UIButton alloc]init];
         NSString *string =tag.tagText;
@@ -135,31 +150,32 @@ typedef NS_ENUM(NSInteger, selectedBtn){
             [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width+2*PADDING,textSize.height+2*PADDING)];
             
         }else{
+            
             [newView setFrame:CGRectMake(PADDING,PADDING,textSize.width+2*PADDING,textSize.height+2*PADDING)];
+            // Make sure user interaction is enabled
+            [newView setUserInteractionEnabled:YES];
+            
         }
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-        longPress.minimumPressDuration = .5;
-        [newButton addGestureRecognizer:longPress];
-        
-        [newView addSubview:newButton];
-        [testArray addObject:newView];
-        
-        [tagBtnArray addObject:newButton];
+
         
         [newButton addTarget:self action:@selector(newButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [newView addSubview:newButton];
+        
+        [testArray addObject:newView];
+        [tagBtnArray addObject:newButton];
+        
     }
     
     [self arrangeButtonWhenCallCellForRowAtIndex];
     
-    
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [ZPAStaticHelper backgroundTextureColor];
-    self.title = NSLocalizedString(@"Add Event", nil);
+    self.title = NSLocalizedString(@"New Activity", nil);
     
     self.firstTime = YES;
     
-    
-    [self configureScreen];
+//    [self configureScreen];
     
   //  [self registerForNotifications];
     
@@ -174,15 +190,11 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     if (self.isFirstTime) {
         self.firstTime = NO;
         [self resetScrollViewContentSize];
-        
     }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    
-    
-   
 
 }
 
@@ -285,17 +297,24 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     selectedTagBtn = [NSMutableArray array];
     
-    dateAndTimePicker = [ZPAStaticHelper datePickerView];
-    dateAndTimePicker.delegate = self;
-    
     customPicker = [ZPAStaticHelper customPickerView];
     customPicker.delegate = self;
     
+    // Set the start and end times
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendarUnit calendarUnits = NSCalendarUnitTimeZone | NSCalendarUnitYear | NSCalendarUnitMonth
+    | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     
-    _lblEventStartTime.text =[NSString stringWithFormat:@"Today %@",[[ZPADateHelper sharedHelper]stringFromDate:[NSDate date] withFormat:@"hh:mm a"]];
+    NSDateComponents *components = [calendar components: calendarUnits fromDate: [NSDate date]];
+    components.second=0;
+    components.minute += (5-components.minute%5);
+    startTime = [calendar dateFromComponents:components];
+    components.hour+=1;
+    endTime = [calendar dateFromComponents:components];
+    // Update the time text displayed to the user
+    [self updateTimeText];
     
     
-    _lblEventEndTime.text = [NSString stringWithFormat:@"Today %@",[[ZPADateHelper sharedHelper]stringFromDate:[NSDate dateWithTimeInterval:(60*60) sinceDate:[NSDate date]] withFormat:@"hh:mm a"]];
     
     currentUser = [ZPAAppData sharedAppData].loggedInUser;
     currentUser.tagsArray = [[NSMutableArray alloc]init];
@@ -307,10 +326,14 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     }
 }
 
+/**
+ */
 -(void)resetScrollViewContentSize
 {
+//#warning should resize views
+    
     float bottomPadding = 0.0f;
-    float contentHeight = self.view_baseBelowLocation.frame.origin.y + self.view_baseBelowLocation.frame.size.height + bottomPadding;
+    float contentHeight = self.view_infoBaseView.frame.origin.y + self.view_TagsContainer.frame.size.height + self.view_addTagBase.frame.size.height + self.view_baseAddInvites.frame.size.height + bottomPadding;
     
     float availableHeight = self.scrollView_base.frame.size.height;
     
@@ -319,7 +342,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     CGSize contentSize = (CGSize){self.scrollView_base.frame.size.width,contentHeight};
     [self.scrollView_base setContentSize:contentSize];
     
-    
+    [self updateBaseViewFramesWithOffset:0 withAnimationDuration:0];
 }
 
 -(NSMutableArray *)arrInvitedUsers
@@ -331,6 +354,46 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     _arrInvitedUsers = [NSMutableArray array];
     return _arrInvitedUsers;
     
+}
+
+//****************************************************
+#pragma mark - UIPickerViewDataSource Methods
+//****************************************************
+
+- (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    
+    // If this is the privacy picker
+    if(pickerView == self.privacyPicker){
+        return 1;
+    }
+    
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    // If this is the privacy picker
+    if(pickerView == self.privacyPicker){
+        return 2;
+    }
+    
+    return 1;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component {
+    
+    // Assuming this is the privacy picker, switch on the row index to determine the appropriate title
+    if(pickerView == self.privacyPicker){
+        switch (row){
+            case 0:
+                return @"Casual";
+            case 1:
+                return @"Private";
+        }
+    }
+    
+    return @"None";
 }
 
 //****************************************************
@@ -365,23 +428,26 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     NSUInteger newLength = (textView.text.length - range.length) + text.length;
     _lblDescriptionPlaceholder.hidden = (newLength>0)?YES:NO;
     
-    if ([text isEqualToString:@"\n"]) {
-        noOfLines++;
-        
-        if (noOfLines >= 2) {
-        
-            return NO;
     
-        }
-        
-    }
     
     return YES;
 }
+
 - (IBAction)doneClicked:(id)sender
 {
     NSLog(@"Done Clicked.");
     [self.view endEditing:YES];
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    CGFloat heightBeforeResize = self.heightConstraint.constant;
+    [self.handler resizeTextViewWithAnimation:YES];
+    CGFloat heightAfterResize = self.heightConstraint.constant;
+    
+    // Check to see if frames should be resized
+    if(heightBeforeResize != heightAfterResize){
+        [self updateBaseViewFramesWithOffset:(heightAfterResize-heightBeforeResize) withAnimationDuration:0.1];
+    }
 }
 
 
@@ -392,10 +458,12 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 - (void)keyboardWillShow:(NSNotification*)note {
     // Scroll the view to the comment text box
-    NSDictionary* info = [note userInfo];
-    CGSize _kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    float kbHeight = _kbSize.width > _kbSize.height ? _kbSize.height : _kbSize.width;
-    _scrollView_base.contentSize = CGSizeMake(_scrollView_base.bounds.size.width, _scrollView_base.bounds.size.height + kbHeight);
+//    NSDictionary* info = [note userInfo];
+//    CGSize _kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+//    float kbHeight = _kbSize.width > _kbSize.height ? _kbSize.height : _kbSize.width;
+//    _scrollView_base.contentSize = CGSizeMake(_scrollView_base.bounds.size.width, _scrollView_base.bounds.size.height + kbHeight);
+    
+//    _scrollView_base.contentSize = CGSizeMake(_scrollView_base.bounds.size.width, _scrollView_base.bounds.size.height - _kbSize.height);
     
     
 }
@@ -403,12 +471,15 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 -(void)keyboardWillHide:(NSNotification *)note
 {
     
-    NSDictionary* info = [note userInfo];
-    CGSize _kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    float kbHeight = _kbSize.width > _kbSize.height ? _kbSize.height : _kbSize.width;
-    _scrollView_base.contentSize = CGSizeMake(_scrollView_base.bounds.size.width, _scrollView_base.bounds.size.height - kbHeight);
-    //    _scrollView_Base.contentSize = CGSizeZero;
-    [self resetScrollViewContentSize];
+//    NSDictionary* info = [note userInfo];
+//    CGSize _kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+//    float kbHeight = _kbSize.width > _kbSize.height ? _kbSize.height : _kbSize.width;
+//    _scrollView_base.contentSize = CGSizeMake(_scrollView_base.bounds.size.width, _scrollView_base.bounds.size.height - kbHeight);
+//        _scrollView_Base.contentSize = CGSizeZero;
+    
+//    _scrollView_base.contentSize = CGSizeMake(_scrollView_base.bounds.size.width, _scrollView_base.bounds.size.height + _kbSize.height);
+    
+//    [self resetScrollViewContentSize];
 }
 
 
@@ -450,60 +521,184 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     alertWithTextField = [[UIAlertView alloc]initWithTitle:@"Set Map Address" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done",nil];
     alertWithTextField.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [alertWithTextField textFieldAtIndex:0].placeholder = @"42 Wallaby way,Sydney";
+    [alertWithTextField textFieldAtIndex:0].placeholder = @"42 Wallaby way, Sydney";
     
     [alertWithTextField show];
 }
 
+/*
+ * User attempts to set the start time
+ */
 - (IBAction)btnSelectEventStartTimeTapped:(id)sender {
     
-    [_txtEventLocation resignFirstResponder];
-    [_txtEventTitle resignFirstResponder];
-    [_txtNewTag resignFirstResponder];
-    [_textView_Description resignFirstResponder];
+    [self.view layoutIfNeeded];
+    
+    CGFloat y_offset = 0;
+    NSTimeInterval duration = 0.3;
+    // Determine if date picker is visible by observing it's height
+    if(self.startPickerHeight.constant>0){
+        // picker is visible, set and hide
+        // Set the start time to the selected time
+//        startTime = [[ZPADateHelper sharedHelper] stringFromDate:self.startTimePicker.date withFormat:@"MM/dd/yyyy hh:mm a"];
+        self.startBaseHeight.constant=33;
+        // TODO: update end time as needed
+        [UIView animateWithDuration:duration animations:^{
+            [self.view layoutIfNeeded];
+            self.startPickerHeight.constant=0;
+            startTime = self.startTimePicker.date;
+            
+            // Update end time if applicable
+            if([startTime timeIntervalSinceDate:endTime] > 0){
+                endTime = [NSDate dateWithTimeInterval:(60*60) sinceDate:startTime];
+            }
+            
+            [self updateTimeText];
+        }];
+        // Animate layout changes
+        y_offset = -100;
+        
+    } else {
+        // picker should be made visible
+        
+        // Set the picker times to the currently visible times
+        
+        // Animate start picker visible
+        self.startPickerHeight.constant=100;
+        self.startBaseHeight.constant+=100;
+        // Set the current time to the minimum date
+        self.startTimePicker.minimumDate = [NSDate date];
+        
+        // Set the picker time to the start time
+        self.startTimePicker.date = startTime;
+        
+        // Animate the changes
+        [UIView animateWithDuration:duration animations:^{
+            
+            [self.view layoutIfNeeded];
+            
+        }];
+        
+        y_offset = 100;
+    }
 
-    
-    selectedButton = startDate;
-    
-    dateAndTimePicker.frame = self.view.bounds;
-    dateAndTimePicker.titleLabel.text = @"Select Start Date";
-    
-    [self.view addSubview:dateAndTimePicker];
+    [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
+
 }
 
 - (IBAction)btnSelectEventEndTimeTapped:(id)sender {
     
-    [_txtEventLocation resignFirstResponder];
-    [_txtEventTitle resignFirstResponder];
-    [_txtNewTag resignFirstResponder];
-    [_textView_Description resignFirstResponder];
+    [self.view layoutIfNeeded];
+    CGFloat y_offset = 0;
+    NSTimeInterval duration = 0.3;
+    // Determine if date picker is visible by observing it's height
+    if(self.endPickerHeight.constant>0){
+        // picker is visible, set and hide
+        // Set the start time to the selected time
+        //        startTime = [[ZPADateHelper sharedHelper] stringFromDate:self.startTimePicker.date withFormat:@"MM/dd/yyyy hh:mm a"];
+        
+        self.endBaseHeight.constant=33;
+        
+        [UIView animateWithDuration:duration animations:^{
+            [self.view layoutIfNeeded];
+            
+            self.endPickerHeight.constant=0;
+            
+            endTime = self.endTimePicker.date;
+            
+            // Update end time if applicable
+            if([startTime timeIntervalSinceDate:endTime] > 0){
+                startTime = [NSDate dateWithTimeInterval:-(60*60) sinceDate:endTime];
+                // If current date is later, set it to the current date
+                startTime = [startTime laterDate:[NSDate date]];
+            }
+            
+            [self updateTimeText];
 
+        }];
+        // Animate layout changes
+        
+        y_offset = -100;
+        
+    } else {
+        // picker should be made visible
+        
+        // Set the picker times to the currently visible times
+        
+        // Animate start picker visible
+        self.endBaseHeight.constant+=100;
+        self.endTimePicker.minimumDate = [NSDate date];
+        self.endTimePicker.date = endTime;
+        
+        // Animate the layout changes
+        [UIView animateWithDuration:duration animations:^{
+            [self.view layoutIfNeeded];
+            self.endPickerHeight.constant=100;
+        }];
+        
+        y_offset = 100;
+    }
     
-    selectedButton = endDate;
-    
-    dateAndTimePicker.frame = self.view.bounds;
-    dateAndTimePicker.titleLabel.text = @"Select End Date";
-    
-    [self.view addSubview:dateAndTimePicker];
+    [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
+
 }
 
+/*
+ * User has selected to change the privacy
+ */
+ 
 - (IBAction)btnSelectEventPrivacyTapped:(id)sender {
     
-    [_txtEventLocation resignFirstResponder];
-    [_txtEventTitle resignFirstResponder];
-    [_txtNewTag resignFirstResponder];
-    [_textView_Description resignFirstResponder];
-
+    [self.view layoutIfNeeded];
     
-    customPicker.frame = self.view.bounds;
-    [self.view addSubview:customPicker];
-    customPicker.pickerTitleLbl.text = @"Select Privacy";
-    customPicker.presentingArray = [NSMutableArray arrayWithObjects:@"Casual",@"Private", nil];
+    CGFloat y_offset = 0;
+    NSTimeInterval duration = 0.3;
+    // Determine if date picker is visible by observing it's height
+    if(self.privacyPickerHeight.constant>0){
+        // picker is visible, set and hide
+        
+        self.privacyBaseHeight.constant=33;
+        
+        [UIView animateWithDuration:duration animations:^{
+            [self.view layoutIfNeeded];
+            
+            self.privacyPickerHeight.constant=0;
+            NSInteger selectedIndex = [self.privacyPicker selectedRowInComponent:0];
+            self.lblEventPrivacy.text = (selectedIndex==0?@"Casual":@"Private");
+            
+        }];
+        // Animate layout changes
+        
+        y_offset = -75;
+        
+    } else {
+        // picker should be made visible
+        
+        // Set the picker times to the currently visible times
+        
+        // Animate start picker visible
+        self.privacyPickerHeight.constant=75;
+        self.privacyBaseHeight.constant+=75;
+        NSInteger selectedIndex = [self.lblEventPrivacy.text isEqualToString:@"Casual"]?0:1;
+        [self.privacyPicker selectRow:selectedIndex inComponent:0 animated:NO];
+        
+        // Animate the layout changes
+        [UIView animateWithDuration:duration animations:^{
+            [self.view layoutIfNeeded];
+            
+        }];
+        
+        y_offset = 75;
+    }
+    
+    [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
     
 }
+
+
+
 - (IBAction)btnAddNewTagTapped:(id)sender {
     
-    [self stopWobble];
+//    [self stopWobble];
     
     
     ///Remove whitespace in string.
@@ -526,19 +721,20 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     }
     
     //Check tag is already is exist or not.
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
         
         if ([titleString.uppercaseString isEqualToString:tag.tagText.uppercaseString]) {
             
             [ZPAStaticHelper showAlertWithTitle:@"" andMessage:@"Tag already exist"];
+            // TODO: set the already existing tag to selected
             return;
             
         }
     }
-    GTLEventtagendpointEventTag *tag = [[GTLEventtagendpointEventTag alloc]init];
+    GTLZeppaclientapiEventTag *tag = [[GTLZeppaclientapiEventTag alloc]init];
         tag.tagText = titleString;
         tag.ownerId = [[ZPAZeppaEventTagSingleton sharedObject]getCurrentUserId];
-      [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLEventtagendpointEventTag *tag, NSError *error) {
+      [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLZeppaclientapiEventTag *tag, NSError *error) {
           [_tagsArray addObject:tag];
         
        }];
@@ -571,24 +767,25 @@ typedef NS_ENUM(NSInteger, selectedBtn){
             UIView *lastView =(UIView *)[testArray lastObject];
             [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width+2*PADDING,textSize.height+2*PADDING)];
             
-            if (newView.frame.origin.x+newButton.frame.size.width>300) {
+            if (newView.frame.origin.x+newButton.frame.size.width>self.view_TagsContainer.frame.size.width) {
                 newView.frame =CGRectMake(0, lastView.frame.origin.y+lastView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
+                // If another level is being added, update the height constraint of the container
+                self.tagContainerHeightConstraint.constant+=newView.frame.size.height;
                 NSLog(@"%f",newView.frame.origin.y);
                 counter++;
             }
             
         }else{
-            [newView setFrame:CGRectMake(0,0,textSize.width+2*PADDING,textSize.height+2*PADDING-2)];
+            [newView setFrame:CGRectMake(0,0,textSize.width+2*PADDING,textSize.height+2*PADDING)];
             NSLog(@"%f",newView.frame.origin.y);
+            self.tagContainerHeightConstraint.constant = newView.frame.size.height;
         }
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-        longPress.minimumPressDuration = .5;
-        [newButton addGestureRecognizer:longPress];
-        
+    
         [newView addSubview:newButton];
         [self.view_TagsContainer addSubview:newView];
         [testArray addObject:newView];
-        [self updateAllViewsFrames];
+        [self updateBaseViewFramesWithOffset:0 withAnimationDuration:0.1];
+
         [newButton addTarget:self action:@selector(newButtonAction:) forControlEvents:UIControlEventTouchUpInside];
 
         if (selectedTagBtn.count >= 6) {
@@ -612,16 +809,14 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         if (tag.identifier) {
             [_eventTagIdsArray addObject:tag.identifier];
             
-            
-        
-            
         }
         
     
     //Reset TextField When Tag is added.
     _txtNewTag.text=@"";
      [_txtNewTag becomeFirstResponder];
-        
+    [self updateBaseViewFramesWithOffset:0 withAnimationDuration:0.1];
+    
 }
 
 - (IBAction)cancelBtnTapped:(UIBarButtonItem *)sender {
@@ -635,6 +830,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     
 }
+
 ///*************************************************
 #pragma mark - AlertView Delegate Method
 ///*************************************************
@@ -650,102 +846,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 
 
-///*************************************************
-#pragma mark - Tag Private Method
-///*************************************************
-
-- (void)startWobble{
-    for (UIView *btn in _view_TagsContainer.subviews) {
-        btn.transform = CGAffineTransformRotate(CGAffineTransformIdentity, RADIANS(-2));
-    }
-    [UIView animateWithDuration:0.10
-                          delay:0.0
-                        options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse)
-                     animations:^ {
-                         for (UIView *btn in _view_TagsContainer.subviews) {
-                             btn.transform = CGAffineTransformRotate(CGAffineTransformIdentity, RADIANS(2));
-                         }
-                     }
-                     completion:NULL
-     ];
-}
-
-- (void)stopWobble {
-    [UIView animateWithDuration:0.10
-                          delay:0.0
-                        options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveLinear)
-                     animations:^ {
-                         for (UIButton *btn in testArray) {
-                             btn.transform = CGAffineTransformIdentity;
-                             for (UIView *view in btn.subviews) {
-                                 if ([view isKindOfClass:[UIButton class]] && view.tag!=TAGS_BUTTON_TAG){
-                                     [view removeFromSuperview];
-                                 }
-                             }
-                         }
-                     }
-                     completion:NULL];
-}
-- (IBAction)deleteButton:(UIButton *)sender {
-    
-    UIButton *delectButton =(UIButton *)sender.superview;
-    delectButton.hidden=YES;
-    int i;
-    for (i=0; i<testArray.count; i++) {
-        if (delectButton==[testArray objectAtIndex:i]) {
-            break;
-        }
-    }
-    [testArray removeObject:delectButton];
-    [self stopWobble];
-    
-    NSMutableArray *tempArray = [NSMutableArray array];
-    tempArray = [testArray mutableCopy];
-    
-    for (int j=0; j<tempArray.count; j++) {
-        UIView *view =[tempArray objectAtIndex:j];
-        UIButton *button = (UIButton *)[view viewWithTag:TAGS_BUTTON_TAG];
-        CGRect frame = button.frame;
-        
-        if (j==0) {
-            view.frame=CGRectMake(0, 0, frame.size.width+PADDING, frame.size.height+PADDING);
-        }
-        else{
-            UIView *preView =[tempArray objectAtIndex:j-1];
-            view.frame=CGRectMake(preView.frame.origin.x+preView.frame.size.width, preView.frame.origin.y, frame.size.width+PADDING, frame.size.height+PADDING);
-            if (view.frame.origin.x+view.frame.size.width>300) {
-                view.frame=CGRectMake(0, view.frame.origin.y+view.frame.size.height, frame.size.width+PADDING, frame.size.height+PADDING);
-                
-                
-            }
-        }
-        
-    }
-    counter = ([[tempArray lastObject] frame].origin.y/32.7)+1;
-    [self updateAllViewsFrames];
-}
--(void)setCrossButton
-{
-    
-    for (UIView *view in testArray) {
-        UIButton *button = (UIButton*)[view viewWithTag:TAGS_BUTTON_TAG];
-        UIButton *crossButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 15, 15)];
-        
-        [crossButton setImage:[UIImage imageNamed:@"cross.png"] forState:UIControlStateNormal];
-        crossButton.center=CGPointMake(button.frame.origin.x, button.frame.origin.y);
-        [crossButton addTarget:self action:@selector(deleteButton:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [view addSubview:crossButton];
-    }
-    [self startWobble];
-    
-}
-- (void)longPress:(UILongPressGestureRecognizer*)gesture {
-    
-    if (gesture.state == UIGestureRecognizerStateBegan){
-        [self setCrossButton];
-    }
-}
 -(void)arrangeButtonWhenCallCellForRowAtIndex{
     
     for (int j=0; j<testArray.count; j++) {
@@ -755,46 +855,76 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         
         if (j==0) {
             view.frame=CGRectMake(0,0, frame.size.width+PADDING, frame.size.height+PADDING);
+            self.tagContainerHeightConstraint.constant+=view.frame.size.height;
         }
         else{
             UIView *preView =[testArray objectAtIndex:j-1];
             view.frame=CGRectMake(preView.frame.origin.x+preView.frame.size.width, preView.frame.origin.y, frame.size.width+PADDING, frame.size.height+PADDING);
-            if (view.frame.origin.x+view.frame.size.width>300) {
+            if (view.frame.origin.x+view.frame.size.width>[[UIScreen mainScreen] bounds].size.width) {
                 view.frame=CGRectMake(0, view.frame.origin.y+view.frame.size.height, view.frame.size.width, view.frame.size.height);
                 counter++;
-                
+                // Indicates a new line is needing to be made, update the tag container height here
+                self.tagContainerHeightConstraint.constant+=view.frame.size.height;
                 
             }
         }
-        [_view_TagsContainer addSubview:view];
+        [self.view_TagsContainer addSubview:view];
     }
-    [self updateAllViewsFrames];
+    // Also account for difference in description height here.
+    CGFloat desc_dif = self.heightConstraint.constant - DESCRIPTION_DESIGN_HEIGHT;
+    [self updateBaseViewFramesWithOffset:desc_dif withAnimationDuration:0.1];
 }
--(void)updateAllViewsFrames{
+
+/*
+ * Update the frame sizes of all views to account for a change in subview size
+ */
+-(void)updateBaseViewFramesWithOffset: (CGFloat) y_diff withAnimationDuration: (NSTimeInterval) duration {
     
+    // Notify all container views they may need to update their constraints
     
-    _scrollView_base.contentSize = CGSizeMake(320, SCROLLVIEW_HEIGHT+(counter*HEIGHTEXTEND));
-    
-    
-    
-    _view_baseBelowLocation.frame = CGRectMake(_view_baseBelowLocation.frame.origin.x, _view_baseBelowLocation.frame.origin.y, _view_baseBelowLocation.frame.size.width,VIEW_SECONDINITIAL+counter*HEIGHTEXTEND);
-    
-    _view_baseTagsFeature.frame = CGRectMake(_view_baseTagsFeature.frame.origin.x, _view_baseTagsFeature.frame.origin.y, _view_baseTagsFeature.frame.size.width, VIEW_BASE_TAGFEATURE+counter*HEIGHTEXTEND-25);
-    
-    _view_TagsContainer.frame = CGRectMake(_view_TagsContainer.frame.origin.x, _view_TagsContainer.frame.origin.y, _view_TagsContainer.frame.size.width, counter*HEIGHTEXTEND);
-    
-    
-    _view_baseAddInvites.frame = CGRectMake(_view_baseAddInvites.frame.origin.x,_view_baseTagsFeature.frame.origin.y+_view_baseTagsFeature.frame.size.height+15 , _view_baseAddInvites.frame.size.width, _view_baseAddInvites.frame.size.height);
+    // Animate pending layout changes
+    [UIView animateWithDuration:duration animations:^{
+        
+        CGFloat y = 0;
+        NSLog(@"info base y origin %f",y);
+        
+        self.view_infoBaseView.frame = CGRectMake(self.view_infoBaseView.frame.origin.x, y, self.scrollView_base.contentSize.width, self.view_infoBaseView.frame.size.height+y_diff);
+
+        y+=self.view_infoBaseView.frame.size.height;
+        NSLog(@"Tag container y origin %f",y);
+        
+        self.view_TagsContainer.frame = CGRectMake(self.view_infoBaseView.frame.origin.x, y, self.scrollView_base.contentSize.width, self.tagContainerHeightConstraint.constant);
+        
+        y+=self.tagContainerHeightConstraint.constant;
+        NSLog(@"Add Tag Base y origin %f",y);
+        self.view_addTagBase.frame = CGRectMake(self.view_addTagBase.frame.origin.x, y, self.scrollView_base.contentSize.width, self.view_addTagBase.frame.size.height);
+        
+        y+=self.view_addTagBase.frame.size.height;
+        NSLog(@"Add invite y origin %f",y);
+        self.view_baseAddInvites.frame = CGRectMake(self.view_baseAddInvites.frame.origin.x, y, self.scrollView_base.contentSize.width, self.view_baseAddInvites.frame.size.height);
+        
+        y += self.view_baseAddInvites.frame.size.height;
+
+        
+        
+//        // Adjust the content view size
+        _scrollView_base.contentSize = CGSizeMake(self.scrollView_base.frame.size.width,  y);
+        
+        
+    }];
+
     
 }
+
 
 -(IBAction)newButtonAction:(UIButton *)sender{
     
     
+    NSLog(@"New Button Action for: %@", sender.currentTitle);
     
     if(sender.backgroundColor == [UIColor whiteColor]){
         
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
             
         if ([sender.titleLabel.text isEqualToString:tag.tagText]) {
             
@@ -819,7 +949,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         [sender setBackgroundColor:[UIColor whiteColor]];
         [sender setTitleColor:[ZPAStaticHelper zeppaThemeColor] forState:UIControlStateNormal];
         
-        for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+        for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
             
             if ([sender.titleLabel.text isEqualToString:tag.tagText]) {
                 [_eventTagIdsArray removeObject:tag.identifier];
@@ -838,11 +968,11 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 -(void )executeZeppaTagFollowApi:(UIButton *)tagButton{
     
     
-    GTLEventtagfollowendpointEventTagFollow * tagFollow = [[GTLEventtagfollowendpointEventTagFollow alloc]init];
+    GTLZeppaclientapiEventTagFollow * tagFollow = [[GTLZeppaclientapiEventTagFollow alloc]init];
     
     
     
-    for (GTLEventtagendpointEventTag * tag in _tagsArray) {
+    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
         if ([tag.tagText.uppercaseString isEqualToString:tagButton.titleLabel.text.uppercaseString]) {
             
             if ([_defaultTagsForUser isFollowing:tag ] == NO ){
@@ -864,50 +994,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
 }
 
-
-///*************************************************
-#pragma mark - Date And Time Picker Delegate Method
-///*************************************************
-
--(void)doneBtnTappedOnDateAndTimePicker:(NSDate *)date{
-    
-    NSMutableDictionary *tempDateAndTime =  [NSMutableDictionary dictionary];
-    [tempDateAndTime setObject:[[ZPADateHelper sharedHelper] stringFromDate:date withFormat:@"MM/dd/yyyy hh:mm a"] forKey:@"detail"];
-    
-    switch (selectedButton) {
-        case startDate:
-        {
-            startTime = [tempDateAndTime objectForKey:@"detail"];
-            
-            double startTimeStamp = ([date timeIntervalSince1970])*1000;
-            
-           _lblEventStartTime.text = [self dispalyDateWithRequiredFormat:[NSNumber numberWithDouble:startTimeStamp]];
-            
-            NSDate *afterOneHour = [NSDate dateWithTimeInterval:(60*60) sinceDate:[[ZPADateHelper sharedHelper]dateFromString:[tempDateAndTime objectForKey:@"detail"] withFormat:@"MM/dd/yyyy hh:mm a"]];
-            
-            endTime = [[ZPADateHelper sharedHelper]stringFromDate:afterOneHour withFormat:@"MM/dd/yyyy hh:mm a"];
-            
-            double endTimeStamp = ([afterOneHour timeIntervalSince1970])*1000;
-            
-            _lblEventEndTime.text = [self dispalyDateWithRequiredFormat:[NSNumber numberWithDouble:endTimeStamp]];
-            
-        }
-            break;
-            
-        case endDate:
-            endTime = [tempDateAndTime objectForKey:@"detail"];
-            
-            double startTimeStamp = ([date timeIntervalSince1970])*1000;
-            
-            _lblEventEndTime.text = [self dispalyDateWithRequiredFormat:[NSNumber numberWithDouble:startTimeStamp]];
-            break;
-            
-        default:
-            break;
-    }
-    
-    
-}
 ///*************************************************
 #pragma mark - Custom PickerView  Delegate Method
 ///*************************************************
@@ -927,9 +1013,8 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     ZPAMyZeppaEvent * myZeppaEvent = [[ZPAMyZeppaEvent alloc]init];
     UIAlertView *alert;
     
-    GTLZeppaeventendpointZeppaEvent *zeppaEvent = [[GTLZeppaeventendpointZeppaEvent alloc] init];
+    GTLZeppaclientapiZeppaEvent *zeppaEvent = [[GTLZeppaclientapiZeppaEvent alloc] init];
     
-   
     
     [zeppaEvent setHostId:currentUser.endPointUser.identifier];
     [zeppaEvent setTitle:_txtEventTitle.text];
@@ -938,16 +1023,12 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     [zeppaEvent setGuestsMayInvite:[NSNumber numberWithInt:_checkBox.checked]];
     
-    NSDate *startDate = [[ZPADateHelper sharedHelper]dateFromString:startTime withFormat:@"MM/dd/yyyy hh:mm a"];
-    
-    double startTimeStamp = ([startDate timeIntervalSince1970])*1000;
+    double startTimeStamp = ([startTime timeIntervalSince1970])*1000;
     
     NSNumber * startTimee = [NSNumber numberWithDouble:startTimeStamp];
     
-    
-    
-    NSDate *endDate = [[ZPADateHelper sharedHelper]dateFromString:endTime withFormat:@"MM/dd/yyyy hh:mm a"];
-    double endTimeStamp = ([endDate timeIntervalSince1970])*1000;
+
+    double endTimeStamp = ([endTime timeIntervalSince1970])*1000;
      NSNumber * endTimee = [NSNumber numberWithDouble:endTimeStamp];
     
     [zeppaEvent setStart:startTimee];
@@ -966,7 +1047,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         [alert show];
     }else if (_eventTagIdsArray.count == 0){
         
-        alert = [[UIAlertView alloc]initWithTitle:@"Add Tags" message:@"Add a few category tags first! This is how Zeppa recommends your events to people you mingle with" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+        alert = [[UIAlertView alloc]initWithTitle:@"Add Tags" message:@"Tap to add a few tags (blue bubbles) first. This is how Zeppa recommends your events to people you mingle with" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
     
         
@@ -976,9 +1057,9 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         [alert show];
 
     
-    GTLQueryZeppaeventendpoint *insertZeppaEventTask = [GTLQueryZeppaeventendpoint queryForInsertZeppaEventWithObject:zeppaEvent];
+    GTLQueryZeppaclientapi *insertZeppaEventTask = [GTLQueryZeppaclientapi queryForInsertZeppaEventWithObject:zeppaEvent idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-    [[self zeppaEventService] executeQuery:insertZeppaEventTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaeventendpointZeppaEvent * event, NSError *error) {
+    [[self zeppaEventService] executeQuery:insertZeppaEventTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaEvent * event, NSError *error) {
         //
         
         if(error){
@@ -1016,16 +1097,15 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 
 // Create Zeppa Event service
--(GTLServiceZeppaeventendpoint *) zeppaEventService {
-    static GTLServiceZeppaeventendpoint *service = nil;
+-(GTLServiceZeppaclientapi *) zeppaEventService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppaeventendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     
     // Set Auth that is held in the delegate
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
         
     
     return service;
@@ -1044,7 +1124,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 }
 
 
--(BOOL)isValidEvent:(GTLZeppaeventendpointZeppaEvent *)event{
+-(BOOL)isValidEvent:(GTLZeppaclientapiZeppaEvent *)event{
     
     return [self isValidTimeWithStartTime:[event.start longLongValue] andEndTime:[event.end longLongValue]] && [ZPAStaticHelper isValidString:event.title] && ([ZPAStaticHelper isValidString:event.displayLocation] || [ZPAStaticHelper isValidString:event.mapsLocation]);
 }
@@ -1083,7 +1163,20 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 }
 
 
--(NSString *)dispalyDateWithRequiredFormat:(NSNumber *)inputTime{
+/*
+ * Update the times shown to the user
+ */
+- (void) updateTimeText {
+    // Set the default start time
+    _lblEventStartTime.text = [self displayDateWithRequiredFormat:startTime];
+    // set the default end time
+    _lblEventEndTime.text = [self displayDateWithRequiredFormat:endTime];
+}
+
+/*
+ * Format date string for easier readability
+ */
+-(NSString *)displayDateWithRequiredFormat:(NSDate *)inputDate{
     
     NSTimeInterval interval;
     NSString * timeToDisplayString;
@@ -1104,11 +1197,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:currentTimeInMills/1000];
     
-    
-    double inputChangedTime = [inputTime doubleValue];
-    
-    
-    NSDate * inputDate = [NSDate dateWithTimeIntervalSince1970:inputChangedTime/1000];
     
     NSDate *inputTempDate = [[ZPADateHelper sharedHelper] dateFromDate:inputDate withFormat:@"yyyy-MM-dd HH:mm"];
     
@@ -1137,7 +1225,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         
         timeToDisplayString = [NSString stringWithFormat:@"Yesterday %@",[[ZPADateHelper sharedHelper] stringFromDate:inputDate withFormat:@"hh:mm a"]];
         
-    }else if ([inputTime longLongValue] - currentTimeInMills < (1000 * 60 * 60 * 24 * 7) ){
+    }else if ([inputDate timeIntervalSinceDate:[NSDate date]] < (1000 * 60 * 60 * 24 * 7) ){
         
         timeToDisplayString = [NSString stringWithFormat:@"%@ %@",[[ZPADateHelper sharedHelper] stringFromDate:inputDate withFormat:@"EEEE"],[[ZPADateHelper sharedHelper] stringFromDate:inputDate withFormat:@"hh:mm a"]];
         

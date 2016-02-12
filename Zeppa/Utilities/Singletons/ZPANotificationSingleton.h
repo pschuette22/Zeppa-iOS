@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GTLZeppanotificationendpointZeppaNotification.h"
+#import "GTLZeppaclientapiZeppaNotification.h"
 
 @interface ZPANotificationSingleton : NSObject
 
-@property (nonatomic,strong)GTLZeppanotificationendpointZeppaNotification *notification;
+@property (nonatomic,strong)GTLZeppaclientapiZeppaNotification *notification;
 
 @property (nonatomic,strong)NSMutableArray * notificationArray;
 
@@ -25,10 +25,15 @@
 -(NSArray *)getNotification;
 -(BOOL)hasLoadedInitial;
 -(void)onLoadedInitialNotification;
--(NSInteger)getNotificationTypeOrder:(GTLZeppanotificationendpointZeppaNotification *)notification;
--(NSString *)getNotificationTitle:(GTLZeppanotificationendpointZeppaNotification *)notification;
--(NSString *)getNotificationMessage:(GTLZeppanotificationendpointZeppaNotification *)notification;
--(void)fetchNotification:(long long)userId;
--(void)addZeppaNotification:(GTLZeppanotificationendpointZeppaNotification *)notification;
+-(NSInteger)getNotificationTypeOrder:(NSString *)notificationType ;
+-(NSString *)getNotificationTitle:(GTLZeppaclientapiZeppaNotification *)notification;
+-(NSString *)getNotificationMessage:(GTLZeppaclientapiZeppaNotification *)notification;
+
+-(void)fetchInitialNotifications:(long long)userId;
+-(void)addZeppaNotification:(GTLZeppaclientapiZeppaNotification *)notification;
 -(void)executeRemoveNotification:(long long)notificationId;
+
+-(void)didReceiveNotification:(NSNumber *)notificationId;
+-(void)fetchNotificationById:(NSNumber *)notificationId;
+
 @end

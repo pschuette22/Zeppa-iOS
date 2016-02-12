@@ -11,48 +11,77 @@
 #import "ZPAMyZeppaEvent.h"
 #import "ZPADefaulZeppatUserInfo.h"
 #import "ZPAFetchDefaultTagsForUser.h"
+#import "ZPADiscussionCell.h"
 
-@interface ZPAEventDetailVC : ZPARevealSplitMenuBaseVC<UITableViewDataSource,UITableViewDelegate,UITextViewDelegate>
-@property (weak, nonatomic) IBOutlet UIScrollView *scollView_base;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIImageView *userProfile_ImageView;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_NoOfInvitedUser;
-@property (weak, nonatomic) IBOutlet UIButton *eventTime_ImageView;
-@property (weak, nonatomic) IBOutlet UIButton *location_ImageView;
-@property (weak, nonatomic) IBOutlet UITextView *discussTextView;
-@property (weak, nonatomic) IBOutlet UIView *discussionPostBaseView;
-@property (weak, nonatomic) IBOutlet UIView *discussionBoardView;
-@property (weak, nonatomic) IBOutlet UIView *tagContainerView;
-@property (weak, nonatomic) IBOutlet UIView *eventDetailView;
-@property (weak, nonatomic) IBOutlet UILabel *whiteLabelInTextView;
+@interface ZPAEventDetailVC : ZPARevealSplitMenuBaseVC<UITableViewDelegate,UITextViewDelegate>
+
+
+// Objects and tasks
 @property (weak, nonatomic) ZPAMyZeppaEvent *eventDetail;
 @property (weak, nonatomic) ZPADefaulZeppatUserInfo *userInfo;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_EventTitle;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_EventDuration;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_EventDisplayLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_EventHostName;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_CommonMinglers;
-@property (weak, nonatomic) IBOutlet UITextView *txtView_EventDescription;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView_ConflictIndicator;
-@property (nonatomic, strong)NSMutableArray *tagsArray;
-@property (weak, nonatomic) IBOutlet UIButton *postButton;
-@property (weak, nonatomic) IBOutlet UIView *qucikActionView;
-@property (weak, nonatomic) IBOutlet UIView *viewUserDisscussion;
-@property (weak, nonatomic) IBOutlet UIView *view_BaseUserDetail;
-@property (weak, nonatomic) IBOutlet UIView *view_DiscussionLabel;
 @property (nonatomic, strong) ZPAFetchDefaultTagsForUser *defaultTagsForUser;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView_discussionUser;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_discussionUserName;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_discussionDetail;
-@property (weak, nonatomic) IBOutlet UILabel *lbl_discussionTime;
+
+/*
+ * Views
+ */
+ 
+// Base views
+@property (weak, nonatomic) IBOutlet UIScrollView *scollView_base;
+@property (weak, nonatomic) IBOutlet UIView *view_contentView;
+
+// User Details
+@property (weak, nonatomic) IBOutlet UIView *view_BaseUserDetail; // should refactor to eventOverviewBase
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *eventOverviewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *userDetailHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet UIImageView *userProfile_ImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView_ConflictIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *lbl_EventTitle;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleHeight;
+@property (weak, nonatomic) IBOutlet UILabel *lbl_EventHostName;
+@property (weak, nonatomic) IBOutlet UILabel *lbl_EventDescription;
+// Button over event description to intersept taps
+@property (weak, nonatomic) IBOutlet UIButton *btn_eventDescription;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descHeight;
+@property (weak, nonatomic) IBOutlet UIView *qucikActionView;
 @property (weak, nonatomic) IBOutlet UIButton *watchButton;
-@property (weak, nonatomic) IBOutlet UIButton *textButton;
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;
-@property (weak, nonatomic) IBOutlet UITableView *tableView_discussion;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *quickActionHeight;
+
+
+// Tag Container
+@property (nonatomic, strong)NSMutableArray *tagsArray;
+@property (weak, nonatomic) IBOutlet UIView *tagContainerView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagContainerHeight;
+
+
+// Event Details
+@property (weak, nonatomic) IBOutlet UIView *eventDetailView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *eventDetailHeight;
+@property (weak, nonatomic) IBOutlet UIButton *eventTime_ImageView;
+@property (weak, nonatomic) IBOutlet UILabel *lbl_EventDuration;
+@property (weak, nonatomic) IBOutlet UIButton *location_ImageView;
+@property (weak, nonatomic) IBOutlet UILabel *lbl_EventDisplayLocation;
+@property (weak, nonatomic) IBOutlet UIButton *btn_attendingUsers;
 @property (weak, nonatomic) IBOutlet UIButton *invitedUserBtn;
 @property (weak, nonatomic) IBOutlet UILabel *lbl_invitedUserNo;
 @property (weak, nonatomic) IBOutlet UIView *addInvitesView;
 @property (weak, nonatomic) IBOutlet UIView *addInvitesSeperatorView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *addInvitesBaseHeight;
+
+// Discussion Board
+@property (weak, nonatomic) IBOutlet UITextView *discussTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *discussionTextHeight;
+@property (weak, nonatomic) IBOutlet UIView *discussionBoardView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *discussionBoardHeight;
+@property (weak, nonatomic) IBOutlet UIView *discussionContainerView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *discussionContainerHeight;
+@property (weak, nonatomic) IBOutlet UIView *view_discussBaseView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *discussBaseHeight;
+@property (weak, nonatomic) IBOutlet UIButton *postButton;
+
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView_discussion;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBarButton;
 
 @property BOOL isMinglerTag;
@@ -60,10 +89,15 @@
 - (IBAction)cancelBarButtonTapped:(UIBarButtonItem *)sender;
 
 - (IBAction)joinBtnTapped:(UIButton *)sender;
-- (IBAction)textBtnTapped:(UIButton *)sender;
 - (IBAction)watchBtnTapped:(UIButton *)sender;
 - (IBAction)cancelBtnTappped:(UIBarButtonItem *)sender;
 - (IBAction)invitedUserBtnTapped:(UIButton *)sender;
+- (IBAction)eventTimeBtnTapped:(UIButton*)sender;
+- (IBAction)eventLocationBtnTapped:(UIButton*)sender;
+- (IBAction)attendingUsersBtnTapped:(UIButton*)sender;
+- (IBAction)descriptionTapped:(UIButton*)sender;
 
 - (IBAction)postButtonTapped:(UIButton *)sender;
+
+- (void) notificationReceived: (NSNotification*) notification;
 @end

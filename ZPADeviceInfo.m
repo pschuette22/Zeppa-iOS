@@ -19,6 +19,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
     device = [[ZPADeviceInfo alloc]init];
+        device.doUpdateToken = NO;
     });
     return device;
 }
@@ -26,38 +27,41 @@
 #pragma mark Devices Informations Methods
 ///****************************************
 -(void)setLoginDeviceForUser:(ZPAMyZeppaUser *)user{
-    
-    loggedInUser = user;
-    GTLDeviceinfoendpointDeviceInfo *deviceInfo = [[GTLDeviceinfoendpointDeviceInfo alloc]init];
-    [deviceInfo setOwnerId:loggedInUser.endPointUser.identifier];
-    [deviceInfo setPhoneType:@"iOS"];
-    [deviceInfo setRegistrationId:[self getRegistrationId]];
-    [deviceInfo setLoggedIn:[NSNumber numberWithInt:1]];
-    [deviceInfo setLastLogin:[NSNumber numberWithLong:[ZPADateHelper currentTimeMillis]]];
-    [deviceInfo setVersion:[NSNumber numberWithInt:1]];
-    [deviceInfo setUpdate:[NSNumber numberWithInt:0]];
-    [deviceInfo setBugfix:[NSNumber numberWithInt:0]];
-    
-    [self getDeviceInfoWithObject:deviceInfo withCursor:nil];
+    // If this object holds a valid registration id, update device in background
+    if([self doUpdateToken] && [self getRegistrationId]){
+        loggedInUser = user;
+        GTLZeppaclientapiDeviceInfo *deviceInfo = [[GTLZeppaclientapiDeviceInfo alloc]init];
+        [deviceInfo setOwnerId:loggedInUser.endPointUser.identifier];
+        [deviceInfo setPhoneType:@"iOS"];
+        [deviceInfo setRegistrationId:[self getRegistrationId]];
+        [deviceInfo setLoggedIn:[NSNumber numberWithInt:1]];
+        
+        [deviceInfo setLastLogin:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]];
+        [deviceInfo setVersion:[NSNumber numberWithInt:1]];
+        [deviceInfo setUpdate:[NSNumber numberWithInt:0]];
+        [deviceInfo setBugfix:[NSNumber numberWithInt:9]];
+        
+        [self getDeviceInfoWithObject:deviceInfo withCursor:nil];
+    }
     
 }
--(void)getDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo withCursor:(NSString *)cursorValue{
+-(void)getDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo withCursor:(NSString *)cursorValue{
     
     __weak typeof(self) weakSelf = self;
-    GTLQueryDeviceinfoendpoint *deviceQuery = [GTLQueryDeviceinfoendpoint queryForListDeviceInfo];
+    GTLQueryZeppaclientapi *deviceQuery = [GTLQueryZeppaclientapi queryForListDeviceInfoWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     [deviceQuery setFilter:[NSString stringWithFormat:@"ownerId == %@",loggedInUser.endPointUser.identifier]];
     [deviceQuery setCursor:cursorValue];
     [deviceQuery setOrdering:nil];
     [deviceQuery setLimit:[[NSNumber numberWithInt:25] integerValue]];
     
-    [self.deviceInfoService executeQuery:deviceQuery completionHandler:^(GTLServiceTicket *ticket, GTLDeviceinfoendpointCollectionResponseDeviceInfo *response, NSError *error) {
+    [self.deviceInfoService executeQuery:deviceQuery completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseDeviceInfo *response, NSError *error) {
         //
         
         if(error){
             // error occurred
         } else if(response && response.items && response.items.count > 0){
             
-            for (GTLDeviceinfoendpointDeviceInfo *device in response.items) {
+            for (GTLZeppaclientapiDeviceInfo *device in response.items) {
                 
                 if ([device.registrationId isEqualToString:deviceInfo.registrationId]) {
                     [weakSelf updateDeviceInfoWithObject:device];
@@ -65,7 +69,7 @@
                 }
             }
             NSString *cursor = response.nextPageToken;
-            if(cursor){
+            if(response.items.count >=25 && cursor){
                 [weakSelf getDeviceInfoWithObject:deviceInfo withCursor:cursor];
             }else{
                 [weakSelf insertDeviceInfoWithObject:deviceInfo];
@@ -77,13 +81,14 @@
     
     
 }
--(void)insertDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo {
+-(void)insertDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo {
     
-    if(deviceInfo){
+    if([self doUpdateToken] && deviceInfo){
+        [self setDoUpdateToken:NO];
        __weak typeof(self) weakSelf = self;
-        GTLQueryDeviceinfoendpoint *insertTask = [GTLQueryDeviceinfoendpoint queryForInsertDeviceInfoWithObject:deviceInfo];
+        GTLQueryZeppaclientapi *insertTask = [GTLQueryZeppaclientapi queryForInsertDeviceInfoWithObject:deviceInfo idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
-        [self.deviceInfoService executeQuery:insertTask completionHandler:^(GTLServiceTicket *ticket, GTLDeviceinfoendpointDeviceInfo *deviceInfo, NSError *error) {
+        [self.deviceInfoService executeQuery:insertTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiDeviceInfo *deviceInfo, NSError *error) {
         //
         
             if(error){
@@ -98,16 +103,19 @@
         }];
     }
 }
-- (void)updateDeviceInfoWithObject:(GTLDeviceinfoendpointDeviceInfo *)deviceInfo {
+
+
+- (void)updateDeviceInfoWithObject:(GTLZeppaclientapiDeviceInfo *)deviceInfo {
     
-    if(deviceInfo){
+    if([self doUpdateToken] && deviceInfo){
+        [self setDoUpdateToken:NO];
        __weak typeof(self) weakSelf = self;
         [deviceInfo setRegistrationId:[self getRegistrationId]];
         [deviceInfo setLoggedIn:[NSNumber numberWithInt:1]]; // 1 for logged in, 0 for not
-        [deviceInfo setLastLogin:[NSNumber numberWithLong:[ZPADateHelper currentTimeMillis]]];
+        [deviceInfo setLastLogin:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]];
     
-        GTLQueryDeviceinfoendpoint *updateDeviceInfoTask = [GTLQueryDeviceinfoendpoint queryForUpdateDeviceInfoWithObject:deviceInfo];
-        [[self deviceInfoService] executeQuery:updateDeviceInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLDeviceinfoendpointDeviceInfo *response, NSError *error) {
+        GTLQueryZeppaclientapi *updateDeviceInfoTask = [GTLQueryZeppaclientapi queryForUpdateDeviceInfoWithObject:deviceInfo idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+        [[self deviceInfoService] executeQuery:updateDeviceInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiDeviceInfo *response, NSError *error) {
         
             if(error){
             // Error occured
@@ -123,42 +131,39 @@
         }];
     }
 }
--(void)removeDeviceInfoWithObject: (GTLDeviceinfoendpointDeviceInfo *)deviceInfo{
+
+-(void)removeDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo{
     
     if(deviceInfo){
        __weak typeof(self) weakSelf = self;
-        GTLQueryDeviceinfoendpoint *updateDeviceInfoTask = [GTLQueryDeviceinfoendpoint queryForRemoveDeviceInfoWithObject:deviceInfo];
-        [[self deviceInfoService] executeQuery:updateDeviceInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLDeviceinfoendpointDeviceInfo *response, NSError *error) {
+        GTLQueryZeppaclientapi *updateDeviceInfoTask = [GTLQueryZeppaclientapi queryForRemoveDeviceInfoWithIdentifier:deviceInfo.identifier.longLongValue idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+        
+        [[self deviceInfoService] executeQuery:updateDeviceInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiDeviceInfo *response, NSError *error) {
         
             if(error){
             // Error occured
-            } else if (response.identifier) {
-            
-            weakSelf.currentDevice = response;
-            NSLog(@"Insert Device Successfully");
-            
             } else {
-            // Returned null object
+                // Device was removed
             }
         }];
     
     }
 }
--(GTLServiceDeviceinfoendpoint *)deviceInfoService {
-    static GTLServiceDeviceinfoendpoint *service = nil;
+
+-(GTLServiceZeppaclientapi *)deviceInfoService {
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceDeviceinfoendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
     // Set Auth that is held in the delegate
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 
 -(NSString *)getRegistrationId{
     
-    return [ZPAAppDelegate sharedObject].currentDeviceToken;
+    return [ZPAAppDelegate sharedObject].registrationToken;
     
 }
 @end

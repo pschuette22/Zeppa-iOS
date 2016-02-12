@@ -14,10 +14,8 @@
 #import "ZPAEventDetailVC.h"
 #import "ZPADefaulZeppatEventInfo.h"
 
-#import <MessageUI/MessageUI.h>
 
-
-@interface ZPAAgendaVC ()<MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate>
+@interface ZPAAgendaVC ()
 
 @property (retain, nonatomic) UIRefreshControl *refreshControl;
 @property (nonatomic, strong)NSMutableArray *arrAttendingEvents;
@@ -41,18 +39,25 @@
 
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
+    
     _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
     // Do any additional setup after loading the view.
-    self.title = NSLocalizedString(@"Agenda", nil);
+    self.title = NSLocalizedString(@"Watching", nil);
     
     ///Set background color of uiview
     [self.view setBackgroundColor:[ZPAStaticHelper backgroundTextureColor]];
     
-    _emptyAgendaLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
-    _emptyAgendaLabel.text= @"Your agenda is empty";
-    _emptyAgendaLabel.backgroundColor=[UIColor clearColor];
-    _emptyAgendaLabel.textAlignment = NSTextAlignmentCenter;
+//<<<<<<< HEAD
+//    _emptyAgendaLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
+//    _emptyAgendaLabel.text= @"Your agenda is empty";
+//    _emptyAgendaLabel.backgroundColor=[UIColor clearColor];
+//    _emptyAgendaLabel.textAlignment = NSTextAlignmentCenter;
+//=======
+    // Hold the currently logged in user
+    _currentUser = [ZPAAppData sharedAppData].loggedInUser;
+//>>>>>>> auth
     
     _refreshControl = [[UIRefreshControl alloc]init];
     _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
@@ -60,11 +65,15 @@
     
     [_refreshControl addTarget:self action:@selector(refreshTable:) forControlEvents:UIControlEventValueChanged];
     
+    
+    
+    
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-    
-	[super viewDidAppear:animated];
+-(void)viewWillAppear:(BOOL)animated {
+    // Set the objects for relevant events
+    _arrAttendingEvents = [[[ZPAZeppaEventSingleton sharedObject]getInterestingEventMediators]mutableCopy];
+    [_tableView reloadData];
     
 }
 
@@ -72,26 +81,17 @@
 	[super viewWillDisappear:animated];
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    
-    _arrAttendingEvents = [[[ZPAZeppaEventSingleton sharedObject]getInterestingEventMediators]mutableCopy];
-    
-    if ([_arrAttendingEvents count] > 0){
-        [_emptyAgendaLabel removeFromSuperview];
-    }else{//or add it
-        [self.tableView addSubview:_emptyAgendaLabel];
-    }
-    
-    _currentUser = [ZPAAppData sharedAppData].loggedInUser;
-    
-    [self.tableView reloadData];
-    
-}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+//-(void)dealloc{
+//    Remove any notification observers that were added
+//}
+
 
 /*
  #pragma mark - Navigation
@@ -103,61 +103,6 @@
  // Pass the selected object to the new view controller.
  }
  */
-
-
-//****************************************************
-#pragma mark - UIMessage Controller Delegate
-//****************************************************
--(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    
-    switch (result) {
-        case MessageComposeResultCancelled:
-            
-            break;
-        case MessageComposeResultFailed:
-        {
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            
-            break;
-        }
-        case MessageComposeResultSent:
-            break;
-        default:
-            break;
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-}
-//****************************************************
-#pragma mark - Mail Controller Delegate
-//****************************************************
--(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    switch (result) {
-        case MFMailComposeResultCancelled:
-            NSLog(@"mail cancelled");
-            
-            break;
-        case MFMailComposeResultFailed:
-            
-            NSLog(@"Mail failed %@",[error localizedDescription]);
-            
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Mail succcessfuly sent");
-            
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Mail saved");
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
-
 
 
 
@@ -174,9 +119,7 @@
 {
     
 
-    return self.arrAttendingEvents.count;
-
-    
+    return _arrAttendingEvents.count;
 }
 
 
@@ -306,29 +249,6 @@
 
     
 }
--(void)textBtnTapped:(UIButton *)sender{
-    
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    myEvent = [_arrAttendingEvents objectAtIndex:indexPath.row];
-    
-    ZPADefaulZeppatUserInfo * eventMediatorInfo = [ZPADefaulZeppatUserInfo sharedObject];
-    
-    id eventHostMediator = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[myEvent.event.hostId longLongValue]];
-    
-    if ([eventHostMediator isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        eventMediatorInfo = eventHostMediator;
-    }else{
-        
-    }
-    
-    if (eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber) {
-        [self showSmsWithRecepientsNumber:eventMediatorInfo.zeppaUserInfo.primaryUnformattedNumber];
-    }else{
-        [self sendEmailWithRecipientsMail:eventMediatorInfo.zeppaUserInfo.googleAccountEmail];
-    }
-    
-
-}
 
 // to get index path of Button.
 -(NSIndexPath *)getIndexPathOfRowWithBtnClick:(UIButton *)sender{
@@ -339,43 +259,6 @@
     
     return indexPath;
     
-}
-//****************************************************
-#pragma mark - Private methods
-//****************************************************
-
--(void)showSmsWithRecepientsNumber:(NSString *)phoneNumber{
-    
-    
-    if(![MFMessageComposeViewController canSendText]){
-        UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to send SMS!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [warningAlert show];
-        return;
-    }
-    NSArray * reciepients =[NSArray arrayWithObject:phoneNumber];
-    MFMessageComposeViewController * messageController = [[MFMessageComposeViewController alloc]init];
-    
-    messageController.messageComposeDelegate = self;
-    [messageController setRecipients:reciepients];
-    
-    [self presentViewController:messageController animated:YES completion:nil];
-}
-
--(void)sendEmailWithRecipientsMail:(NSString *)emailId{
-    
-    NSString * mailSubject = @"";
-    NSString * mailBody = @"";
-    NSArray * mailRecepients = [NSArray arrayWithObject:emailId];
-    
-    MFMailComposeViewController * mailController = [[MFMailComposeViewController alloc]init];
-    
-    mailController.mailComposeDelegate = self;
-    
-    [mailController setSubject:mailSubject];
-    [mailController setMessageBody:mailBody isHTML:NO];
-    [mailController setToRecipients:mailRecepients];
-    
-    [self presentViewController:mailController animated:YES completion:nil];
 }
 
 

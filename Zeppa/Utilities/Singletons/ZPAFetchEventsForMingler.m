@@ -32,7 +32,7 @@
 -(void)executeZeppaEventRelationshipListQueryWithCursor:(NSString *)cursorValue{
     
     __weak typeof(self) weakSelf = self;
-    GTLQueryZeppaeventtouserrelationshipendpoint *e2uRelationshipQuery = [GTLQueryZeppaeventtouserrelationshipendpoint queryForListZeppaEventToUserRelationship];
+    GTLQueryZeppaclientapi *e2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaEventToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     //[e2uRelationshipQuery setFilter:[NSString stringWithFormat:@"eventHostId == %lld && expires > %lld",_minglerId,[ZPADateHelper currentTimeMillis]]];
     [e2uRelationshipQuery setFilter:[NSString stringWithFormat:@"eventHostId == %lld && userId == %@ && expires > %lld",_minglerId,[ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier ,[ZPADateHelper currentTimeMillis]]];
@@ -40,17 +40,17 @@
     [e2uRelationshipQuery setOrdering:@"expires desc"];
     [e2uRelationshipQuery setLimit:[[NSNumber numberWithInt:25] integerValue]];
     
-    [[self zeppaUserRelationshipService] executeQuery: e2uRelationshipQuery completionHandler: ^(GTLServiceTicket *ticket,  GTLZeppaeventtouserrelationshipendpointCollectionResponseZeppaEventToUserRelationship *response, NSError *error) {
+    [[self zeppaUserRelationshipService] executeQuery: e2uRelationshipQuery completionHandler: ^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship *response, NSError *error) {
         //
         
         if(error){
             // error
         } else if(response && response.items && response.items.count > 0){
             
-            for (GTLZeppaeventtouserrelationshipendpointZeppaEventToUserRelationship *relation in response.items) {
+            for (GTLZeppaclientapiZeppaEventToUserRelationship *relation in response.items) {
                 
                
-                [weakSelf fetchZeppaEventWithIdentifier:[relation.eventId longLongValue] withCompletion:^(GTLZeppaeventendpointZeppaEvent *event) {
+                [weakSelf fetchZeppaEventWithIdentifier:[relation.eventId longLongValue] withCompletion:^(GTLZeppaclientapiZeppaEvent *event) {
                    
                     ZPAMyZeppaEvent *myevent = [[ZPAMyZeppaEvent alloc]init];
                     myevent.event = event;
@@ -101,15 +101,14 @@
 
     
 }
--(GTLServiceZeppaeventtouserrelationshipendpoint *)zeppaUserRelationshipService{
+-(GTLServiceZeppaclientapi *)zeppaUserRelationshipService{
     
-    static GTLServiceZeppaeventtouserrelationshipendpoint *service = nil;
+    static GTLServiceZeppaclientapi *service = nil;
     
     if(!service){
-        service = [[GTLServiceZeppaeventtouserrelationshipendpoint alloc] init];
+        service = [[GTLServiceZeppaclientapi alloc] init];
         service.retryEnabled = YES;
     }
-    [service setAuthorizer:[ZPAAuthenticatonHandler sharedAuth].auth];
     return service;
 }
 @end

@@ -10,13 +10,13 @@
 
 #import "ZPAMyZeppaUser.h"
 
-#import "GTLZeppauserinfoendpointZeppaUserInfo.h"
-#import "GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
 
 @interface ZPADefaulZeppatUserInfo : NSObject
 @property (nonatomic, strong) ZPAMyZeppaUser *user;
-@property (nonatomic, strong) GTLZeppauserinfoendpointZeppaUserInfo *zeppaUserInfo;
-@property (nonatomic, strong) GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *relationShip;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaUserInfo *zeppaUserInfo;
+@property (nonatomic, strong) GTLZeppaclientapiZeppaUserToUserRelationship *relationship;
 @property (nonatomic, strong) NSMutableArray *minglersIds;
 @property (readonly, getter=isMingling)BOOL mingling;
 @property (readonly, assign)BOOL requestPending;
@@ -29,5 +29,5 @@
 
 -(BOOL)requestPending;
 
--(void)setUserRelationship:(GTLZeppausertouserrelationshipendpointZeppaUserToUserRelationship *)relationship;
+-(void)setUserRelationship:(GTLZeppaclientapiZeppaUserToUserRelationship *)relationship;
 @end

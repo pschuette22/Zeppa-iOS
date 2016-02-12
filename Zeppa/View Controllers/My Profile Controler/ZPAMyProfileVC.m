@@ -11,19 +11,17 @@
 #import "ZPAMyBasicInfoCell.h"
 #import "ZPAMyPlannedEventCell.h"
 #import "ZPAZeppaEventSingleton.h"
-#import "GTLZeppauserendpointZeppaUserInfo.h"
-#import "GTLServiceZeppauserendpoint.h"
-#import "GTLQueryZeppauserendpoint.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
+#import "GTLServiceZeppaclientapi.h"
+#import "GTLQueryZeppaclientapi.h"
 #import "UIImageView+WebCache.h"
 #import "ZPALoginVC.h"
 #import "ZPAAppDelegate.h"
 #import "ZPAZeppaEventTagSingleton.h"
-//#import "GTMHTTPFetcherLogging.h"
 
 #import "ZPAAuthenticatonHandler.h"
 #import "ZPAEventDetailVC.h"
 
-//#import <GoogleOpenSource/GTMHTTPFetcherLogging.h>
 
 //Tags Properties
 #define TAGS_BASEVIEW_TAGVALUE 100
@@ -40,7 +38,9 @@
 
 #define HEADER_HEIGHT   32.0f
 
-#define MY_BASIC_INFO_CELL_HEIGHT 200
+//#define MY_BASIC_INFO_CELL_HEIGHT 200
+#define BASIC_INFO_BASE_HEIGHT 105
+#define ADD_TAG_BASE_HEIGHT 39
 #define MY_PLANNED_EVENTS_INFO_CELL_HEIGHT 100
 
 #define SYSTEM_VERSION_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
@@ -61,7 +61,6 @@
     
     NSMutableArray *_tempArray;
     NSInteger _counter;
-    NSInteger _heightExtend;
     NSMutableArray *tagArray;
 }
 //****************************************************
@@ -83,15 +82,12 @@
     
     tagArray = [NSMutableArray array];
     [_tableView clipsToBounds];
-    
 //    if(_currentUser.tagsArray.count==0){
 //        [self resizeTagviewAndTableCell];
 //    }
 
     
     ///_counter for increase RowHeight each time
-   
-    
     
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -114,7 +110,7 @@
     
     
    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateProfileTags:) name:kZeppaTagUpdateNotificationKey object:nil];
-    [_basicInfoCell.viewForBaselineLayout addSubview:_basicInfoCell.view_TagContainer];
+//    [_basicInfoCell.viewForBaselineLayout addSubview:_basicInfoCell.view_tagContainer];
     
     _tempArray  = [NSMutableArray array];
     _arrMyPlannedEvents = [[[ZPAZeppaEventSingleton sharedObject] getHostedEventMediators] mutableCopy];
@@ -124,7 +120,7 @@
     
     _counter = (_currentUser.tagsArray.count>0)?1:0;
     
-    for (GTLEventtagendpointEventTag *tag in _currentUser.tagsArray) {
+    for (GTLZeppaclientapiEventTag *tag in _currentUser.tagsArray) {
         [self showTagButtonWithTitleString:tag.tagText];
     }
     
@@ -218,7 +214,6 @@
         return 1;
     }
     return _arrMyPlannedEvents.count;
-    
 }
 
 
@@ -227,6 +222,7 @@
     
     NSInteger indexSec = indexPath.section;
     if (indexSec == TABLE_SEC_INDEX_MY_BASIC_INFO) {
+        NSLog(@"Cell for row at index path");
         ///Show User's basic profile details
         _basicInfoCell = [tableView dequeueReusableCellWithIdentifier:@"ZPAMyBasicInfoCell"];
         ///Get Saved Current User Object
@@ -249,7 +245,7 @@
                                            .endPointUser.userInfo.familyName];
         
         ///Set Contact Number
-        NSString *contactNumber = [self getFormattedNumber:_currentUser.endPointUser.userInfo.primaryUnformattedNumber];
+        NSString *contactNumber = [self getFormattedNumber:_currentUser.endPointUser.phoneNumber];
         
         if ([ZPAStaticHelper canUseWebObject:contactNumber]
             && contactNumber.length > 0) {
@@ -261,20 +257,27 @@
             ///Hide the contact number button if not present and reset frames if required
             [_basicInfoCell.btnContactNumber setHidden:YES];
             
-            
         }
-        [_basicInfoCell.btnEmail setTitle:_currentUser.endPointUser.userInfo.googleAccountEmail forState:UIControlStateNormal];
+        [_basicInfoCell.btnEmail setTitle:_currentUser.endPointUser.authEmail forState:UIControlStateNormal];
         ///Adjust frame for Add new tag controls
-        CGRect frame = _basicInfoCell.contentView.frame;
-        frame.size.height = MY_BASIC_INFO_CELL_HEIGHT + (_counter * _heightExtend);
-        _basicInfoCell.contentView.frame = frame;
         
-        
-        CGRect viewFrame = _basicInfoCell.view_TagContainer.frame;
-        viewFrame.size.height = _counter * _heightExtend+15;
-        _basicInfoCell.view_TagContainer.frame = viewFrame;
-        
+//        CGRect frame = _basicInfoCell.contentView.frame;
+//        frame.size.height = MY_BASIC_INFO_CELL_HEIGHT + self.tagContainerHeight.constant;
+//        _basicInfoCell.contentView.frame = frame;
+//        
+//        
+//        CGRect viewFrame = _basicInfoCell.view_tagContainer.frame;
+//        viewFrame.size.height = self.tagContainerHeight.constant;
+//        _basicInfoCell.view_tagContainer.frame = viewFrame;
+        // Reset the tag container height
         [self  arrangeButtonWhenCallCellForRowAtIndex];
+        
+        // Set the size of the tag container
+        [self resizeTagContainer];
+        
+//        CGFloat y_origin = BASIC_INFO_BASE_HEIGHT + _tagContainerHeight; // 3 for the padding at the end
+//        // Make the new rect for the add tag view
+//        _basicInfoCell.view_baseAddTag.frame = CGRectMake(_basicInfoCell.view_baseAddTag.frame.origin.x, y_origin, _basicInfoCell.view_baseAddTag.frame.size.width, _basicInfoCell.view_baseAddTag.frame.size.height);
         
         return _basicInfoCell;
     }
@@ -299,8 +302,10 @@
     NSInteger indexSet = indexPath.section;
     
     if (indexSet == TABLE_SEC_INDEX_MY_BASIC_INFO) {
+        CGFloat height = BASIC_INFO_BASE_HEIGHT + ADD_TAG_BASE_HEIGHT + self.basicInfoCell.tagContainerHeight.constant;
+        NSLog(@"Info Cell Height: %f", height);
         
-        return MY_BASIC_INFO_CELL_HEIGHT + ((_counter-1) * _heightExtend)+15;
+        return height;
         
     }
     if (indexSet == TABLE_SEC_INDEX_MY_PLANNED_EVENTS) {
@@ -374,7 +379,7 @@
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     
     float tableViewHeight =   self.tableView.contentSize.height;
-    self.tableView.contentSize=CGSizeMake(self.tableView.contentSize.width, tableViewHeight+(_counter * _heightExtend));
+    self.tableView.contentSize=CGSizeMake(self.tableView.contentSize.width, tableViewHeight+(self.basicInfoCell.tagContainerHeight.constant));
     self.tableView.contentOffset=CGPointMake(0, _basicInfoCell.txtNewTag.frame.origin.y-100);
     
     return YES;
@@ -420,14 +425,14 @@
         //str1 = [str1.capitalizedString stringByAppendingString:str2.capitalizedString];
         
         
-        GTLEventtagendpointEventTag *tag = [[GTLEventtagendpointEventTag alloc]init];
+        GTLZeppaclientapiEventTag *tag = [[GTLZeppaclientapiEventTag alloc]init];
         tag.tagText = titleString;
         tag.ownerId = [[ZPAZeppaEventTagSingleton sharedObject]getCurrentUserId];
     
-       [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLEventtagendpointEventTag *tag, NSError *error) {
+    // TODO: implement adding tags from profile
+    
+       [[ZPAZeppaEventTagSingleton sharedObject] executeInsetEventTagWithEventTag:tag WithCompletion:^(GTLZeppaclientapiEventTag *tag, NSError *error) {
        
-        
-        
         
        }];
     
@@ -461,29 +466,28 @@
         [newButton setTag:TAGS_BUTTON_TAG];
         
         
-        _heightExtend = textSize.height+2*PADDING;
-        
         UIView *newView =[[UIView alloc]init];
         
         if (_tempArray.count!=0) {
             UIView *lastView =(UIView *)[_tempArray lastObject];
             [newView setFrame:CGRectMake(lastView.frame.origin.x+lastView.frame.size.width,lastView.frame.origin.y,textSize.width+2*PADDING,textSize.height+2*PADDING)];
             
-            if (newView.frame.origin.x+newButton.frame.size.width>300) {
-                
+            if (newView.frame.origin.x+newButton.frame.size.width>self.tableView.contentSize.width) {
                 
                 newView.frame =CGRectMake(PADDING, newView.frame.origin.y+newView.frame.size.height, newView.frame.size.width, newView.frame.size.height);
-                _counter++;
                 
-               
-                    [self resizeTagviewAndTableCell];
+                _counter++;
+                self.basicInfoCell.tagContainerHeight.constant += newView.frame.size.height;
+
+                [self resizeTagviewAndTableCell];
                 
             }
             
         }else{
             
         [newView setFrame:CGRectMake(0,PADDING,textSize.width+2*PADDING,textSize.height+2*PADDING)];
-            
+
+            self.basicInfoCell.tagContainerHeight.constant = newView.frame.size.height+(2*PADDING);
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
                 _counter = 1;
             [_tableView reloadData];
@@ -492,7 +496,7 @@
             
         }
         [newView addSubview:newButton];
-        [_basicInfoCell.view_TagContainer addSubview:newView];
+        [_basicInfoCell.view_tagContainer addSubview:newView];
         [_tempArray addObject:newView];
     }
     
@@ -502,6 +506,7 @@
     
     
     NSIndexPath *indexpath =[NSIndexPath indexPathForRow:0 inSection:0 ];
+    [self resizeTagContainer];
     [self.tableView reloadRowsAtIndexPaths:@[indexpath] withRowAnimation:UITableViewRowAnimationAutomatic];
     
 }
@@ -511,28 +516,43 @@
             [view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         }
     }
-    
+    // Reset the tag container height
     for (int j=0; j<_tempArray.count; j++) {
         UIView *view =[_tempArray objectAtIndex:j];
         UIButton *button = (UIButton *)[view viewWithTag:TAGS_BUTTON_TAG];
         CGRect frame = button.frame;
         
+        
         if (j==0) {
+            _counter=1;
             view.frame=CGRectMake(PADDING, PADDING, frame.size.width+PADDING, frame.size.height+PADDING);
+            self.basicInfoCell.tagContainerHeight.constant=view.frame.size.height + (2*PADDING);
         }
         else{
             UIView *preView =[_tempArray objectAtIndex:j-1];
             view.frame=CGRectMake(preView.frame.origin.x+preView.frame.size.width, preView.frame.origin.y, frame.size.width+PADDING, frame.size.height+PADDING);
-            if (view.frame.origin.x+view.frame.size.width>300) {
+            if (view.frame.origin.x+view.frame.size.width>self.tableView.contentSize.width) {
                 view.frame=CGRectMake(PADDING, view.frame.origin.y+view.frame.size.height, view.frame.size.width, view.frame.size.height);
-                //_counter++;
+                _counter++;
+                self.basicInfoCell.tagContainerHeight.constant+=view.frame.size.height;
             }
         }
-        [_basicInfoCell.view_TagContainer addSubview:view];
+        [_basicInfoCell.view_tagContainer addSubview:view];
     }
    
     
  }
+/*
+ * Resizes the tag container view and height constraints
+ */
+- (void) resizeTagContainer {
+    CGRect tcFrame = _basicInfoCell.view_tagContainer.frame;
+    CGFloat xOrigin = tcFrame.origin.x;
+    CGFloat yOrigin = tcFrame.origin.y;
+    CGFloat width = self.tableView.contentSize.width;
+    _basicInfoCell.view_tagContainer.frame = CGRectMake(xOrigin, yOrigin, width, self.basicInfoCell.tagContainerHeight.constant);
+    [self.view layoutIfNeeded];
+}
 
 
 - (IBAction)editBtnTapped:(UIBarButtonItem *)sender {
@@ -559,7 +579,7 @@
     
 }
 -(void)updateProfileTags:(NSNotification *)notify{
-    [[_basicInfoCell.view_TagContainer subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [[_basicInfoCell.view_tagContainer subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     [_tempArray removeAllObjects];
     [_currentUser.tagsArray removeAllObjects];

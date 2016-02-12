@@ -64,18 +64,30 @@
    
 }
 
+
+
 -(void)viewWillAppear:(BOOL)animated{
     
     _arrNotifications = [[[ZPANotificationSingleton sharedObject]getNotification]mutableCopy];
     notificationEventArr = [NSMutableArray array];
-    if ([_arrNotifications count]==0){
-        [self.tableView addSubview:_emptyActivityLabel];
-    }else{
-        [_emptyActivityLabel removeFromSuperview];
-    }
-    
-    [self.tableView reloadData];
+//<<<<<<< HEAD
+//    if ([_arrNotifications count]==0){
+//        [self.tableView addSubview:_emptyActivityLabel];
+//    }else{
+//        [_emptyActivityLabel removeFromSuperview];
+//    }
+//    
+//    [self.tableView reloadData];
+//=======
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(notificationReceived:)
+                                                 name:@"ZeppaNotification"
+                                               object:nil];
+//>>>>>>> auth
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -83,7 +95,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -91,8 +103,10 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    // Before navigating away, remove the notification observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-*/
+
 
 //****************************************************
 #pragma mark - UITableViewDataSource
@@ -153,7 +167,7 @@
 //    
 //    ZPAEventDetailVC *event = [[_eventDetailVc viewControllers] objectAtIndex:0];
 //    
-//    for (GTLZeppanotificationendpointZeppaNotification *notification in _arrNotifications) {
+//    for (GTLZeppaclientapiZeppaNotification *notification in _arrNotifications) {
 //        
 //       [notificationEventArr addObject:[[ZPAZeppaEventSingleton sharedObject]getEventById: [notification.eventId longLongValue]]];
 //    }
@@ -175,9 +189,9 @@
 //****************************************************
 -(void)onClickActivity:(NSInteger )index{
     
-    GTLZeppanotificationendpointZeppaNotification * notification = [_arrNotifications objectAtIndex:index];
+    GTLZeppaclientapiZeppaNotification * notification = [_arrNotifications objectAtIndex:index];
     
-    switch ([[ZPANotificationSingleton sharedObject]getNotificationTypeOrder:notification]) {
+    switch ([[ZPANotificationSingleton sharedObject]getNotificationTypeOrder:notification.type]) {
         case 0: //Mingle Request
         {
             ZPARequsetMinglersVC * requestMinglers = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPARequsetMinglersVC"];
@@ -195,7 +209,7 @@
         {
             ZPAUserProfileVC *userProfile = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAUserProfileVC"];
             
-            ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.userId longLongValue]];
+            ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];
             
             NSString * str = [NSString stringWithFormat:@"%@ %@", defaultZeppaUserInfo.zeppaUserInfo.givenName,defaultZeppaUserInfo.zeppaUserInfo.familyName];
             
@@ -234,7 +248,7 @@
             
         case 5: // Event Cancelled
             
-            [ZPAStaticHelper showAlertWithTitle:nil andMessage:@"Event Was Canceled..."];
+//            [ZPAStaticHelper showAlertWithTitle:nil andMessage:@"Event Was Canceled..."];
             break;
             
         case 6: // Event Updated (Unimplemented for now)
@@ -355,7 +369,7 @@
 //
 //}
 
--(void)showEventDetailViewController:(GTLZeppanotificationendpointZeppaNotification *)notification{
+-(void)showEventDetailViewController:(GTLZeppaclientapiZeppaNotification *)notification{
     
         _eventDetailVc = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
     
@@ -372,6 +386,25 @@
         [self presentViewController:_eventDetailVc animated:YES completion:NULL];
 
     
+    
+}
+
+/*
+ * When a notification is received and should be consumed
+ */
+- (void) notificationReceived:(NSNotification *)notification {
+    
+    // If a new notification was received,
+    if([notification.name isEqualToString:@"ZeppaNotification"]){
+        GTLZeppaclientapiZeppaNotification* notif = notification.object;
+        if([_arrNotifications containsObject:notif]){
+            // Object is already in there
+        } else {
+            // This notification is not in there, reset the notifications and reload
+            _arrNotifications = [[[ZPANotificationSingleton sharedObject]getNotification]mutableCopy];
+            [self.tableView reloadData];
+        }
+    }
     
 }
 
