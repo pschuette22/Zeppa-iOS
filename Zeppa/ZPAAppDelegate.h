@@ -7,15 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 #import "ZPALoginVC.h"
-#import "GTMOAuth2Authentication.h"
 #import "ZPAFetchNotificationTask.h"
 
 //@class GTLServiceTicket;
 //typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
 
 
-@interface ZPAAppDelegate : UIResponder <UIApplicationDelegate,ZPALoginVCDelegate> // GGLInstanceIDDelegate
+@interface ZPAAppDelegate : UIResponder <UIApplicationDelegate,ZPALoginVCDelegate,CLLocationManagerDelegate> // GGLInstanceIDDelegate
 
 
 @property (strong, nonatomic) UIWindow *window;

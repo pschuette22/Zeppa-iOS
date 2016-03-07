@@ -52,29 +52,29 @@
     self.imageView_EventHostProfilePic.layer.masksToBounds = YES;
     
 }
--(void)showDetailOnCell:(ZPAMyZeppaEvent *)zeppaEvent{
+-(void)showDetailOnCell:(ZPAEventInfoBase *)zeppaEvent{
     
-    ZPAMyZeppaUser *user = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaEvent.event.hostId longLongValue]];
+    ZPAUserInfoBase *userInfo = [zeppaEvent getHostInfo];
     
-    NSURL *profileImageURL = [NSURL URLWithString:user.endPointUser.userInfo.imageUrl];
+    NSURL *profileImageURL = [NSURL URLWithString:userInfo.userInfo.imageUrl];
     [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
     }];
-    _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
-    _lblEventTitle.text = zeppaEvent.event.title;
+    _lblEventHostName.text = [userInfo getDisplayName];
+    _lblEventTitle.text = zeppaEvent.zeppaEvent.title;
     
     
-    _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
+//    _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
     
   //  [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator];
     
     
     [_btnEventDuration.titleLabel setNumberOfLines:0];
-    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.event.start withEndTime:zeppaEvent.event.end];
+    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.zeppaEvent.start withEndTime:zeppaEvent.zeppaEvent.end];
     
     [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];
     
-    [_btnEventLocation setTitle:zeppaEvent.event.displayLocation forState:UIControlStateNormal];
+    [_btnEventLocation setTitle:zeppaEvent.zeppaEvent.displayLocation forState:UIControlStateNormal];
 
 }
 

@@ -34,6 +34,8 @@ extern NSString *const kZeppaGoogleAPINextSyncTokenKey;
 extern NSString *const kZeppaGoogleAPINextPageTokenKey;
 extern NSString *const kZeppaGoogleAPIItemsKey;
 extern NSString *const kZeppaGoogleAPIKindKey;
+extern NSString *const kZeppaGoogleAPIKey;
+
 
 //****************************************************
 #pragma mark - User Login keys
@@ -93,7 +95,14 @@ extern NSString *const kZeppaEventsSequenceKey;
 
 
 //****************************************************
-#pragma mark - Notifications Keys
+#pragma mark - UINotifications Keys
+//****************************************************
+extern NSString *const kNotifDidFinishFindFriendsTask;
+extern NSString *const kNotifDidUpdateLocation;
+
+
+//****************************************************
+#pragma mark - Zeppa Notifications Keys
 //****************************************************
 extern NSString *const kZeppaSettingSyncCalendarKey;
 extern NSString *const kZeppaSettingNotificationKey;
@@ -120,6 +129,22 @@ extern NSString *const kzeppacalendarSync;
 extern NSString *const kObserveEventsChangedKey;
 extern NSString *const kObserveMinglersChangedKey;
 extern NSString *const kObserveCommentsKey;
+
+
+//****************************************************
+#pragma mark - Pref Keys
+//****************************************************
+extern NSString *const kLocationLatitude;
+extern NSString *const kLocationLongitude;
+
+
+
+//****************************************************
+#pragma mark - Pref Keys
+//****************************************************
+extern NSString *const urlPrivacyPolicy;
+extern NSString *const urlTermsOfUse;
+
 
 
 

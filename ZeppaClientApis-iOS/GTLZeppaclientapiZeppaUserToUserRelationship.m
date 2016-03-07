@@ -13,11 +13,12 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLZeppaclientapiZeppaUserToUserRelationship (0 custom class methods, 7 custom properties)
+//   GTLZeppaclientapiZeppaUserToUserRelationship (0 custom class methods, 8 custom properties)
 
 #import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
 
 #import "GTLZeppaclientapiKey.h"
+#import "GTLZeppaclientapiZeppaUserInfo.h"
 
 // ----------------------------------------------------------------------------
 //
@@ -26,7 +27,7 @@
 
 @implementation GTLZeppaclientapiZeppaUserToUserRelationship
 @dynamic created, creatorId, identifier, key, relationshipType, subjectId,
-         updated;
+         updated, userInfo;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map = @{

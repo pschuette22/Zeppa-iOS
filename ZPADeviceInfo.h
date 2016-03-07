@@ -7,22 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZPAAppDelegate.h"
-#import "ZPAAuthenticatonHandler.h"
-#import "ZPAMyZeppaUser.h"
-#import "GTLZeppaclientapiDeviceInfo.h"
-#import "GTLQueryZeppaclientapi.h"
-#import "GTLServiceZeppaclientapi.h"
-#import "GTLZeppaclientapiCollectionResponseDeviceInfo.h"
 @interface ZPADeviceInfo : NSObject
+@property(nonatomic, strong) GTLZeppaclientapiDeviceInfo *device;
 
-@property (readonly)GTLServiceZeppaclientapi *deviceInfoService;
-@property(nonatomic, strong) GTLZeppaclientapiDeviceInfo *currentDevice;
-@property(readwrite) BOOL doUpdateToken;
+-(id) initWithDevice: (GTLZeppaclientapiDeviceInfo*) device;
 
-+(ZPADeviceInfo *)sharedObject;
--(void)setLoginDeviceForUser:(ZPAMyZeppaUser *)user;
--(void)updateDeviceInfoWithObject:(GTLZeppaclientapiDeviceInfo *)deviceInfo;
--(void)insertDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo;
--(void)removeDeviceInfoWithObject: (GTLZeppaclientapiDeviceInfo *)deviceInfo;
 @end

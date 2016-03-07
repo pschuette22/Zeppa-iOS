@@ -8,7 +8,7 @@
 
 #import "ZPAOtherEventAgendaCell.h"
 
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAZeppaEventSingleton.h"
 
 @implementation ZPAOtherEventAgendaCell
@@ -55,65 +55,50 @@
     
 }
 
--(void)showEventDetailsOnAgendaCell:(ZPAMyZeppaEvent * )zeppaEvents{
+-(void)showEventDetailsOnAgendaCell:(ZPAMyZeppaEvent * )zeppaEvent{
     
-    id zeppaUser = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaEvents.event.hostId longLongValue]];
+    ZPAUserInfoBase *hostInfo = [zeppaEvent getHostInfo];
     
-    if ([zeppaUser isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
+    NSURL *profileImageURL = [NSURL URLWithString:hostInfo.userInfo.imageUrl];
+    [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
-        ZPADefaulZeppatUserInfo * user = zeppaUser;
-        
-        NSURL *profileImageURL = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
-        [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            
-        }];
-        _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
-        
-    }else{
-        
-        ZPAMyZeppaUser * user = zeppaUser;
-        
-        NSURL *profileImageURL = [NSURL URLWithString:user.endPointUser.userInfo.imageUrl];
-        [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            
-        }];
-        _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
-    }
+    }];
+    _lblEventHostName.text = [hostInfo getDisplayName];
     
     
     
     
     
-    _lblEventTitle.text = zeppaEvents.event.title;
+    _lblEventTitle.text = zeppaEvent.zeppaEvent.title;
     
     
     _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
     
-    [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator withZeppaEvent:zeppaEvents];
+//    [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator withZeppaEvent:zeppaEvents];
     
     [_btnEventDuration.titleLabel setNumberOfLines:0];
     
     
-    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvents.event.start withEndTime:zeppaEvents.event.end];
+    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.zeppaEvent.start withEndTime:zeppaEvent.zeppaEvent.end];
     
     [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];
     
-    [_btnEventLocation setTitle:zeppaEvents.event.displayLocation forState:UIControlStateNormal];
+    [_btnEventLocation setTitle:zeppaEvent.zeppaEvent.displayLocation forState:UIControlStateNormal];
     
     
     
-    if ([zeppaEvents.relationship.isWatching boolValue] == true) {
-        [_btnWatch setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [_btnWatch setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
-    }
-    if ([zeppaEvents.relationship.isAttending boolValue] == true) {
-        [_btnJoin setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [_btnJoin setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
-    }
+//    if ([zeppaEvent.relationship.isWatching boolValue] == true) {
+//        [_btnWatch setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
+//    }
+//    else{
+//        [_btnWatch setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
+//    }
+//    if ([zeppaEvents.relationship.isAttending boolValue] == true) {
+//        [_btnJoin setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
+//    }
+//    else{
+//        [_btnJoin setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
+//    }
     
     
 

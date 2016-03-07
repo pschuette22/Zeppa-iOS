@@ -12,7 +12,7 @@
 #import "ZPAConfirmedMinglerCell.h"
 #import "ZPARequestMinglersCell.h"
 
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAZeppaUserSingleton.h"
 
 #import "ZPAFindMinglers.h"

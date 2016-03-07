@@ -34,7 +34,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSLog(@"%@",_minglerUserInfo.minglersIds);
+//    NSLog(@"%@",_minglerUserInfo.minglersIds);
     
     
 }
@@ -46,28 +46,28 @@
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-    
-    if ([segue.identifier isEqualToString:SEGUE_ID_SHOW_USERPROFILE]) {
-        
-        ZPAUserProfileVC *userProfile = segue.destinationViewController;
-        
-        ZPADefaulZeppatUserInfo * defaultZeppaUserInfo=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_minglerUserInfo.minglersIds objectAtIndex:indexPath.row] longLongValue]];
-        
-        NSString * str = [NSString stringWithFormat:@"%@ %@", defaultZeppaUserInfo.zeppaUserInfo.givenName,defaultZeppaUserInfo.zeppaUserInfo.familyName];
-        
-        NSLog(@"name %@",str);
-        
-        userProfile.userProfileInfo = defaultZeppaUserInfo;
-        
-        userProfile.userTagArray = [[[ZPAZeppaEventTagSingleton sharedObject] getZeppaTagForUser:[defaultZeppaUserInfo.userId longLongValue]]mutableCopy];
-        
-        NSLog(@"userTag %@",userProfile.userTagArray);
-    }
-    else{
-        //AddViewController *avc = segue.destinationViewController;
-    }
-    //     AddViewController *avc = segue.destinationViewController;
+//    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+//    
+//    if ([segue.identifier isEqualToString:SEGUE_ID_SHOW_USERPROFILE]) {
+//        
+//        ZPAUserProfileVC *userProfile = segue.destinationViewController;
+//        
+//        ZPADefaultZeppaUserInfo * defaultZeppaUserInfo=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_minglerUserInfo.relationship objectAtIndex:indexPath.row] longLongValue]];
+//        
+//        NSString * str = defaultZeppaUserInfo.getDisplayName;
+//        
+//        NSLog(@"name %@",str);
+//        
+//        userProfile.userProfileInfo = defaultZeppaUserInfo;
+//        
+//        userProfile.userTagArray = [[[ZPAZeppaEventTagSingleton sharedObject] getZeppaTagForUser:[defaultZeppaUserInfo.userId longLongValue]]mutableCopy];
+//        
+//        NSLog(@"userTag %@",userProfile.userTagArray);
+//    }
+//    else{
+//        //AddViewController *avc = segue.destinationViewController;
+//    }
+//    //     AddViewController *avc = segue.destinationViewController;
 }
 
 
@@ -77,27 +77,29 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return _minglerUserInfo.minglersIds.count ;
+//    return _minglerUserInfo.minglersIds.count ;
+    return 0;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString *mingelerCell = @"MinglerCell";
-    ZPACommonMinglersCell *cell = [tableView dequeueReusableCellWithIdentifier:mingelerCell];
-        
-    ZPADefaulZeppatUserInfo * user=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_minglerUserInfo.minglersIds objectAtIndex:indexPath.row] longLongValue]];
-        
-        cell.lbl_commonMinglersName.text =[NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
-        
-        NSURL *minglerImageUrl = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
-        [cell.imageView_CommonMinglersImage setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            
-            ///Do anything with image
-            
-        }];
-    
-   
-    return cell;
+//    static NSString *mingelerCell = @"MinglerCell";
+//    ZPACommonMinglersCell *cell = [tableView dequeueReusableCellWithIdentifier:mingelerCell];
+//        
+//    ZPADefaultZeppaUserInfo * user=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_minglerUserInfo.minglersIds objectAtIndex:indexPath.row] longLongValue]];
+//        
+//        cell.lbl_commonMinglersName.text =[NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
+//        
+//        NSURL *minglerImageUrl = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
+//        [cell.imageView_CommonMinglersImage setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//            
+//            ///Do anything with image
+//            
+//        }];
+//    
+//   
+//    return cell;
+    return nil;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
     

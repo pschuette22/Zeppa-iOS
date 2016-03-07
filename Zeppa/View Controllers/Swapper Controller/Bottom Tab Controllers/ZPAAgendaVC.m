@@ -9,24 +9,23 @@
 #import "ZPAAgendaVC.h"
 #import "ZPADateHelper.h"
 #import "ZPAMyEventAgendaCell.h"
+#import "ZPAEventInfoBase.h"
 #import "ZPAOtherEventAgendaCell.h"
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAEventDetailVC.h"
-#import "ZPADefaulZeppatEventInfo.h"
+#import "ZPADefaultZeppaEventInfo.h"
 
 
 @interface ZPAAgendaVC ()
 
 @property (retain, nonatomic) UIRefreshControl *refreshControl;
-@property (nonatomic, strong)NSMutableArray *arrAttendingEvents;
+@property (nonatomic, strong) NSArray *arrAttendingEvents;
 @property (nonatomic, strong)UINavigationController *eventDetailNavigation;
 @property (retain,nonatomic) IBOutlet UILabel *emptyAgendaLabel;
 
 @end
 
-@implementation ZPAAgendaVC{
-     ZPAMyZeppaEvent *myEvent;
-}
+@implementation ZPAAgendaVC
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,41 +40,34 @@
 {
     
     [super viewDidLoad];
-    
-    _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
+
+//    _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
     // Do any additional setup after loading the view.
-    self.title = NSLocalizedString(@"Watching", nil);
+//    self.title = NSLocalizedString(@"Watching", nil);
     
     ///Set background color of uiview
     [self.view setBackgroundColor:[ZPAStaticHelper backgroundTextureColor]];
     
-//<<<<<<< HEAD
-//    _emptyAgendaLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
-//    _emptyAgendaLabel.text= @"Your agenda is empty";
-//    _emptyAgendaLabel.backgroundColor=[UIColor clearColor];
-//    _emptyAgendaLabel.textAlignment = NSTextAlignmentCenter;
-//=======
+    _emptyAgendaLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 450)];
+    _emptyAgendaLabel.text= @"So much Room for Activities!\nJoin, Watch, or Start one and it'll show up here";
+    _emptyAgendaLabel.backgroundColor=[UIColor clearColor];
+    _emptyAgendaLabel.numberOfLines=2;
+    _emptyAgendaLabel.textAlignment = NSTextAlignmentCenter;
     // Hold the currently logged in user
     _currentUser = [ZPAAppData sharedAppData].loggedInUser;
-//>>>>>>> auth
     
     _refreshControl = [[UIRefreshControl alloc]init];
-    _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
+    _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Fetching Activities..."];
     [self.tableView addSubview:_refreshControl];
     
     [_refreshControl addTarget:self action:@selector(refreshTable:) forControlEvents:UIControlEventValueChanged];
     
     
-    
-    
+    [self updateEvents];
+    // TODO: register for notifications when user joins/ leaves events
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didReceiveNotification:) name:kZeppaEventsUpdateNotificationKey object:nil];
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    // Set the objects for relevant events
-    _arrAttendingEvents = [[[ZPAZeppaEventSingleton sharedObject]getInterestingEventMediators]mutableCopy];
-    [_tableView reloadData];
-    
-}
 
 - (void) viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -88,23 +80,25 @@
 }
 
 
-//-(void)dealloc{
-//    Remove any notification observers that were added
-//}
+// If the view is deallocated, stop observing
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
-
+// Get ready to show event details
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    // Get ready to show event details
+    // check to make sure this is headed to an Event Detail View Controller
+    if([segue.destinationViewController.restorationIdentifier isEqualToString:@"ZPAEventDetailVC"]){
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        ZPAMyZeppaEvent *zeppaEvent = _arrAttendingEvents[indexPath.row];
+        ZPAEventDetailVC *eventDetailVC = (ZPAEventDetailVC*) segue.destinationViewController;
+        eventDetailVC.eventDetail = zeppaEvent;
+    }
+    
+}
 
 //****************************************************
 #pragma mark - UITableViewDataSource Methods
@@ -117,9 +111,11 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
-
-    return _arrAttendingEvents.count;
+    if(_arrAttendingEvents){
+        return _arrAttendingEvents.count;
+    } else {
+        return 0;
+    }
 }
 
 
@@ -128,11 +124,11 @@
     
     NSInteger rowIndex = indexPath.row;
     
-    myEvent = [_arrAttendingEvents objectAtIndex:rowIndex];
-    NSLog(@"%@",myEvent.event.hostId);
-    NSLog(@"%@",_currentUser.endPointUser.identifier);
+    ZPAEventInfoBase* eventInfo = [_arrAttendingEvents objectAtIndex:rowIndex];
+//    ZPAUserInfoBase* userInfo = [eventInfo getHostInfo];
     
-    if( [myEvent.event.hostId isEqualToNumber: _currentUser.endPointUser.identifier]){
+    
+    if([eventInfo isMyEvent]){
         
         ZPAMyEventAgendaCell *myEventAgendaCell = [tableView dequeueReusableCellWithIdentifier:@"ZPAMyEventAgendaCell"];
         
@@ -141,13 +137,11 @@
         return myEventAgendaCell;
         
     }else{
-        _otherEventAgendaCell = [tableView dequeueReusableCellWithIdentifier:@"ZPAOtherEventAgendaCell"];
-       
+        ZPAOtherEventAgendaCell *otherEventAgendaCell = [tableView dequeueReusableCellWithIdentifier:@"ZPAOtherEventAgendaCell"];
 
+        [otherEventAgendaCell showEventDetailsOnAgendaCell:[_arrAttendingEvents objectAtIndex:rowIndex]];
         
-        [_otherEventAgendaCell showEventDetailsOnAgendaCell:[_arrAttendingEvents objectAtIndex:rowIndex]];
-        
-         return _otherEventAgendaCell;
+         return otherEventAgendaCell;
         
     }
     
@@ -174,80 +168,96 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    myEvent = [_arrAttendingEvents objectAtIndex:indexPath.row];
+    ZPAEventInfoBase* eventInfo = [_arrAttendingEvents objectAtIndex:indexPath.row];
     
-    if( [myEvent.event.hostId isEqualToNumber: _currentUser.endPointUser.identifier]){
-        
+    if( [eventInfo isMyEvent]){
         return 95.0f;
-        
     }else{
-        
         return 142.0f;
     }
-    
-    
 }
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
-    
-    ZPAEventDetailVC *eventDetail= [[_eventDetailNavigation viewControllers] objectAtIndex:0];
-    
-    eventDetail.eventDetail= [_arrAttendingEvents objectAtIndex:indexPath.row];
 
-    
-    [self presentViewController:_eventDetailNavigation animated:YES completion:NULL];
-    
-    
+    // Set the selected event when touched
+//    ZPAEventInfoBase* eventInfo = [_arrAttendingEvents objectAtIndex:indexPath.row];
+    // Handle anything else from here?
     
 }
 
 ///**********************************************
 #pragma mark - Action Methods
 ///**********************************************
+
+-(void) didReceiveNotification:(NSNotification *)notif {
+
+    if([notif.name isEqualToString:kZeppaEventsUpdateNotificationKey]) {
+        [self updateEvents];
+    }
+    
+}
+
+/**
+ * Notify the controller that interesting events changed
+ */
+-(void)updateEvents {
+    
+    _arrAttendingEvents = [[ZPAZeppaEventSingleton sharedObject] getInterestingEventMediators];
+//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    if ([_arrAttendingEvents count] == 0){
+        //add it to view controller
+        [self.tableView addSubview:_emptyAgendaLabel];
+    }else{
+        [_emptyAgendaLabel removeFromSuperview];
+        //_emptyFeedLabel.hidden = true;
+    }
+    [self.tableView reloadData];
+    
+}
+
 -(void)joinBtnTapped:(UIButton *)sender{
     
     
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    myEvent = [_arrAttendingEvents objectAtIndex:indexPath.row];
-    
-    myEvent.isAgenda = YES;
-    
-    if (![myEvent.relationship.isAttending boolValue] == true) {
-        [sender setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
-        [_otherEventAgendaCell.btnWatch setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [_otherEventAgendaCell.btnWatch setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
-        [sender setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
-    }
-    
-    [[ZPADefaulZeppatEventInfo sharedObject]onJoinButtonClicked:myEvent.relationship];
-    
-    [_tableView reloadData];
+//    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
+//    myEvent = [_arrAttendingEvents objectAtIndex:indexPath.row];
+//    
+//    myEvent.isAgenda = YES;
+//    
+//    if (![myEvent.relationship.isAttending boolValue] == true) {
+//        [sender setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
+//        [_otherEventAgendaCell.btnWatch setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
+//    }
+//    else{
+//        [_otherEventAgendaCell.btnWatch setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
+//        [sender setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
+//    }
+//    
+//    [[ZPADefaulZeppatEventInfo sharedObject]onJoinButtonClicked:myEvent.relationship];
+//    
+//    [_tableView reloadData];
 
     
 }
+
 -(void)watchBtnTapped:(UIButton *)sender{
     
     
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    myEvent = [_arrAttendingEvents objectAtIndex:indexPath.row];
-    
-    if (![myEvent.relationship.isWatching boolValue] == true) {
-        [sender setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [sender setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
-    }
-    [[ZPADefaulZeppatEventInfo sharedObject]onWatchButtonClicked:myEvent.relationship];
-    
-    [_tableView reloadData];
-    
+//    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
+//    myEvent = [_arrAttendingEvents objectAtIndex:indexPath.row];
+//    
+//    if (![myEvent.relationship.isWatching boolValue] == true) {
+//        [sender setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
+//    }
+//    else{
+//        [sender setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
+//    }
+//    [[ZPADefaulZeppatEventInfo sharedObject]onWatchButtonClicked:myEvent.relationship];
+//    
+//    [_tableView reloadData];
+//    
 
-    
 }
 
 // to get index path of Button.
@@ -269,8 +279,7 @@
     
     
     [_refreshControl endRefreshing];
-    _arrAttendingEvents = [[[ZPAZeppaEventSingleton sharedObject]getInterestingEventMediators]mutableCopy];
-    [self.tableView reloadData];
+    [self updateEvents];
 }
 
 

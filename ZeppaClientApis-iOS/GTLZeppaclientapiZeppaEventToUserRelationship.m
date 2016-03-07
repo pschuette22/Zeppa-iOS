@@ -13,11 +13,12 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLZeppaclientapiZeppaEventToUserRelationship (0 custom class methods, 13 custom properties)
+//   GTLZeppaclientapiZeppaEventToUserRelationship (0 custom class methods, 14 custom properties)
 
 #import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
 
 #import "GTLZeppaclientapiKey.h"
+#import "GTLZeppaclientapiZeppaEvent.h"
 
 // ----------------------------------------------------------------------------
 //
@@ -25,9 +26,9 @@
 //
 
 @implementation GTLZeppaclientapiZeppaEventToUserRelationship
-@dynamic created, eventHostId, eventId, expires, identifier, invitedByUserId,
-         isAttending, isRecommended, isWatching, key, updated, userId,
-         wasInvited;
+@dynamic created, event, eventHostId, eventId, expires, identifier,
+         invitedByUserId, isAttending, isRecommended, isWatching, key, updated,
+         userId, wasInvited;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map = @{

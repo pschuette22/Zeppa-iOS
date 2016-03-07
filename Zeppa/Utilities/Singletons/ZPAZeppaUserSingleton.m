@@ -7,13 +7,14 @@
 //
 
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
-
+#import "ZPADefaultZeppaUserInfo.h"
 
 
 static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
 
-@implementation ZPAZeppaUserSingleton
+@implementation ZPAZeppaUserSingleton {
+    ZPAMyZeppaUser *_zeppaUser;
+}
 
 +(ZPAZeppaUserSingleton *)sharedObject{
     if (zeppaUserSingleton == nil) {
@@ -32,25 +33,14 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     _heldUserMediators = nil;
 }
 
--(NSNumber *)userId{
-    static  NSNumber *userIdentifier;
-    if (userIdentifier == nil) {
-        userIdentifier = [ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier;
-    }
-    return userIdentifier;
-    
-}
--(NSNumber *)getUserId{
-    
-    return [ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier;
-}
+
 -(NSArray *)getZeppaMinglerUsers{
     
     NSMutableArray *friendList = [NSMutableArray array];
     
-    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
+    for (ZPADefaultZeppaUserInfo *userInfo in _heldUserMediators) {
         
-        if (userInfo.isMingling) {
+        if (userInfo.isFriend) {
             
             [friendList addObject:userInfo];
             
@@ -63,43 +53,18 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     
 }
 
--(NSArray *)getZeppaRecognizedEmails{
-    
-    NSMutableArray *emailList = [NSMutableArray array];
-    
-//    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
-//        
-//        if (userInfo.zeppaUserInfo.googleAccountEmail.length>0) {
-//            [emailList addObject:userInfo.zeppaUserInfo.googleAccountEmail];
-//        }
-//    }
-    return emailList;
-    
-}
 
--(NSArray *)getZeppaRecognizedNumbers{
-    
-    NSMutableArray *numberList = [NSMutableArray array];
-    
-//    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
-//        
-//        if (userInfo.zeppaUserInfo.primaryUnformattedNumber.length>0) {
-//            [numberList addObject:userInfo.zeppaUserInfo.primaryUnformattedNumber];
-//        }
-//    }
-    return numberList;
-}
+
 
 
 -(NSArray *)getPossibleFriendInfoMediators{
     
     NSMutableArray *friendsList = [NSMutableArray array];
-    for (ZPADefaulZeppatUserInfo *user in _heldUserMediators) {
+    for (ZPADefaultZeppaUserInfo *user in _heldUserMediators) {
         
-        if (![user isMingling] && (![user requestPending] || ([user requestPending] && [user didSendRequest]))) {
+        if (![user isFriend] && (![user isPendingRequest] || ([user isPendingRequest] && [user didSendRequest]))) {
             
             [friendsList addObject:user];
-            
             
         }
     }
@@ -112,9 +77,9 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     
     
     NSMutableArray *friendsList = [NSMutableArray array];
-    for (ZPADefaulZeppatUserInfo *user in _heldUserMediators) {
+    for (ZPADefaultZeppaUserInfo *user in _heldUserMediators) {
         
-        if ([user requestPending] && ![user didSendRequest]) {
+        if ([user isPendingRequest] && ![user didSendRequest]) {
             
             [friendsList addObject:user];
             
@@ -127,35 +92,69 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
     
 }
 
+-(GTLServiceTicket *) updateUserLocation: (CLLocation *)location withCompletion:(ZPAUserEndpointServiceCompletionBlock)completion {
+    
+    if(_zeppaUser==nil){
+        return nil;
+    }
+    
+    // Peep this real quick
+    _zeppaUser.endPointUser.latitude = [NSDecimalNumber numberWithDouble:location.coordinate.latitude];
+    _zeppaUser.endPointUser.longitude = [NSDecimalNumber numberWithDouble:location.coordinate.longitude];
+    
+    GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForUpdateZeppaUserWithObject:_zeppaUser.endPointUser idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    
+    GTLServiceTicket *ticket =[[self zeppaUserService] executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUser *zeppaUser, NSError *error) {
+        
+        if (zeppaUser && zeppaUser.key){
+            
+                GTLZeppaclientapiZeppaUser *response = zeppaUser;
+                GTLZeppaclientapiZeppaUserInfo *responseInfo= [zeppaUser userInfo];
+
+                _zeppaUser.endPointUser = response;
+                _zeppaUser.endPointUser.userInfo = responseInfo;
+            
+                completion(ticket, _zeppaUser, error);
+        }
+        
+        // If there is a defined completion block, call it
+        if(completion) {
+            completion(ticket, nil, error);
+        }
+    }];
+    return ticket;
+    
+}
+
 -(void)addDefaultZeppaUserMediatorWithUserInfo:(GTLZeppaclientapiZeppaUserInfo *)userInfo andRelationShip:(GTLZeppaclientapiZeppaUserToUserRelationship *)relation{
     
     NSLog(@"Relationship id:%@",relation.identifier);
     NSLog(@"UserId  id:%@",userInfo.key.parent.identifier);
     id mingler = [self getZPAUserMediatorById:[userInfo.key.parent.identifier longLongValue]];
    
-    if (mingler &&  [mingler isMemberOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = (ZPADefaulZeppatUserInfo *)mingler;
+    if (mingler &&  [mingler isMemberOfClass:[ZPADefaultZeppaUserInfo class]]) {
+        ZPADefaultZeppaUserInfo *defaultZeppaUserInfo = (ZPADefaultZeppaUserInfo *)mingler;
         defaultZeppaUserInfo.relationship = relation;
         return;
     }
     if (!mingler) {
         
-        ZPADefaulZeppatUserInfo *defaultUserInfo = [[ZPADefaulZeppatUserInfo alloc]init];
-        defaultUserInfo.zeppaUserInfo = userInfo;
+        ZPADefaultZeppaUserInfo *defaultUserInfo = [[ZPADefaultZeppaUserInfo alloc]init];
+        defaultUserInfo.userInfo = userInfo;
         defaultUserInfo.relationship = relation;
         [_heldUserMediators addObject:defaultUserInfo];
     }
 }
 -(void)removeHeldMediatorById:(long long)userId{
     
-    ZPADefaulZeppatUserInfo *removeUser = nil;
+    ZPADefaultZeppaUserInfo *removeUser = nil;
     if(!_heldUserMediators && _heldUserMediators.count>0){
         return;
     }else{
         
-        for (ZPADefaulZeppatUserInfo *defaultZeppaUser in _heldUserMediators) {
+        for (ZPADefaultZeppaUserInfo *defaultZeppaUser in _heldUserMediators) {
             
-            if ([defaultZeppaUser.zeppaUserInfo.key.identifier longLongValue] == userId) {
+            if ([defaultZeppaUser.userId longLongValue] == userId) {
                 removeUser = defaultZeppaUser;
                 break;
             }
@@ -176,22 +175,42 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
             return _zeppaUser;
     }
     
-    for (ZPADefaulZeppatUserInfo *userInfo in _heldUserMediators) {
+    for (ZPADefaultZeppaUserInfo *userInfo in _heldUserMediators) {
         if ([userInfo.userId longLongValue] == userId) {
             
-            ///it return ZPADefaulZeppatUserInfo object.
+            ///it return ZPADefaultZeppaUserInfo object.
             return userInfo;
         }
     }
     return nil;
 }
 
+-(ZPAMyZeppaUser*) setMyZeppaUser:(ZPAMyZeppaUser*)zeppaUser {
+    if(zeppaUser){
+        _zeppaUser = zeppaUser;
+    }
+    
+    return zeppaUser;
+}
+
+
+// Get the singletons held Zeppa User. may be nil
+-(ZPAMyZeppaUser*) getMyZeppaUser {
+    return _zeppaUser;
+}
+
+- (NSNumber*) getMyZeppaUserIdentifier {
+    if(!_zeppaUser){
+        return [NSNumber numberWithLong:-1];
+    }
+    return _zeppaUser.endPointUser.identifier;
+}
 
 -(NSArray *)getMinglersFrom:(NSArray *)userIdArray{
     NSMutableArray * user = [NSMutableArray array];
     
     for (int i= 0 ; i<userIdArray.count; i++) {
-        ZPADefaulZeppatUserInfo * userInfo = [self getZPAUserMediatorById:[[userIdArray objectAtIndex:i] longLongValue]];
+        ZPADefaultZeppaUserInfo * userInfo = [self getZPAUserMediatorById:[[userIdArray objectAtIndex:i] longLongValue]];
         if (userInfo) {
              [user addObject:userInfo];
         }
@@ -237,7 +256,7 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
 
 -(GTLServiceTicket *)getCurrentZeppaUserWithCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion
 {
-   __weak typeof(self)  weakSelf = self;
+    
     GTLQueryZeppaclientapi *query = [GTLQueryZeppaclientapi queryForFetchCurrentZeppaUserWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
     
     // Peep this real quick
@@ -253,7 +272,7 @@ static ZPAZeppaUserSingleton *zeppaUserSingleton = nil;
                 ZPAMyZeppaUser *user = [[ZPAMyZeppaUser alloc]init];
                 user.endPointUser = response;
                 user.endPointUser.userInfo = responseInfo;
-                weakSelf.zeppaUser = user;
+                _zeppaUser = user;
                 completion(ticket, user, error);
             } else {
                 // Error

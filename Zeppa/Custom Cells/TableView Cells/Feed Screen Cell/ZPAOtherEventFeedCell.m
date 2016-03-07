@@ -8,7 +8,8 @@
 
 #import "ZPAOtherEventFeedCell.h"
 
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
+#import "ZPADefaultZeppaEventInfo.h"
 #import "ZPAZeppaEventSingleton.h"
 
 @implementation ZPAOtherEventFeedCell
@@ -54,49 +55,33 @@
     self.imageView_EventHostProfilePic.layer.masksToBounds = YES;
     
 }
--(void)showDetailOnCell:(ZPAMyZeppaEvent *)zeppaEvent{
+-(void)showDetailOnCell:(ZPADefaultZeppaEventInfo *)zeppaEvent{
     
-    id zeppaUser = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaEvent.event.hostId longLongValue]];
+    ZPADefaultZeppaUserInfo* zeppaUser = zeppaEvent.getHostInfo;
     
-    if ([zeppaUser isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        
-        ZPADefaulZeppatUserInfo * user = zeppaUser;
-        
-        NSURL *profileImageURL = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
-        [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            
-        }];
-        _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
-        
-    }else{
-        
-        ZPAMyZeppaUser * user = zeppaUser;
-        
-        NSURL *profileImageURL = [NSURL URLWithString:user.endPointUser.userInfo.imageUrl];
-        [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            
-        }];
-        _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
-    }
-    
-        _lblEventTitle.text = zeppaEvent.event.title;
-        
-        
-        _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
-        
-    [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator withZeppaEvent:zeppaEvent];
     
         
+    NSURL *profileImageURL = [NSURL URLWithString:zeppaUser.userInfo.imageUrl];
+    [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
-        NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.event.start withEndTime:zeppaEvent.event.end];
-        
+    }];
     
-        [_btnEventDuration.titleLabel setNumberOfLines:0];
-        [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];
+    _lblEventHostName.text = zeppaUser.getDisplayName;
+    _lblEventTitle.text = zeppaEvent.zeppaEvent.title;
+    _imageView_ConflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
         
-        [_btnEventLocation setTitle:zeppaEvent.event.displayLocation forState:UIControlStateNormal];
+//    [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator withZeppaEvent:zeppaEvent];
+    
+    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.zeppaEvent.start withEndTime:zeppaEvent.zeppaEvent.end];
+    
+
+    [_btnEventDuration.titleLabel setNumberOfLines:0];
+    [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];
+    
+    [_btnEventLocation setTitle:zeppaEvent.zeppaEvent.displayLocation forState:UIControlStateNormal];
         
    
+   // Set quick action bar based on relationship info
     if ([zeppaEvent.relationship.isWatching boolValue] == true) {
         [_watchBtn setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
     }

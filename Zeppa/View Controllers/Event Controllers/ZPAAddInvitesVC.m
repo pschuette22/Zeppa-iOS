@@ -12,7 +12,7 @@
 #import "UIImageView+WebCache.h"
 #import "GTLZeppaclientapiZeppaUserInfo.h"
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 
 
 @interface ZPAAddInvitesVC ()
@@ -50,30 +50,31 @@
    
     
     ///Insert Dummy Invitees candidate for now
-    self.arrInviteesCandidate = [[[ZPAZeppaUserSingleton sharedObject] getZeppaMinglerUsers] mutableCopy];
-    
-    
-    NSMutableArray * arr = [NSMutableArray arrayWithArray:_arrInviteesCandidate];
-    int i =0;
-    for (ZPADefaulZeppatUserInfo *UserInfo in arr) {
-        i ++;
-        if (_zeppaEvent && [UserInfo.userId isEqualToNumber:_zeppaEvent.event.hostId]) {
-            
-            [_arrInviteesCandidate removeObject:UserInfo];
-        }
-        for (NSString * invitedUser in _zeppaEvent.event.invitedUserIds) {
-            
-            if ([invitedUser isEqualToString:[UserInfo.userId stringValue]]) {
-                 [_arrInviteesCandidate removeObject:UserInfo];
-                
-                if(_arrInviteesCandidate.count ==0) {
-                    
-                }
-            }
-        }
-    }
+//    self.arrInviteesCandidate = [[[ZPAZeppaUserSingleton sharedObject] getZeppaMinglerUsers] mutableCopy];
+//    
+//    
+//    NSMutableArray * arr = [NSMutableArray arrayWithArray:_arrInviteesCandidate];
+//    int i =0;
+//    for (ZPADefaultZeppaUserInfo *userInfo in arr) {
+//        i ++;
+//        if (_zeppaEvent && [userInfo.userId isEqualToNumber:_zeppaEvent.event.hostId]) {
+//            
+//            [_arrInviteesCandidate removeObject:userInfo];
+//        }
+//        for (NSString * invitedUser in _zeppaEvent.event.invitedUserIds) {
+//            
+//            if ([invitedUser isEqualToString:[UserInfo.userId stringValue]]) {
+//                 [_arrInviteesCandidate removeObject:UserInfo];
+//                
+//                if(_arrInviteesCandidate.count ==0) {
+//                    
+//                }
+//            }
+//        }
+//    }
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
    // [self performSegueWithIdentifier:@"unwindToEvents" sender:self];
     
     if (_delegate && [_delegate respondsToSelector:@selector(noOfInvitees)]) {
@@ -119,7 +120,7 @@
     _addInviteCell = [tableView dequeueReusableCellWithIdentifier:strAddInviteCellId];
     _addInviteCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    ZPADefaulZeppatUserInfo *userInfo = [self.arrInviteesCandidate objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [self.arrInviteesCandidate objectAtIndex:indexPath.row];
     if ([_invitesUserIdArray containsObject:userInfo.userId]) {
         _addInviteCell.btnToggleCheckmark.selected = YES;
     }else{
@@ -185,7 +186,7 @@
     _addInviteCell = [tableView dequeueReusableCellWithIdentifier:strAddInviteCellId];
 
     
-    ZPADefaulZeppatUserInfo *userInfo = [self.arrInviteesCandidate objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [self.arrInviteesCandidate objectAtIndex:indexPath.row];
     
     
     if (![_invitesUserIdArray containsObject:userInfo.userId]) {
@@ -221,7 +222,7 @@
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:rootViewPoint];
     NSLog(@"%ld",(long)indexPath.row);
     
-    ZPADefaulZeppatUserInfo *userInfo = [self.arrInviteesCandidate objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [self.arrInviteesCandidate objectAtIndex:indexPath.row];
     
     
     if (sender.selected == NO) {

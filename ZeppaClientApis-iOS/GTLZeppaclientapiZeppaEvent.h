@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLZeppaclientapiZeppaEvent (0 custom class methods, 19 custom properties)
+//   GTLZeppaclientapiZeppaEvent (0 custom class methods, 21 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -49,6 +49,8 @@
 
 @property (nonatomic, retain) NSArray *invitedUserIds;  // of NSNumber (longLongValue)
 @property (nonatomic, retain) GTLZeppaclientapiKey *key;
+@property (nonatomic, retain) NSNumber *latitude;  // floatValue
+@property (nonatomic, retain) NSNumber *longitude;  // floatValue
 @property (nonatomic, copy) NSString *mapsLocation;
 @property (nonatomic, copy) NSString *privacy;
 @property (nonatomic, retain) NSNumber *start;  // longLongValue

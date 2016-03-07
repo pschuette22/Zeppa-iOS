@@ -8,6 +8,8 @@
 
 #import "ZPAMyEventAgendaCell.h"
 #import "ZPAZeppaEventSingleton.h"
+#import "ZPAEventInfoBase.h"
+
 @implementation ZPAMyEventAgendaCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -52,23 +54,25 @@
     
 }
 
--(void)showEventDetailsOnAgendaCell:(ZPAMyZeppaEvent * )zeppaEvents{
+-(void)showEventDetailsOnAgendaCell:(ZPAEventInfoBase * )zeppaEvent{
     
-    ZPAMyZeppaUser *user = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[zeppaEvents.event.hostId longLongValue]];
+    ZPAUserInfoBase *userInfo = [zeppaEvent getHostInfo];
     
-    NSURL *profileImageURL = [NSURL URLWithString:user.endPointUser.userInfo.imageUrl];
+    
+    NSURL *profileImageURL = [NSURL URLWithString:userInfo.userInfo.imageUrl];
     [_imageView_EventHostProfilePic setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
     }];
-    _lblEventHostName.text = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
-    _lblEventTitle.text = zeppaEvents.event.title;
+    _lblEventHostName.text = userInfo.getDisplayName;
+    
+    _lblEventTitle.text = zeppaEvent.zeppaEvent.title;
     // _imageView_ConflictIndicator = zeppaEvent.;
-    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvents.event.start withEndTime:zeppaEvents.event.end];
+    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.zeppaEvent.start withEndTime:zeppaEvent.zeppaEvent.end];
     
     [_btnEventDuration.titleLabel setNumberOfLines:0];
     [_btnEventDuration setTitle:durationString forState:UIControlStateNormal];
     
-    [_btnEventLocation setTitle:zeppaEvents.event.displayLocation forState:UIControlStateNormal];
+    [_btnEventLocation setTitle:zeppaEvent.zeppaEvent.displayLocation forState:UIControlStateNormal];
     
    // [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_ConflictIndicator];
     

@@ -86,8 +86,8 @@
     {
         ZPAMyZeppaUser *user = [ZPAAppData sharedAppData].loggedInUser;
         ZPALeftMenuProfileCell *leftMenuProfileCell = [tableView dequeueReusableCellWithIdentifier:@"ZPALeftMenuProfileCell"];
-        if (user.profileImage) {
-            leftMenuProfileCell.imageView_Profile.image = user.profileImage;
+        if (user.userInfo.imageUrl) {
+            leftMenuProfileCell.imageView_Profile.image = user.image;
         }
         else{
             NSURL *profileImageURL = [NSURL URLWithString:user.endPointUser.userInfo.imageUrl];
@@ -111,7 +111,7 @@
     {
         ZPALeftMenuItemCell *leftMenuItemHomeCell = [tableView dequeueReusableCellWithIdentifier:@"ZPALeftMenuItemCell"];
         leftMenuItemHomeCell.imageView_Item.image = [UIImage imageNamed:@"ic_home"];
-        leftMenuItemHomeCell.lblMenuItem.text = @"Home";
+        leftMenuItemHomeCell.lblMenuItem.text = @"Activities";
         
         if (_currentSelectedIndex == indexRow) {
             leftMenuItemHomeCell.lblMenuItem.textColor = [UIColor whiteColor];
@@ -127,7 +127,7 @@
     {
         ZPALeftMenuItemCell *leftMenuItemMinglersCell = [tableView dequeueReusableCellWithIdentifier:@"ZPALeftMenuItemCell"];
         leftMenuItemMinglersCell.imageView_Item.image = [UIImage imageNamed:@"ic_minglers"];
-        leftMenuItemMinglersCell.lblMenuItem.text = @"Minglers";
+        leftMenuItemMinglersCell.lblMenuItem.text = @"Friends";
         
         if (_currentSelectedIndex == indexRow) {
             leftMenuItemMinglersCell.lblMenuItem.textColor = [UIColor whiteColor];

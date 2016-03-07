@@ -9,7 +9,7 @@
 #import "ZPASplitVC.h"
 #import "ZPASplitViewProtocol.h"
 
-#import "ZPASwapperVC.h"
+#import "ZPAHomeTabController.h"
 #import "ZPAMyProfileVC.h"
 #import "ZPAFriendListVC.h"
 #import "ZPAFeedbackVC.h"
@@ -27,15 +27,15 @@
 @interface ZPASplitVC ()<UIGestureRecognizerDelegate,ZPASplitViewProtocol>
 
 @property (nonatomic, strong) ZPALeftMenuVC         * leftMenuVC;
-@property (nonatomic, strong) ZPASwapperVC          * swapperVC;
 @property (nonatomic, strong) ZPAMyProfileVC        * myProfileVC;
+@property (nonatomic, strong) ZPAHomeTabController  * homeTabController;
 @property (nonatomic, strong) ZPAFriendListVC       * minglersVC;
 @property (nonatomic, strong) ZPAFeedbackVC         * feedbackVC;
 @property (nonatomic, strong) ZPASettingsVC         * settingsVC;
 
 
 @property (nonatomic, strong) UINavigationController  * myProfileNavC;
-@property (nonatomic, strong) UINavigationController  * extendABidNavC;
+@property (nonatomic, strong) UINavigationController  * homeNavController;
 @property (nonatomic, strong) UINavigationController  * minglersNavC;
 @property (nonatomic, strong) UINavigationController  * feedbackNavC;
 @property (nonatomic, strong) UINavigationController  * settingsNavC;
@@ -83,6 +83,8 @@
 
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+
     NSLog(@"selected Index %ld",(long)_selectedMenuIndex);
 }
 
@@ -446,7 +448,7 @@
         
         // Are you more than halfway? If so, show the panel when done dragging by setting this value to YES (1).
         //  _showPanel = abs([sender view].center.x - _centerViewController.view.frame.size.width/2) > _centerViewController.view.frame.size.width/2;
-        _showPanel = fabs([sender view].frame.origin.x + [sender view].frame.size.width) > _swapperVC.view.frame.size.width/2;
+        _showPanel = fabs([sender view].frame.origin.x + [sender view].frame.size.width) > _homeTabController.view.frame.size.width/2;
         
         // Allow dragging only in x-coordinates by only updating the x-coordinate with translation position.
         CGRect panelFrame = [sender view].frame;
@@ -514,14 +516,15 @@
             }
             else{
                 ///Replace Minglers view with the currently displayed View behind Menu
-                if (!self.swapperVC) {
-                    self.swapperVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPASwapperVC"];
-                    self.swapperVC.splitViewDelegate = self;
+                if (!self.homeTabController) {
+                    self.homeNavController = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAHomeNavController"];
+                    self.homeTabController = [[self.homeNavController viewControllers] firstObject];
+                    self.homeTabController.splitViewDelegate = self;
                }
                 
                 if (self.childViewControllers.count > 0) {
                    
-                    [self swapFromViewController:[self.childViewControllers firstObject] toViewController:self.swapperVC];
+                    [self swapFromViewController:[self.childViewControllers firstObject] toViewController:self.homeNavController];
                     [self movePanelToOriginalPosition:nil];
 
                 }
@@ -529,12 +532,10 @@
                     // If this is the very first time we're loading this we need to do
                     // an initial load and not a swap.
 
-                    [_swapperVC willMoveToParentViewController:self];
-                    [self addChildViewController:self.swapperVC];
-                    [self.view addSubview:self.swapperVC.view];
-                    
-                    [_swapperVC didMoveToParentViewController:self];
-
+                    [_homeNavController willMoveToParentViewController:self];
+                    [self addChildViewController:self.homeNavController];
+                    [self.view addSubview:self.homeNavController.view];
+                    [_homeTabController didMoveToParentViewController:self];
                     
                 }
                 

@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLZeppaclientapiZeppaUserToUserRelationship (0 custom class methods, 7 custom properties)
+//   GTLZeppaclientapiZeppaUserToUserRelationship (0 custom class methods, 8 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -22,6 +22,7 @@
 #endif
 
 @class GTLZeppaclientapiKey;
+@class GTLZeppaclientapiZeppaUserInfo;
 
 // ----------------------------------------------------------------------------
 //
@@ -39,4 +40,5 @@
 @property (nonatomic, copy) NSString *relationshipType;
 @property (nonatomic, retain) NSNumber *subjectId;  // longLongValue
 @property (nonatomic, retain) NSNumber *updated;  // longLongValue
+@property (nonatomic, retain) GTLZeppaclientapiZeppaUserInfo *userInfo;
 @end

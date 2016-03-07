@@ -12,7 +12,7 @@
 
 #import "ZPAUserProfileCell.h"
 #import "ZPAMinglersEventCell.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 
 @interface ZPAUserProfileVC : UIViewController<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -20,18 +20,12 @@
 @property(nonatomic,strong)ZPAMinglersEventCell *minglerEventCell;
 
 @property (nonatomic, strong)GTLServiceZeppaclientapi *zeppaUserToUserRelationship;
-
-
-
-@property (nonatomic,strong)ZPADefaulZeppatUserInfo *userProfileInfo;
+@property (nonatomic,strong)ZPADefaultZeppaUserInfo *userProfileInfo;
 
 @property (nonatomic,strong)NSMutableArray *userTagArray;
 @property (nonatomic,strong)NSMutableArray *minglersArray;
 
 - (IBAction)commonMinglersBtnTapped:(UIButton *)sender;
 
-- (IBAction)watchBtnTapped:(UIButton *)sender;
-
-- (IBAction)joinBtnTapped:(UIButton *)sender;
 
 @end

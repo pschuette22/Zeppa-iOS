@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Pete Schuette. All rights reserved.
 //
 
-#import "ZPAUserInfoBaseClass.h"
+#import "ZPAUserInfoBase.h"
 #import "ZPAAuthenticatonHandler.h"
 
 #import "GTLServiceZeppaclientapi.h"
@@ -21,13 +21,13 @@
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPANotificationSingleton.h"
 
-#import "ZPADefaulZeppatUserInfo.h"
-#import "ZPAEventInfoBaseClass.h"
+#import "ZPADefaultZeppaUserInfo.h"
+#import "ZPAEventInfoBase.h"
 #import "ZPAUserDefault.h"
 #import "ZPAConstants.h"
 
 
-@interface ZPAFetchNotificationTask: ZPAUserInfoBaseClass
+@interface ZPAFetchNotificationTask: ZPAUserInfoBase
 
 // Authed service objects
 @property (nonatomic, strong)GTLServiceZeppaclientapi * service;
@@ -35,8 +35,8 @@
 // Notification information / related objects
 @property (nonatomic, strong) NSNumber *notificationId;
 @property (nonatomic, retain) GTLZeppaclientapiZeppaNotification *notification;
-@property (nonatomic, retain) ZPAMyZeppaEvent *eventInfo;
-@property (nonatomic, retain) ZPADefaulZeppatUserInfo *senderInfo;
+@property (nonatomic, retain) ZPAEventInfoBase *eventInfo;
+@property (nonatomic, retain) ZPADefaultZeppaUserInfo *senderInfo;
 
 typedef void(^FetchSenderInfoCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
 @property (nonatomic, copy) FetchSenderInfoCompletionBlock fetchSenderInfoCompletionBlock;

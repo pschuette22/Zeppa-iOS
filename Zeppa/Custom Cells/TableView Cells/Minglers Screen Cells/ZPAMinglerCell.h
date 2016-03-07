@@ -10,7 +10,7 @@
 #import "ZPAMyZeppaUser.h"
 
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 
 @interface ZPAMinglerCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_MinglerProfilePic;
@@ -18,5 +18,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblCommonMinglers;
 @property (weak, nonatomic) IBOutlet UIButton *btnDisclosureIndicator;
 
--(void)showZeppaMinglersInfoOnCell:(ZPADefaulZeppatUserInfo *)zeppaUser;
+-(void)showZeppaMinglersInfoOnCell:(ZPADefaultZeppaUserInfo *)zeppaUser;
 @end

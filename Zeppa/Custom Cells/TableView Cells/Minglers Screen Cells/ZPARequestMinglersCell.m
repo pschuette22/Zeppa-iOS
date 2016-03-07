@@ -27,11 +27,11 @@
 }
 
 
--(void)showDetailOnCell:(ZPADefaulZeppatUserInfo *)userInfo{
+-(void)showDetailOnCell:(ZPADefaultZeppaUserInfo *)userInfo{
     
-    _lbl_requestUserName.text = [NSString stringWithFormat:@"%@ %@",userInfo.zeppaUserInfo.givenName,userInfo.zeppaUserInfo.familyName];
+    _lbl_requestUserName.text = userInfo.getDisplayName;
     
-    NSURL *confrmedMinglerImageUrl = [NSURL URLWithString:userInfo.zeppaUserInfo.imageUrl];
+    NSURL *confrmedMinglerImageUrl = [NSURL URLWithString:userInfo.userInfo.imageUrl];
     [_imageView_requestUserImage setImageWithURL:confrmedMinglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
         ///Do anything with image
@@ -40,12 +40,12 @@
     
     
     
-    if ([userInfo requestPending] == YES) {
+    if ([userInfo isPendingRequest] && [userInfo didSendRequest]) {
         [_btn_requestButton setTitle:@"Requested" forState:UIControlStateNormal];
         [_btn_requestButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_btn_requestButton setBackgroundColor:[ZPAStaticHelper zeppaThemeColor]];
         
-    }else{
+    }else if (![userInfo isPendingRequest]){
         [_btn_requestButton setTitle:@"Request" forState:UIControlStateNormal];
         
         _btn_requestButton.layer.borderColor = [[UIColor lightGrayColor] CGColor];

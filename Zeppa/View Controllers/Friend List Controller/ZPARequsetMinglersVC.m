@@ -22,7 +22,6 @@
 @implementation ZPARequsetMinglersVC{
     
     UIAlertView *alert;
-    ZPADefaulZeppatUserInfo *user;
     MBProgressHUD * progress;
 }
 ///**********************************************
@@ -40,14 +39,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Start Mingling", nil);
     
+    self.title = NSLocalizedString(@"Start Mingling", nil);
+    // Register the observer for this notification...
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNotification:) name:kNotifDidFinishFindFriendsTask object:nil];
     [self configure];
     [self callZeppaApi];
     
     alert = [[UIAlertView alloc]initWithTitle:@"Finding People" message:@"This takes a bit, especially if you have a lot of contacts. So sit back, relax and enjoy the day" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
     [alert show];
     progress = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    // TODO: add a refresh controller
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,6 +58,11 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+    
 ///****************************************************
 #pragma mark - TableView DataSource
 ///****************************************************
@@ -66,14 +74,15 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    user = [_zeppaMinglerUser objectAtIndex:indexPath.row];
-    if (( user.relationship == nil) || ([user.relationship.creatorId longLongValue] == [[ZPAZeppaUserSingleton sharedObject].userId longLongValue])) {
+    ZPADefaultZeppaUserInfo *userInfo = [_zeppaMinglerUser objectAtIndex:indexPath.row];
+    if (( userInfo.relationship == nil) || ([userInfo.relationship.creatorId longLongValue] == [[[ZPAZeppaUserSingleton sharedObject] getMyZeppaUserIdentifier] longLongValue])) {
         
         static NSString *userEventCellId = @"RequestMinglersCell";
         ZPARequestMinglersCell *cell = [tableView dequeueReusableCellWithIdentifier:userEventCellId];
         cell.selectionStyle  = UITableViewCellSelectionStyleNone;
         
-        [cell showDetailOnCell:user];
+        [cell showDetailOnCell:userInfo];
+        
         return cell;
         
     }
@@ -82,7 +91,7 @@
         ZPAConfirmedMinglerCell *cell = [tableView dequeueReusableCellWithIdentifier:userEventCellId];
         cell.selectionStyle  = UITableViewCellSelectionStyleNone;
         
-        [cell showDetailOnCell:user];
+        [cell showDetailOnCell:userInfo];
         
         return cell;
         
@@ -136,12 +145,12 @@
 
     NSIndexPath *indexPath =[self getIndexPathOfRowWithBtnClick:sender];
     
-    user = [_zeppaMinglerUser objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [_zeppaMinglerUser objectAtIndex:indexPath.row];
     
-    [self removeUserToUserRelationShip:user];
+    [self removeUserToUserRelationShip:userInfo];
     
    
-    [_zeppaMinglerUser removeObject:user];
+    [_zeppaMinglerUser removeObject:userInfo];
     
     [self.tableView reloadData];
     
@@ -157,10 +166,10 @@
     
     NSIndexPath *indexPath =[self getIndexPathOfRowWithBtnClick:sender];
     
-    user = [_zeppaMinglerUser objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [_zeppaMinglerUser objectAtIndex:indexPath.row];
     
     
-    [self updateUserToUserRelationShip:user];
+    [self updateUserToUserRelationShip:userInfo];
     
 }
 
@@ -173,18 +182,18 @@
     
     NSIndexPath *indexPath =[self getIndexPathOfRowWithBtnClick:sender];
     
-    user = [_zeppaMinglerUser objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [_zeppaMinglerUser objectAtIndex:indexPath.row];
     
     
-    if (user.relationship == nil ) {
-        [self inserZeppaUserToUserRelationship:user];
+    if (userInfo.relationship == nil ) {
+        [self inserZeppaUserToUserRelationship:userInfo];
        // [sender setTitle:@"Requested" forState:UIControlStateNormal];
         
     }else{
         [sender setTitle:@"Request" forState:UIControlStateNormal];
-        [self removeUserToUserRelationShip:user];
+        [self removeUserToUserRelationShip:userInfo];
         
-        [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:user.zeppaUserInfo andRelationShip:nil];
+        [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:userInfo.userInfo andRelationShip:nil];
         
         [self updateMingler];
         
@@ -224,12 +233,12 @@
     [_findMingler executeZeppaApi];
     
 }
--(void)inserZeppaUserToUserRelationship:(ZPADefaulZeppatUserInfo *)userInfo{
+-(void)inserZeppaUserToUserRelationship:(ZPADefaultZeppaUserInfo *)userInfo{
     
     
     GTLZeppaclientapiZeppaUserToUserRelationship *relationship = [[GTLZeppaclientapiZeppaUserToUserRelationship alloc] init];
     
-    [relationship setCreatorId:[[ZPAZeppaUserSingleton sharedObject] userId]];
+    [relationship setCreatorId:[[ZPAZeppaUserSingleton sharedObject] getMyZeppaUserIdentifier]];
     [relationship setSubjectId:userInfo.userId];
     [relationship setRelationshipType:@"PENDING_REQUEST"];
     
@@ -243,10 +252,9 @@
            
         } else if ( response.identifier){
             
-           [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:userInfo.zeppaUserInfo andRelationShip:response];
+            [userInfo setRelationship:response];
             
             [self updateMingler];
-            
 
             
         } else {
@@ -259,7 +267,7 @@
     
 }
 
--(void)updateUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
+-(void)updateUserToUserRelationShip:(ZPADefaultZeppaUserInfo *)userInfo{
     
     GTLZeppaclientapiZeppaUserToUserRelationship *relationship = [[GTLZeppaclientapiZeppaUserToUserRelationship alloc] init];
     
@@ -278,7 +286,7 @@
             
            
             
-           [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:userInfo.zeppaUserInfo andRelationShip:response];
+           [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:userInfo.userInfo andRelationShip:response];
             
             [self updateMingler];
            
@@ -292,7 +300,7 @@
 
 }
 
--(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
+-(void)removeUserToUserRelationShip:(ZPADefaultZeppaUserInfo *)userInfo{
     
 
     GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForRemoveZeppaUserToUserRelationshipWithIdentifier:[userInfo.relationship.identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
@@ -302,15 +310,11 @@
         
         if(error){
             // TODO: notify user there was an issue removing relationship from DB
-        } else if ( response.identifier){
-            
-//            [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:userInfo.zeppaUserInfo andRelationShip:response];
-////            
-//            [self updateMingler];
-            //
-            
         } else {
-            //            [resultView setText:@"Error Inserting ZeppaUserToUserRelationship"];
+            
+            [userInfo setRelationship:nil];
+
+            
         }
         
     }];
@@ -376,6 +380,25 @@
     
     
     [self.tableView reloadData];
+}
+
+- (void) didReceiveNotification:(NSNotification*) notification {
+    
+    
+    if([notification.name isEqualToString:kNotifDidFinishFindFriendsTask]) {
+        
+        // If the alert is being displayed, dismiss it
+        if(alert) {
+            [alert dismissWithClickedButtonIndex:0 animated:YES];
+        }
+        
+        // If progress is being displayed, hide it
+        if(progress) {
+            [progress hide:YES];
+        }
+        
+    }
+    
 }
 
 

@@ -66,11 +66,11 @@
    // id zeppaUser = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];
     
     //if ([zeppaUser isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        ZPADefaulZeppatUserInfo * user = [ZPADefaulZeppatUserInfo sharedObject];
+//         * user = [ZPADefaulZeppatUserInfo sharedObject];
+    
+        ZPADefaultZeppaUserInfo* user = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];;
         
-         user = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];;
-        
-        NSURL *profileImageURL = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
+        NSURL *profileImageURL = [NSURL URLWithString:user.userInfo.imageUrl];
         [_imageView_ActivityOwner setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             
         }];

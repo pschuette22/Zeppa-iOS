@@ -11,7 +11,7 @@
 
 
 
-@interface ZPAAddEventVC : UIViewController<UITextFieldDelegate,UITextViewDelegate,UIAlertViewDelegate>
+@interface ZPAAddEventVC : UIViewController<UITextFieldDelegate,UITextViewDelegate,UIAlertViewDelegate,UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
 // Main View Bases
@@ -25,7 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *txtEventTitle;
 @property (weak, nonatomic) IBOutlet UITextField *txtEventLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lblMapAddress;
 @property (weak, nonatomic) IBOutlet UILabel *lblDescriptionPlaceholder;
 @property (weak, nonatomic) IBOutlet UITextView *textView_Description;
 @property (weak, nonatomic) IBOutlet UIView *view_baseStartTime;
@@ -41,8 +40,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lbl_noOfInvites;
 @property (weak, nonatomic) IBOutlet UIButton *checkBtn;
 @property (weak, nonatomic) IBOutlet Checkbox *checkBox;
-
-
 
 // Privacy picker views and constraints
 @property (weak, nonatomic) IBOutlet UIPickerView *privacyPicker;
@@ -63,21 +60,21 @@
 @property (weak, nonatomic) IBOutlet UIView *view_endTimeBase;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *endBaseHeight;
 
+
 @property NSMutableArray *eventTagIdsArray;
 
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBtnTapped;
-
 - (IBAction)doneBtnTapped:(UIBarButtonItem *)sender;
-- (IBAction)btnMapLocationTapped:(UIButton *)sender;
+// - (IBAction)btnMapLocationTapped:(UIButton *)sender;
 
-- (IBAction)btnSelectEventStartTimeTapped:(id)sender;
-- (IBAction)btnSelectEventEndTimeTapped:(id)sender;
-- (IBAction)btnSelectEventPrivacyTapped:(id)sender;
-- (IBAction)btnAddNewTagTapped:(id)sender;
-- (IBAction)cancelBtnTapped:(UIBarButtonItem *)sender;
+
+- (IBAction) btnSelectLocationTapped:(id)sender;
+- (IBAction) btnSelectEventStartTimeTapped:(id)sender;
+- (IBAction) btnSelectEventEndTimeTapped:(id)sender;
+- (IBAction) btnSelectEventPrivacyTapped:(id)sender;
+- (IBAction) btnAddNewTagTapped:(id)sender;
 
 - (IBAction)addInviteesBtn:(UIButton *)sender;
--(IBAction)newButtonAction:(UIButton *)sender;
+- (IBAction)newButtonAction:(UIButton *)sender;
 
 @end

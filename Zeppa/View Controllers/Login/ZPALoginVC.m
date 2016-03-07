@@ -6,37 +6,21 @@
 //  Copyright (c) 2014 Milan Agarwal. All rights reserved.
 //
 #import "ZPALoginVC.h"
-#import "ZPACalendar.h"
-#import "ZPAEvent.h"
 #import "ZPADateHelper.h"
 #import "ZPAAuthenticatonHandler.h"
 #import "ZPACreateOrEditAccountVC.h"
 #import "ZPAApplication.h"
 #import "ZPAUserDefault.h"
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPASwapperVC.h"
 #import "ZPASplitVC.h"
-
-#import "GTMHTTPFetcherLogging.h"
-#import "GTLCalendar.h"
 
 #import "GTLZeppaclientapi.h"
 #import "GTLZeppaclientapiZeppaUserInfo.h"
 
-typedef enum {
-
-    GoogleFetchOperationNone = -1,
-    GoogleFetchOperationBasicInfo,
-    GoogleFetchOperationCalendarList,
-    GoogleFetchOperationCalendarEvents,
-    GoogleFetchOperationFriendList
-    
-}GoogleFetchOperation;
 
 @interface ZPALoginVC ()<ZPACreateOrEditAccountVCDelegate>
 
 @property (nonatomic, strong) ZPAMyZeppaUser *user;
-@property (nonatomic, assign) GoogleFetchOperation currentOperation;
 
 @property (readonly) GTLServiceZeppaclientapi *zeppaUserService;
 
@@ -81,7 +65,7 @@ typedef enum {
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
-    
+    [super viewDidDisappear:animated];
     [self.view endEditing:YES];
 }
 

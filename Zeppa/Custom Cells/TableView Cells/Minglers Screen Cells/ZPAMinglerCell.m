@@ -8,6 +8,7 @@
 
 #import "ZPAMinglerCell.h"
 #import "UIImageView+WebCache.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAAppData.h"
 
 
@@ -61,22 +62,20 @@
     
 }
 
--(void)showZeppaMinglersInfoOnCell:(ZPADefaulZeppatUserInfo *)zeppaUser{
+-(void)showZeppaMinglersInfoOnCell:(ZPADefaultZeppaUserInfo *)zeppaUser{
 
-   
     
-    
-    NSURL *minglerImageUrl = [NSURL URLWithString:zeppaUser.zeppaUserInfo.imageUrl];
+    NSURL *minglerImageUrl = [NSURL URLWithString:zeppaUser.userInfo.imageUrl];
     [_imageView_MinglerProfilePic setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             
             ///Do anything with image
             
         }];
-    _lblMinglerName.text = [NSString stringWithFormat:@"%@ %@",zeppaUser.zeppaUserInfo.givenName,zeppaUser.zeppaUserInfo.familyName];
-    _lblCommonMinglers.text = @"17 minglers";
-        NSLog(@"%@",zeppaUser.zeppaUserInfo.givenName);
-        NSLog(@"%@",zeppaUser.zeppaUserInfo.imageUrl);
-    
+    _lblMinglerName.text =  [zeppaUser getDisplayName];
+//    _lblCommonMinglers.text = @"17 minglers";
+//        NSLog(@"%@",zeppaUser.zeppaUserInfo.givenName);
+//        NSLog(@"%@",zeppaUser.zeppaUserInfo.imageUrl);
+//    
 }
 
 //-(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{

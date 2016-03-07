@@ -8,25 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ZPAEventInfoBase.h"
 #import "GTLZeppaclientapiZeppaEvent.h"
 #import "GTLZeppaclientapiKey.h"
 #import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
 
-@interface ZPAMyZeppaEvent : NSObject
+@interface ZPAMyZeppaEvent : ZPAEventInfoBase <ZPAEventInfoMethods>
 
-@property (nonatomic, strong) GTLZeppaclientapiZeppaEvent *event;
-@property (nonatomic, strong) GTLZeppaclientapiZeppaEventToUserRelationship *relationship;
-@property (nonatomic, strong)NSString* confictStatus;
-@property (nonatomic, strong)NSMutableArray *relationships;
-@property (nonatomic, strong)NSMutableArray *comments;
-@property (nonatomic, strong)NSArray *getTagIds;
+- (id) initWithZeppaEvent:(GTLZeppaclientapiZeppaEvent *)event;
 
-@property (nonatomic, readonly)BOOL isOldEvent;
-@property (nonatomic, readonly)BOOL isPrivateEvent;
-@property (nonatomic, readonly)BOOL isGuestsMayInvite;
-@property (nonatomic, assign)BOOL isAgenda;
+- (BOOL) isFeedEvent;
+- (BOOL) isInterestingEvent;
+- (BOOL) isAttending;
+- (BOOL) isWatching;
+- (void) cancelEvent;
+- (BOOL) isMyEvent;
+-(ZPAMyZeppaUser*) getHostInfo;
 
--(BOOL)doesMatchEventId:(long long)eventId;
--(BOOL)hostIdDoesMatch:(long long)hostId;
--(NSArray *)getAttendingUserIds;
+
 @end

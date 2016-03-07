@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLZeppaclientapiZeppaEventToUserRelationship (0 custom class methods, 13 custom properties)
+//   GTLZeppaclientapiZeppaEventToUserRelationship (0 custom class methods, 14 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -22,6 +22,7 @@
 #endif
 
 @class GTLZeppaclientapiKey;
+@class GTLZeppaclientapiZeppaEvent;
 
 // ----------------------------------------------------------------------------
 //
@@ -30,6 +31,7 @@
 
 @interface GTLZeppaclientapiZeppaEventToUserRelationship : GTLObject
 @property (nonatomic, retain) NSNumber *created;  // longLongValue
+@property (nonatomic, retain) GTLZeppaclientapiZeppaEvent *event;
 @property (nonatomic, retain) NSNumber *eventHostId;  // longLongValue
 @property (nonatomic, retain) NSNumber *eventId;  // longLongValue
 @property (nonatomic, retain) NSNumber *expires;  // longLongValue

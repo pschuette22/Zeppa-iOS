@@ -39,9 +39,9 @@
         
         ZPAUserProfileVC *userProfile = segue.destinationViewController;
         
-        ZPADefaulZeppatUserInfo * defaultZeppaUserInfo=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_attendingUserIdArr objectAtIndex:indexPath.row] longLongValue]];
+        ZPADefaultZeppaUserInfo * defaultZeppaUserInfo=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_attendingUserIdArr objectAtIndex:indexPath.row] longLongValue]];
         
-        NSString * str = [NSString stringWithFormat:@"%@ %@", defaultZeppaUserInfo.zeppaUserInfo.givenName,defaultZeppaUserInfo.zeppaUserInfo.familyName];
+        NSString * str = defaultZeppaUserInfo.getDisplayName;
         
         NSLog(@"name %@",str);
         
@@ -72,11 +72,12 @@
     static NSString *mingelerCell = @"MinglerCell";
     ZPACommonMinglersCell *cell = [tableView dequeueReusableCellWithIdentifier:mingelerCell];
     
-    ZPADefaulZeppatUserInfo * user=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_attendingUserIdArr objectAtIndex:indexPath.row] longLongValue]];
+    ZPADefaultZeppaUserInfo * user=[[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[[_attendingUserIdArr objectAtIndex:indexPath.row] longLongValue]];
     
-    cell.lbl_commonMinglersName.text =[NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
+    cell.lbl_commonMinglersName.text = user.getDisplayName;
     
-    NSURL *minglerImageUrl = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
+    NSURL *minglerImageUrl = [NSURL URLWithString:user.userInfo.imageUrl];
+    
     [cell.imageView_CommonMinglersImage setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
         ///Do anything with image

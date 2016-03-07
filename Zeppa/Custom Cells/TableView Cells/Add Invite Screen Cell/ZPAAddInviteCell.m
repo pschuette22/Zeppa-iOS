@@ -37,11 +37,11 @@
 - (IBAction)btnSelectUserTapped:(id)sender {
 }
 
--(void)showDetailOnCell:(ZPADefaulZeppatUserInfo *)user{
+-(void)showDetailOnCell:(ZPADefaultZeppaUserInfo *)userInfo{
     
-    _lblInviteeName.text =[NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
+    _lblInviteeName.text = [userInfo getDisplayName];
     
-    NSURL *minglerImageUrl = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
+    NSURL *minglerImageUrl = [NSURL URLWithString:userInfo.userInfo.imageUrl];
     [_imageView_Invitee setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
         ///Do anything with image

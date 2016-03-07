@@ -54,7 +54,6 @@
 @property(nonatomic,strong) ZPAMyBasicInfoCell *basicInfoCell;
 @property(nonatomic,strong) ZPAMyZeppaUser *currentUser;
 @property(nonatomic,strong) NSArray *arrMyPlannedEvents;
-@property (nonatomic, strong)UINavigationController *eventDetailNavigation;
 @end
 
 @implementation ZPAMyProfileVC{
@@ -91,7 +90,7 @@
     
 }
 -(void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
 //    if([[UIDevice currentDevice]userInterfaceIdiom]==UIUserInterfaceIdiomPhone)
 //    {
 //        if (![[UIScreen mainScreen] bounds].size.height == 480)
@@ -115,14 +114,11 @@
     _tempArray  = [NSMutableArray array];
     _arrMyPlannedEvents = [[[ZPAZeppaEventSingleton sharedObject] getHostedEventMediators] mutableCopy];
     _currentUser = [ZPAAppData sharedAppData].loggedInUser;
-    _currentUser.tagsArray = [[[ZPAZeppaEventTagSingleton sharedObject] getMyTags] mutableCopy];
     
     
-    _counter = (_currentUser.tagsArray.count>0)?1:0;
-    
-    for (GTLZeppaclientapiEventTag *tag in _currentUser.tagsArray) {
-        [self showTagButtonWithTitleString:tag.tagText];
-    }
+//    for (GTLZeppaclientapiEventTag *tag in _currentUser.tagsArray) {
+//        [self showTagButtonWithTitleString:tag.tagText];
+//    }
     
     [_tableView reloadData];
     
@@ -137,6 +133,22 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+// Get ready to show event details
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    // Get ready to show event details
+    // check to make sure this is headed to an Event Detail View Controller
+    if([segue.destinationViewController.restorationIdentifier isEqualToString:@"ZPAEventDetailVC"]){
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        ZPAMyZeppaEvent *zeppaEvent = _arrMyPlannedEvents[indexPath.row];
+        ZPAEventDetailVC *eventDetailVC = (ZPAEventDetailVC*) segue.destinationViewController;
+        eventDetailVC.eventDetail = zeppaEvent;
+    }
+    
+}
+
+
 ///**********************************************
 #pragma mark - Configure
 ///**********************************************
@@ -227,8 +239,8 @@
         _basicInfoCell = [tableView dequeueReusableCellWithIdentifier:@"ZPAMyBasicInfoCell"];
         ///Get Saved Current User Object
         ///Set profile image
-        if (_currentUser.profileImage) {
-            _basicInfoCell.imageView_MyProfile.image = _currentUser.profileImage;
+        if (_currentUser.image) {
+            _basicInfoCell.imageView_MyProfile.image = _currentUser.image;
         }
         else{
             
@@ -344,21 +356,6 @@
 //    return headerView ;
 //}
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSInteger indexSet = indexPath.section;
-    
-    if (indexSet == TABLE_SEC_INDEX_MY_PLANNED_EVENTS) {
-    _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
-    
-    ZPAEventDetailVC *eventDetail= [[_eventDetailNavigation viewControllers] objectAtIndex:0];
-    
-    eventDetail.eventDetail= [_arrMyPlannedEvents objectAtIndex:indexPath.row];
-    
-    
-    [self presentViewController:_eventDetailNavigation animated:YES completion:NULL];
-    }
-}
 
 
 ///*****************************************************
@@ -389,7 +386,7 @@
 ///*************************************************
 - (IBAction)tagButtonTapped:(UIButton *)sender{
     
-    tagArray= _currentUser.tagsArray;
+//    tagArray= _currentUser.tagsArray;
     
     
     NSString *titleString = [_basicInfoCell.txtNewTag.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -582,7 +579,7 @@
     [[_basicInfoCell.view_tagContainer subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     [_tempArray removeAllObjects];
-    [_currentUser.tagsArray removeAllObjects];
+//    [_currentUser.tagsArray removeAllObjects];
     
     [_tableView reloadData];
    // [_basicInfoCell.viewForBaselineLayout addSubview:_basicInfoCell.view_TagContainer];

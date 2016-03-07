@@ -31,4 +31,6 @@
 - (void) removeZeppaTagFollow:(GTLZeppaclientapiEventTagFollow *)tagFollow;
 
 -(BOOL)isFollowing;
+
+
 @end

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ZPANotificationSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
-#import "ZPADefaulZeppatEventInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
+#import "ZPADefaultZeppaEventInfo.h"
 #import "ZPAZeppaUserSingleton.h"
 #import "GTLZeppaclientapiZeppaNotification.h"
 

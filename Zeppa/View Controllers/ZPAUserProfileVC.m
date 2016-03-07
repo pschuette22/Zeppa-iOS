@@ -11,10 +11,8 @@
 #import <MessageUI/MessageUI.h>
 
 #import "ZPAZeppaEventTagSingleton.h"
-#import "ZPADefaulZeppatEventInfo.h"
+#import "ZPADefaultZeppaEventInfo.h"
 #import "ZPADefaultZeppaEventTagInfo.h"
-#import "ZPAFetchMutualMingers.h"
-#import "ZPAFetchEventsForMingler.h"
 #import "ZPAFetchDefaultTagsForUser.h"
 #import "ZPAEventDetailVC.h"
 #import "ZPAMutualMinglerVC.h"
@@ -45,11 +43,11 @@
 #define WIDTHPADDING 5
 #define TAGS_BASEVIEW_TAG_VALUE 100
 
-@interface ZPAUserProfileVC ()<MutualMinglerDelegate,MutualMinglerTagDelegate,MutualMinglerEventDelegate>
-@property (nonatomic, strong) ZPAFetchMutualMingers *muturalMingler;
+@interface ZPAUserProfileVC ()<MutualMinglerTagDelegate>
+//@property (nonatomic, strong) ZPAFetchMutualMingers *muturalMingler;
 @property (nonatomic, strong) ZPAFetchDefaultTagsForUser *defaultTagsForUser;
-@property (nonatomic, strong) ZPAFetchEventsForMingler *eventForMingler;
-@property (nonatomic, strong)UINavigationController *eventDetailNavigation;
+//@property (nonatomic, strong) ZPAFetchEventsForMingler *eventForMingler;
+//@property (nonatomic, strong)UINavigationController *eventDetailNavigation;
 @property (nonatomic, strong) MBProgressHUD *progressHud;
 
 
@@ -93,15 +91,15 @@ NSArray *minglerTagsArray;
     
     [self showProgressHUD];
     
-    _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
+//    _eventDetailNavigation = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAEventDetailNavC"];
     
     [self callZeppaApi];
     
     //Replace with current user name.
-    self.title = [NSString stringWithFormat:@"%@'s Profile",_userProfileInfo.zeppaUserInfo.givenName];
+    self.title = [NSString stringWithFormat:@"%@'s Profile",_userProfileInfo.userInfo.givenName];
     currentUser = [ZPAAppData sharedAppData].loggedInUser;
-    currentUser.tagsArray = [[NSMutableArray alloc]init];
-    currentUser.tagsArray = _userTagArray;
+//    currentUser.tagsArray = [[NSMutableArray alloc]init];
+//    currentUser.tagsArray = _userTagArray;
     
     _mutualMinglerStr = @"Loading Friends...";
     
@@ -119,7 +117,7 @@ NSArray *minglerTagsArray;
     
 }
 -(void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
     _tempArray  = [NSMutableArray array];
 }
 - (void)didReceiveMemoryWarning
@@ -137,16 +135,21 @@ NSArray *minglerTagsArray;
         minglerVC.minglerUserInfo = _userProfileInfo;
     }else if ([segue.identifier  isEqualToString:@"unwindFromUserProfile"]){
         
+    } else if([segue.destinationViewController.restorationIdentifier isEqualToString:@"ZPAEventDetailVC"]){
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        ZPAMyZeppaEvent *zeppaEvent = minglersEventArray[indexPath.row];
+        ZPAEventDetailVC *eventDetailVC = (ZPAEventDetailVC*) segue.destinationViewController;
+        eventDetailVC.eventDetail = zeppaEvent;
     }
-        
     
     
        
 }
+
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
     
     
-    if (![_mutualMinglerStr isEqualToString:@"No Mutual Friends"]  && ![_mutualMinglerStr isEqualToString:@"Loading Friends..."]) {
+    if (![_mutualMinglerStr isEqualToString:@"No Mutual Friends"]  && ![_mutualMinglerStr isEqualToString:@"Fetching Friends..."]) {
         return YES;
     }
     return NO;
@@ -262,20 +265,20 @@ NSArray *minglerTagsArray;
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (indexPath.section == TABLE_SEC_INDEX_USEREVENT) {
-      
-    ZPAEventDetailVC *eventDetail= [[_eventDetailNavigation viewControllers] objectAtIndex:0];
-        
-    eventDetail.eventDetail= [minglersEventArray objectAtIndex:indexPath.row];
-    eventDetail.tagsArray = [minglerTagsArray mutableCopy];
-    eventDetail.userInfo = _userProfileInfo;
-    eventDetail.isMinglerTag = YES;
-        
-    [self presentViewController:_eventDetailNavigation animated:YES completion:NULL];
-    
-    
-    
-    }
+//    if (indexPath.section == TABLE_SEC_INDEX_USEREVENT) {
+//      
+//    ZPAEventDetailVC *eventDetail= [[_eventDetailNavigation viewControllers] objectAtIndex:0];
+//        
+//    eventDetail.eventDetail= [minglersEventArray objectAtIndex:indexPath.row];
+//    eventDetail.tagsArray = [minglerTagsArray mutableCopy];
+//    eventDetail.userInfo = _userProfileInfo;
+//    eventDetail.isMinglerTag = YES;
+//        
+//    [self presentViewController:_eventDetailNavigation animated:YES completion:NULL];
+//    
+//    
+//    
+//    }
     
 }
 
@@ -286,10 +289,9 @@ NSArray *minglerTagsArray;
 ///*************************************************
 - (IBAction)unMingleBtnTapped:(id)sender {
     
-    
-    
-    
-    [self removeUserToUserRelationShip:_userProfileInfo];
+
+    // TODO: delete user relationship
+//    [self removeUserToUserRelationShip:_userProfileInfo];
     
     [[ZPAZeppaEventSingleton sharedObject]removeMediatorsForUser:[_userProfileInfo.userId longLongValue]];
     
@@ -303,23 +305,6 @@ NSArray *minglerTagsArray;
 - (IBAction)commonMinglersBtnTapped:(UIButton *)sender {
     // TODO: show a list of people user and selected user have in common
     
-}
-
-- (IBAction)watchBtnTapped:(UIButton *)sender {
-    
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    zeppaEvent = [minglersEventArray objectAtIndex:indexPath.row];
-    
-    if (![[ZPADefaulZeppatEventInfo sharedObject]isWatching] == true) {
-        [sender setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [sender setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
-    }
-    [[ZPADefaulZeppatEventInfo sharedObject]onWatchButtonClicked:zeppaEvent.relationship];
-    
-    [_tableView reloadData];
-
 }
 
 //- (IBAction)textBtnTapped:(UIButton *)sender {
@@ -346,28 +331,6 @@ NSArray *minglerTagsArray;
 //    
 //}
 
-- (IBAction)joinBtnTapped:(UIButton *)sender {
-    
-    NSIndexPath *indexPath = [self getIndexPathOfRowWithBtnClick:sender];
-    zeppaEvent = [minglersEventArray objectAtIndex:indexPath.row];
-    
-    zeppaEvent.isAgenda = YES;
-    
-    if (![[ZPADefaulZeppatEventInfo sharedObject]isAttending ] == true) {
-        [sender setImage:[UIImage imageNamed:@"ic_join_filled.png"] forState:UIControlStateNormal];
-        [_minglerEventCell.btn_watch setImage:[UIImage imageNamed:@"ic_watch_filled.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [_minglerEventCell.btn_watch setImage:[UIImage imageNamed:@"ic_watch_empty.png"] forState:UIControlStateNormal];
-        [sender setImage:[UIImage imageNamed:@"ic_join_empty.png"] forState:UIControlStateNormal];
-    }
-    
-    [[ZPADefaulZeppatEventInfo sharedObject]onJoinButtonClicked:zeppaEvent.relationship];
-    
-    [_tableView reloadData];
-
-    
-}
 
 
 ///**********************************************
@@ -375,81 +338,81 @@ NSArray *minglerTagsArray;
 ///**********************************************
 -(void)callZeppaApi{
     
-    _muturalMingler = [[ZPAFetchMutualMingers alloc]init];
-    _muturalMingler.delegate = self;
-    [_muturalMingler executeZeppaMinglerApiWithZeppaUser:_userProfileInfo withUserIndetifier:[self getUserID]];
-    
-    
-    _defaultTagsForUser = [[ZPAFetchDefaultTagsForUser alloc]init];
-    _defaultTagsForUser.delgate = self;
-    [_defaultTagsForUser executeZeppaApiWithUserId:[self getUserID] andMinglerId:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
-    
-    _eventForMingler  =  [[ZPAFetchEventsForMingler alloc]init];
-    _eventForMingler.delegate = self;
+//    _muturalMingler = [[ZPAFetchMutualMingers alloc]init];
+//    _muturalMingler.delegate = self;
+//    [_muturalMingler executeZeppaMinglerApiWithZeppaUser:_userProfileInfo withUserIndetifier:[self getUserID]];
+//    
+//    
+//    _defaultTagsForUser = [[ZPAFetchDefaultTagsForUser alloc]init];
+//    _defaultTagsForUser.delgate = self;
+//    [_defaultTagsForUser executeZeppaApiWithUserId:[self getUserID] andMinglerId:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
+//    
+//    _eventForMingler  =  [[ZPAFetchEventsForMingler alloc]init];
+//    _eventForMingler.delegate = self;
+////    [_eventForMingler executeZeppaApiWithMinglerId:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
 //    [_eventForMingler executeZeppaApiWithMinglerId:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
-    [_eventForMingler executeZeppaApiWithMinglerId:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
     
 }
 -(long long)getUserID{
     
-    return [[[ZPAZeppaUserSingleton sharedObject] userId] longLongValue];
+    return [[[ZPAZeppaUserSingleton sharedObject] getMyZeppaUserIdentifier] longLongValue];
 }
 -(void)getMutualMinglerList{
     
-    
-    if(_userProfileInfo.minglersIds.count==0){
-        
-        _mutualMinglerStr = @"No Mutual Friends";
-        
-    }else if (_userProfileInfo.minglersIds.count == 1){
-        
-        _mutualMinglerStr = [NSString stringWithFormat:@"1 Mutual Friend"];
-        
-    }else{
-        _mutualMinglerStr = [NSString stringWithFormat:@"%lu Mutual Friends",(unsigned long)_userProfileInfo.minglersIds.count];
-    }
-    [self.tableView reloadData];
+//    
+//    if(_userProfileInfo.minglersIds.count==0){
+//        
+//        _mutualMinglerStr = @"No Mutual Friends";
+//        
+//    }else if (_userProfileInfo.minglersIds.count == 1){
+//        
+//        _mutualMinglerStr = [NSString stringWithFormat:@"1 Mutual Friend"];
+//        
+//    }else{
+//        _mutualMinglerStr = [NSString stringWithFormat:@"%lu Mutual Friends",(unsigned long)_userProfileInfo.minglersIds.count];
+//    }
+//    [self.tableView reloadData];
 }
 
 -(void)getMutualMinglerTags{
     
-    minglerTagsArray = [NSArray array];
-    zeppaEvent = [[ZPAMyZeppaEvent alloc]init];
-   
-    if (zeppaEvent.getTagIds.count == 0 ) {
-        
-       minglerTagsArray = [[ZPAZeppaEventTagSingleton sharedObject]getZeppaTagForUser:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
-    }else{
-        minglerTagsArray = [[ZPAZeppaEventTagSingleton sharedObject]getTagsFromTagIdsArray:zeppaEvent.getTagIds];
-    }
-    
-    
-//    _counter = (minglerTagsArray.count>0)?1:0;
-
-    
-    for (GTLZeppaclientapiEventTag *tag in minglerTagsArray) {
-        [self showTagButtonWithTitleString:tag];
-    }
-
-    
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+//    minglerTagsArray = [NSArray array];
+//    zeppaEvent = [[ZPAMyZeppaEvent alloc]init];
+//   
+//    if (zeppaEvent.getTagIds.count == 0 ) {
+//        
+//       minglerTagsArray = [[ZPAZeppaEventTagSingleton sharedObject]getZeppaTagForUser:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]];
+//    }else{
+//        minglerTagsArray = [[ZPAZeppaEventTagSingleton sharedObject]getTagsFromTagIdsArray:zeppaEvent.getTagIds];
+//    }
+//    
+//    
+////    _counter = (minglerTagsArray.count>0)?1:0;
+//
+//    
+//    for (GTLZeppaclientapiEventTag *tag in minglerTagsArray) {
+//        [self showTagButtonWithTitleString:tag];
+//    }
+//
+//    
+//    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
+//    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
 }
 
 -(void)getMutualMinglerEventsList{
     
-      minglersEventArray = [NSArray array];
-    
-    minglersEventArray = [[ZPAZeppaEventSingleton sharedObject]getEventMediatorsForFriend:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]] ;
-    
-    NSLog(@"%zd",minglersEventArray.count);
-    
-    [self hideProressHUD];
-    
-    
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:1];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
-    //[self.tableView reloadData];
+//      minglersEventArray = [NSArray array];
+//    
+//    minglersEventArray = [[ZPAZeppaEventSingleton sharedObject]getEventMediatorsForFriend:[_userProfileInfo.zeppaUserInfo.key.parent.identifier longLongValue]] ;
+//    
+//    NSLog(@"%zd",minglersEventArray.count);
+//    
+//    [self hideProressHUD];
+//    
+//    
+//    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:1];
+//    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+//    //[self.tableView reloadData];
 }
 ///*************************************************
 #pragma mark - Tag Private Method
@@ -656,28 +619,6 @@ NSArray *minglerTagsArray;
   
 }
 
--(void)removeUserToUserRelationShip:(ZPADefaulZeppatUserInfo *)userInfo{
-    
-    
-    GTLQueryZeppaclientapi *updateU2URelationshipTask = [GTLQueryZeppaclientapi queryForRemoveZeppaUserToUserRelationshipWithIdentifier:[userInfo.relationship.identifier longLongValue] idToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    
-    [self.zeppaUserToUserRelationship executeQuery:updateU2URelationshipTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiZeppaUserToUserRelationship  *response, NSError *error) {
-        //
-        
-        if(error){
-            // TODO: notify the user an error occured
-        } else {
-            
-            //            [resultView setText:[NSString stringWithFormat:@"ZeppaUserToUserRelationship: {\n   identifier: %@\n   created: %@\n   updated: %@\n   creatorId: %@\n   subjectId: %@\n   relationshipType: %@\n   }", response.identifier, response.created, response.updated, response.creatorId, response.subjectId, response.relationshipType]];
-            
-            [self performSegueWithIdentifier:@"unwindFromUserProfile" sender:self];
-            
-        }
-        
-    }];
-    
-    
-}
 
 
 -(GTLServiceZeppaclientapi *)zeppaUserToUserRelationship{

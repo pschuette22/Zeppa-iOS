@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Milan Agarwal. All rights reserved.
 //
 
+
 #import "ZPAAppDelegate.h"
 #import <Google/SignIn.h>
 #import "ZPASplitVC.h"
@@ -14,6 +15,8 @@
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAUserDefault.h"
+#import "ZPAConstants.h"
+@import GoogleMaps;
 
 @interface ZPAAppDelegate ()
 
@@ -26,7 +29,7 @@
 
 
 @implementation ZPAAppDelegate {
-    
+    CLLocationManager *locationManager;
 }
 
 +(ZPAAppDelegate *)sharedObject{
@@ -36,9 +39,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
+    // Register user defaults
+    
     NSError* configureError;
     [[GGLContext sharedInstance] configureWithError: &configureError];
-    
+    [GMSServices provideAPIKey:kZeppaGoogleAPIKey];
     
     // Override point for customization after application launch.
     id rootVC = self.window.rootViewController;
@@ -50,7 +55,8 @@
     [[UINavigationBar appearance]setBarTintColor:[UIColor colorWithRed:10.0f/255.0 green:210.0f/255.0 blue:255.0f/255.0 alpha:1.0]];
     [[UINavigationBar appearance]setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance]setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     
     [[UISwitch appearance]setOnTintColor:[UIColor colorWithRed:10.0f/255.0 green:210.0f/255.0 blue:255.0f/255.0 alpha:1.0]];
     
@@ -69,19 +75,37 @@
     
     
     // Register for remote notifications
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+//    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         // iOS 8 or later
         // [END_EXCLUDE]
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-    } else {
-        // iOS 7.1 or earlier
-        UIRemoteNotificationType allNotificationTypes =
-        (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
-        [application registerForRemoteNotificationTypes:allNotificationTypes];
-    }
-    
+//    } else {
+//        // iOS 7.1 or earlier
+//        UIRemoteNotificationType allNotificationTypes =
+//        (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
+//        [application registerForRemoteNotificationTypes:allNotificationTypes];
+//    }
     
 
+    // Register for location updates
+    if (locationManager==nil)
+        locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.pausesLocationUpdatesAutomatically=YES;
+    [locationManager requestWhenInUseAuthorization];
+    locationManager.distanceFilter=100; // Update every 100 meters
+    locationManager.desiredAccuracy=kCLLocationAccuracyHundredMeters;
+    [locationManager startUpdatingLocation];
+    [locationManager startMonitoringSignificantLocationChanges];
+    
+//    if([CLLocationManager locationServicesEnabled]) {
+//        
+//        if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+//            
+//        } else if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+//            // TODO: perhaps put a banner indicating location makes this work better?
+//        }
+//    }
     return YES;
 }
 
@@ -97,6 +121,7 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
 }
 
 
@@ -105,6 +130,11 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    // Just to make sure we're not monitoring for location changes
+    if (locationManager) {
+        [locationManager stopUpdatingLocation];
+        [locationManager stopMonitoringSignificantLocationChanges];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -117,6 +147,10 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
     // TODO: remove expired data and run queries for new stuff
+    if (locationManager && [CLLocationManager authorizationStatus]==kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [locationManager startUpdatingLocation];
+        [locationManager startMonitoringSignificantLocationChanges];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -236,14 +270,14 @@
     self.registrationToken = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSLog(@"content---%@", self.registrationToken);
     
-    [[ZPADeviceInfo sharedObject] setDoUpdateToken:YES];
-    // if there is current device, update the device in the backend
-    if([ZPADeviceInfo sharedObject].currentDevice){
-        [[[ZPADeviceInfo sharedObject] currentDevice] setRegistrationId:_registrationToken];
-        [[ZPADeviceInfo sharedObject] updateDeviceInfoWithObject:[[ZPADeviceInfo sharedObject] currentDevice]];
-    } else if([ZPAZeppaUserSingleton sharedObject].zeppaUser) {
-        [[ZPADeviceInfo sharedObject] setLoginDeviceForUser:[ZPAZeppaUserSingleton sharedObject].zeppaUser];
-    }
+//    [[ZPADeviceInfo sharedObject] setDoUpdateToken:YES];
+//    // if there is current device, update the device in the backend
+//    if([ZPADeviceInfo sharedObject].currentDevice){
+//        [[[ZPADeviceInfo sharedObject] currentDevice] setRegistrationId:_registrationToken];
+//        [[ZPADeviceInfo sharedObject] updateDeviceInfoWithObject:[[ZPADeviceInfo sharedObject] currentDevice]];
+//    } else if([[ZPAZeppaUserSingleton sharedObject] getMyZeppaUser]) {
+//        [[ZPADeviceInfo sharedObject] setLoginDeviceForUser:[[ZPAZeppaUserSingleton sharedObject] getMyZeppaUser]];
+//    }
     
 }
 
@@ -386,6 +420,56 @@
     }
 }
 
+
+
+// Delegate method from the CLLocationManagerDelegate protocol.
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray *)locations {
+    // If it's a relatively recent event, turn off updates to save power.
+    CLLocation* location = [locations lastObject];
+    NSDate* eventDate = location.timestamp;
+    NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
+    if (fabs(howRecent) < 15.0) {
+        // If the event is recent, update the stored values
+        [ZPAUserDefault storedObject:[NSDecimalNumber numberWithFloat:location.coordinate.latitude] withKey:kLocationLatitude];
+        [ZPAUserDefault storedObject:[NSDecimalNumber numberWithFloat:location.coordinate.longitude] withKey:kLocationLongitude];
+        
+        // Post a notification that the device location was updated
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotifDidUpdateLocation object:location];
+        
+        // Update the users location in datastore
+        [[ZPAZeppaUserSingleton sharedObject] updateUserLocation:location withCompletion:^(GTLServiceTicket *ticket, id object, NSError *error) {
+            // idc
+        }];
+    }
+}
+
+// ***************************************
+#pragma mark - Location Delegate Methods
+// ***************************************
+
+// When the location updates pause, stop monitoring for changes
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    [manager stopUpdatingLocation];
+    [manager stopMonitoringSignificantLocationChanges];
+}
+
+// When the location updates resume, resume monitoring as well
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
+    [manager startUpdatingLocation];
+    [manager startMonitoringSignificantLocationChanges];
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    if(status==kCLAuthorizationStatusAuthorizedWhenInUse || status==kCLAuthorizationStatusAuthorizedAlways) {
+        [manager startUpdatingLocation];
+        [manager startMonitoringSignificantLocationChanges];
+    } else if (status==kCLAuthorizationStatusDenied){
+        [manager stopUpdatingLocation];
+        [manager stopMonitoringSignificantLocationChanges];
+    }
+}
 
 
 @end

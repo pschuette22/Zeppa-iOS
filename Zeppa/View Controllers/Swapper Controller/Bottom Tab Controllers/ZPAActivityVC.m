@@ -8,7 +8,6 @@
 
 #import "ZPAActivityVC.h"
 #import "ZPAActivityNotificationCell.h"
-#import "ZPAFetchInitialNotifications.h"
 #import "ZPANotificationSingleton.h"
 #import "ZPAEventDetailVC.h"
 #import "ZPAZeppaEventSingleton.h"
@@ -23,7 +22,6 @@
 @end
 
 @implementation ZPAActivityVC{
-    ZPAFetchInitialNotifications *initialNotification;
     NSMutableArray *notificationEventArr;
 }
 
@@ -46,7 +44,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.title = NSLocalizedString(@"Activity", nil);
+//    self.title = NSLocalizedString(@"Activity", nil);
     
     self.view.backgroundColor = [ZPAStaticHelper backgroundTextureColor];
     
@@ -56,7 +54,7 @@
     _emptyActivityLabel.textAlignment = NSTextAlignmentCenter;
     
     _refreshControl = [[UIRefreshControl alloc]init];
-    _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
+    _refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Fetching Notifications..."];
     [self.tableView addSubview:_refreshControl];
     
     [_refreshControl addTarget:self action:@selector(refreshTable:) forControlEvents:UIControlEventValueChanged];
@@ -67,24 +65,23 @@
 
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     
     _arrNotifications = [[[ZPANotificationSingleton sharedObject]getNotification]mutableCopy];
     notificationEventArr = [NSMutableArray array];
-//<<<<<<< HEAD
-//    if ([_arrNotifications count]==0){
-//        [self.tableView addSubview:_emptyActivityLabel];
-//    }else{
-//        [_emptyActivityLabel removeFromSuperview];
-//    }
-//    
-//    [self.tableView reloadData];
-//=======
+    
+    if ([_arrNotifications count]==0){
+        [self.tableView addSubview:_emptyActivityLabel];
+    }else{
+        [_emptyActivityLabel removeFromSuperview];
+    }
+    
+
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(notificationReceived:)
                                                  name:@"ZeppaNotification"
                                                object:nil];
-//>>>>>>> auth
 }
 
 
@@ -112,9 +109,10 @@
 #pragma mark - UITableViewDataSource
 //****************************************************
 
+
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-
     return 1;
     
 }
@@ -122,7 +120,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     
-   return self.arrNotifications.count;
+   return _arrNotifications.count;
 
 }
 
@@ -150,12 +148,12 @@
 //****************************************************
 
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    return 68.0f;
-    
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    
+//    return 68.0f;
+//    
+//}
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -209,9 +207,9 @@
         {
             ZPAUserProfileVC *userProfile = [self.storyboard instantiateViewControllerWithIdentifier:@"ZPAUserProfileVC"];
             
-            ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];
+            ZPADefaultZeppaUserInfo *defaultZeppaUserInfo = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];
             
-            NSString * str = [NSString stringWithFormat:@"%@ %@", defaultZeppaUserInfo.zeppaUserInfo.givenName,defaultZeppaUserInfo.zeppaUserInfo.familyName];
+            NSString * str = defaultZeppaUserInfo.getDisplayName;
             
             NSLog(@"name %@",str);
             
@@ -381,7 +379,7 @@
 //        [notificationEventArr addObject:[[ZPAZeppaEventSingleton sharedObject]getEventById: [notification.eventId longLongValue]]];
     
     
-        event.eventDetail = [[ZPAZeppaEventSingleton sharedObject]getEventById: [notification.eventId longLongValue]];
+        event.eventInfo = [[ZPAZeppaEventSingleton sharedObject]getEventById: [notification.eventId longLongValue]];
     
         [self presentViewController:_eventDetailVc animated:YES completion:NULL];
 

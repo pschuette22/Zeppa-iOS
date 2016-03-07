@@ -10,8 +10,9 @@
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPAPhoneContact.h"
 #import "ZPAAuthenticatonHandler.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAZeppaUserSingleton.h"
+#import "ZPAConstants.h"
 
 
 #import "GTLZeppaclientapiZeppaUserToUserRelationship.h"
@@ -23,7 +24,9 @@
 #import <AddressBookUI/AddressBookUI.h>
 
 
-@implementation ZPAFindMinglers
+@implementation ZPAFindMinglers {
+    int queryCount;
+}
 
 ///**********************************************
 #pragma mark - Private Methods
@@ -31,8 +34,6 @@
 
 -(void)executeZeppaApi;
 {
-    _recognizedEmails  = [[[ZPAZeppaUserSingleton sharedObject] getZeppaRecognizedEmails] mutableCopy];
-    _recognizedNumbers = [[[ZPAZeppaUserSingleton sharedObject]getZeppaRecognizedNumbers ]mutableCopy];
     _uniqueInfoItems = [NSMutableArray array];
     [self getAllContacts];
 }
@@ -42,70 +43,23 @@
     [cont getPhonContactInformation:^(NSArray *phoneNumbers, NSArray *emails, NSError *error) {
         
         __weak typeof(self)  weakSelf = self;
-        if (!error) {
-          
-          NSString * recognizedEmailString = [self getEmailString:emails];
-          NSString * recognizedNumberString = [self getNumberString:phoneNumbers];
-         [weakSelf getZeppaUserInfoListQueryForEmailIds:recognizedEmailString andNumber:recognizedNumberString];
-            
-            NSLog(@"%@ emails ",recognizedEmailString);
-            NSLog(@"%@ emails ",recognizedNumberString);
+        
+        if(error) {
+            // TODO: handle error
+        } else if (emails.count > 0 && phoneNumbers.count > 0){
+            queryCount=0;
+            [weakSelf getZeppaUserInfoListQueryForEmails:emails andNumbers:phoneNumbers];
+
+        } else {
+            // Tell user they no contacts in their phone
         }
+        
         
     }];
     
 }
 
--(NSString *)getEmailString:(NSArray *)emailArray{
-    
-    NSString *numberString = @"";
-    
-    for (int i=0; i<emailArray.count; i++) {
-        if (![self numberIsRecognized:[emailArray objectAtIndex:i]]) {
-        NSString * str = [NSString stringWithFormat:@"googleAccountEmail == '%@' ||",[emailArray objectAtIndex:i]];
-        numberString =[numberString stringByAppendingString:str];
-        }
-    }
-    
-    if ([numberString length] > 2) {
-        numberString = [numberString substringToIndex:[numberString length] - 2];
-    }
-    return numberString;
-}
--(NSString *)getNumberString:(NSArray *)numberArray{
-    
-    NSString *numberString = @"";
-    
-    for (int i=0; i<numberArray.count; i++) {
-        if (![self numberIsRecognized:[numberArray objectAtIndex:i]]) {
-            NSString * str = [NSString stringWithFormat:@"primaryUnformattedNumber == %@ ||",[numberArray objectAtIndex:i]];
-            numberString =[numberString stringByAppendingString:str];
-        }
-    }
-    if ([numberString length] > 2) {
-        numberString = [numberString substringToIndex:[numberString length] - 2];
-    }
-    return numberString;
-}
 
--(BOOL)emailIsRecognized:(NSString *)email{
-    
-    for (NSString *emailString in _recognizedEmails) {
-        if ([emailString isEqualToString:email]) {
-            return YES;
-        }
-    }
-    return NO;
-}
--(BOOL)numberIsRecognized:(NSString *)number{
-    
-    for (NSString *numberString in _recognizedNumbers) {
-        if ([numberString isEqualToString:number]) {
-            return YES;
-        }
-    }
-    return NO;
-}
 -(void)updateMingler{
     
     ZPAZeppaUserSingleton *user  = [ZPAZeppaUserSingleton sharedObject];
@@ -175,166 +129,100 @@
 ///**********************************************
 #pragma mark - Zeppa Api Call
 ///**********************************************
--(void)getZeppaUserInfoListQueryForEmailIds:(NSString *)filterEmailId andNumber:(NSString *)filterNumberString{
+-(void)getZeppaUserInfoListQueryForEmails:(NSArray*)emails andNumbers:(NSArray*) numbers{
     
-    __weak typeof(self)  weakSelf = self;
-    __block NSString *filter = filterEmailId;
-    GTLQueryZeppaclientapi *listZeppaUserInfoTask = [GTLQueryZeppaclientapi queryForListZeppaUserInfoWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    [listZeppaUserInfoTask setFilter:filter];
-
-    [[self zeppaUserInfoService] executeQuery:listZeppaUserInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaUserInfo *response, NSError *error)  {
-
-        //
-        if(error){
-            // error
-        } else if(response && response.items && response.items.count > 0){
+    
+    /*
+     * Iterate through the list of provided emails and query for users with these emails
+     *
+     */
+    NSMutableArray *emailQueryList = [NSMutableArray array];
+    int charCount = 0;
+    if(emails.count > 0){
+        for(NSString* email in emails){
+            [emailQueryList addObject:email];
+            charCount+=email.length;
             
-            for(GTLZeppaclientapiZeppaUserInfo *userInfo  in response.items) {
-                
-                _defaultZeppaUser.zeppaUserInfo = userInfo;
-                [_uniqueInfoItems addObject:userInfo];
-//                [_recognizedEmails addObject:userInfo.googleAccountEmail];
-                
-                [weakSelf getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:nil anduserId:userInfo.key.parent.identifier];
-                
+            // If char count is greater than some amount, query for list
+            if(charCount > 1850) {
+                [self queryForZeppaUserInfoWithFilter:@"listParam.contains(authEmail)" withList:[NSArray arrayWithArray:emailQueryList]];
+                [emailQueryList removeAllObjects];
+                charCount=0;
             }
-            [weakSelf getZeppaUserInfoListQueryForNumber:filterNumberString];
-        }else{
-            
-            [weakSelf getZeppaUserInfoListQueryForNumber:filterNumberString];
-
         }
-    }];
-    
-}
-
--(void)getZeppaUserInfoListQueryForNumber:(NSString *)filterNumber{
-    
-    
-    __weak typeof(self) weakSelf = self;
-    __block NSString *filter = filterNumber;
-    
-    GTLQueryZeppaclientapi *listZeppaUserInfoTask = [GTLQueryZeppaclientapi queryForListZeppaUserInfoWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    [listZeppaUserInfoTask setFilter:filter];
-    
-    [[self zeppaUserInfoService] executeQuery:listZeppaUserInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaUserInfo *response, NSError *error) {
+        if(emailQueryList.count>0){
+            [self queryForZeppaUserInfoWithFilter:@"listParam.contains(authEmail)" withList:[NSArray arrayWithArray:emailQueryList]];
+        }
         
-        //
-        if(error){
-            // error
-        } else if(response && response.items && response.items.count > 0){
+    }
+    
+    NSMutableArray *numberQueryList = [NSMutableArray array];
+    charCount = 0;
+    if(numbers.count > 0){
+        for(NSString* number in numbers){
+            [numberQueryList addObject:number];
+            charCount+=number.length;
             
-            for(GTLZeppaclientapiZeppaUserInfo *userInfo  in response.items){
-                
-                _defaultZeppaUser.zeppaUserInfo = userInfo;
-                [_uniqueInfoItems addObject:userInfo];
-//                [_recognizedNumbers addObject:userInfo.primaryUnformattedNumber];
-                [weakSelf getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:nil anduserId:userInfo.key.parent.identifier];
-               
+            // If char count is greater than some amount, query for list
+            if(charCount > 1850) {
+                [self queryForZeppaUserInfoWithFilter:@"listParam.contains(phoneNumber)" withList:[NSArray arrayWithArray:numberQueryList]];
+                [numberQueryList removeAllObjects];
+                charCount=0;
             }
-           [weakSelf updateMingler];
-        }else{
-            NSLog(@"ok");
-            [weakSelf updateMingler];
-           [weakSelf getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:nil anduserId:_defaultZeppaUser.zeppaUserInfo.key.parent.identifier];
         }
-    }];
+        if(numberQueryList.count>0){
+            [self queryForZeppaUserInfoWithFilter:@"listParam.contains(phoneNumber)" withList:[NSArray arrayWithArray:numberQueryList]];
+        }
+        
+    }
     
 }
+
+- (void)queryForZeppaUserInfoWithFilter:(NSString*) filter withList:(NSArray*) list{
+    
+    queryCount+=1;
+    GTLQueryZeppaclientapi *listZeppaUserInfoTask = [GTLQueryZeppaclientapi queryForListZeppaUserInfoWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
+    // Set the limit
+    listZeppaUserInfoTask.limit = list.count;
+    listZeppaUserInfoTask.filter = filter;
+    
+    NSError *jsonError;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:list options:NSJSONWritingPrettyPrinted error:&jsonError];
+    if (jsonData){
+        
+        listZeppaUserInfoTask.jsonArgs = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"jsonArgs: %@", listZeppaUserInfoTask.jsonArgs);
+        [self.zeppaUserInfoService executeQuery:listZeppaUserInfoTask completionHandler:^(GTLServiceTicket *ticket, GTLZeppaclientapiCollectionResponseZeppaUserInfo *response, NSError *error) {
+            if(error){
+                // There was an error
+                NSLog(@"Error Querying for user info: %@", error.description);
+            } else if (response && response.items && response.items.count>0) {
+                // Iterate through response and add defaults
+                for (GTLZeppaclientapiZeppaUserInfo *info in response) {
+                    [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:nil];
+                }
+                // TODO: post a notification saying held user mediators has changed
+            }
+            
+            queryCount-=1;
+            if(queryCount>0){
+                // Queries are still running, don't do anything
+            } else {
+                // Notify the device that we're no longer searching for people
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotifDidFinishFindFriendsTask object:nil];
+            }
+        }];
+    } else if (jsonError) {
+        NSLog(@"json error: %@", jsonError.description);
+    }
+    
+}
+
 
 ///***********************************************
 #pragma  mark - Zeppa UserToUser RelationShip Api
 ///***********************************************
--(void)getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:(NSString *)cursorValue anduserId:(NSNumber *)userId{
-    
-    __weak  typeof(self)  weakSelf = self;
-    
-    __block NSString *filter = [NSString stringWithFormat:@"creatorId == %@ && subjectId == %@ ",[ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier,userId];
-    __block  NSString *ordering = @"created desc";
-    __block NSNumber *limit = [NSNumber numberWithInt:50];
-    
-    GTLQueryZeppaclientapi *u2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    
-    [u2uRelationshipQuery setFilter:filter];
-    [u2uRelationshipQuery setCursor:cursorValue];
-    [u2uRelationshipQuery setOrdering:ordering];
-    [u2uRelationshipQuery setLimit:[limit integerValue]];
-    
-    [self.zeppaUserRelationshipService executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
-        //
-        
-        //  __strong typeof(self) strongSelf = weakSelf;
-        //  __typeof__(self) strongSelf = weakSelf;
-        if(error){
-            // error
-        } else if(response && response.items && response.items.count > 0){
-            
-            for (GTLZeppaclientapiZeppaUserToUserRelationship *mingler in response.items) {
-                [weakSelf fetchZeppaUserInfoWithParentIdentifier:mingler.subjectId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
-                    
-                    [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:mingler];
-                 [weakSelf getZeppaUserToUserRelationshipListQueryUsingSubjectIdwithCursor:nil andSubjectId:userId];
-                    
-                    
-                    
-                }];
-            }
-            NSString *nextCursor = response.nextPageToken;
-            if (nextCursor) {
-                [weakSelf getZeppaUserToUserRelationshipListQueryUsingCreatorIdwithCursor:nextCursor anduserId:userId];
-            }else{
-               [weakSelf getZeppaUserToUserRelationshipListQueryUsingSubjectIdwithCursor:nil andSubjectId:userId];
-            }
-        }else{
-            [weakSelf getZeppaUserToUserRelationshipListQueryUsingSubjectIdwithCursor:nil andSubjectId:userId];
-        }
-        [_delegate finishLoadingMingler];
-    }];
-    
-}
--(void)getZeppaUserToUserRelationshipListQueryUsingSubjectIdwithCursor:(NSString *)cursorValue andSubjectId:(NSNumber *)subjectId{
-    
-    __block typeof(self)  weakSelf = self;
-    __block NSString *filter = [NSString stringWithFormat:@"subjectId == %@ && creatorId == %@",[ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier,subjectId];
-    __block  NSString *ordering = @"created desc";
-    __block NSNumber *limit = [NSNumber numberWithInt:50];
-    
-    GTLQueryZeppaclientapi *u2uRelationshipQuery = [GTLQueryZeppaclientapi queryForListZeppaUserToUserRelationshipWithIdToken:[[ZPAAuthenticatonHandler sharedAuth] authToken]];
-    
-    [u2uRelationshipQuery setFilter:filter];
-    [u2uRelationshipQuery setCursor:cursorValue];
-    [u2uRelationshipQuery setOrdering:ordering];
-    [u2uRelationshipQuery setLimit:[limit integerValue]];
-    
-    [self.zeppaUserRelationshipService executeQuery:u2uRelationshipQuery completionHandler:^(GTLServiceTicket *ticket,  GTLZeppaclientapiCollectionResponseZeppaUserToUserRelationship *response, NSError *error) {
-        //
-        if(error){
-            // error
-        } else if(response && response.items && response.items.count > 0){
-            
-            for(GTLZeppaclientapiZeppaUserToUserRelationship *mingler in response.items) {
-                [weakSelf fetchZeppaUserInfoWithParentIdentifier:mingler.creatorId withCompletion:^(GTLZeppaclientapiZeppaUserInfo *info) {
-                    
-                    [[ZPAZeppaUserSingleton sharedObject] addDefaultZeppaUserMediatorWithUserInfo:info andRelationShip:mingler];
-                    // [_delegate finishLoadingMingler];
 
-                }];
-                
-            }
-            NSString *nextCursor = response.nextPageToken;
-            if (nextCursor) {
-                [weakSelf getZeppaUserToUserRelationshipListQueryUsingSubjectIdwithCursor:nextCursor andSubjectId:subjectId];
-            }else{
-                
-            }
-            
-        }else{
-           [_delegate finishLoadingMingler];
-        }
-       [_delegate finishLoadingMingler];
-    }];
-    
-}
 -(GTLServiceZeppaclientapi *)zeppaUserRelationshipService{
     
     static GTLServiceZeppaclientapi *service = nil;
@@ -354,6 +242,7 @@
         service = [[GTLServiceZeppaclientapi  alloc] init];
         service.retryEnabled = YES;
     }
+    
     return service;
 }
 

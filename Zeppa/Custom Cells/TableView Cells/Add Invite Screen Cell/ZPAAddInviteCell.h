@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 
 
 @interface ZPAAddInviteCell : UITableViewCell
@@ -18,5 +18,5 @@
 - (IBAction)btnSelectUserTapped:(id)sender;
 
 
--(void)showDetailOnCell:(ZPADefaulZeppatUserInfo *)user;
+-(void)showDetailOnCell:(ZPADefaultZeppaUserInfo *)user;
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAMyZeppaEvent.h"
 
 @interface ZPAMinglersEventCell : UITableViewCell
@@ -24,6 +24,6 @@
 - (IBAction)watchButtonTapped:(UIButton *)sender;
 - (IBAction)joinButtonTapped:(UIButton *)sender;
 
--(void)showEventDetailOnCell:(ZPADefaulZeppatUserInfo *)userInfo withZeppaEvents:(ZPAMyZeppaEvent *)zeppaEvent;
+-(void)showEventDetailOnCell:(ZPADefaultZeppaUserInfo *)userInfo withZeppaEvents:(ZPAMyZeppaEvent *)zeppaEvent;
 
 @end

@@ -6,9 +6,7 @@
 //  Copyright (c) 2014 Milan Agarwal. All rights reserved.
 //
 
-#import "ZPARevealSplitMenuBaseVC.h"
-
-@interface ZPAActivityVC : ZPARevealSplitMenuBaseVC<UITableViewDataSource,UITableViewDelegate>
+@interface ZPAActivityVC : UIViewController<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong)NSMutableArray *arrNotifications;
 

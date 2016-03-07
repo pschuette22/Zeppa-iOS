@@ -14,6 +14,12 @@
 +(void)storedObject:(id)object withKey:(NSString *)key;
 //get Data from userDefault with Key
 +(id)getValueFromUserDefaultUsingKey:(NSString *)key;
+
+// Get or insert boolean value for a given key
++(BOOL)getBoolWithKey:(NSString*)key withDefault:(BOOL) defaultValue;
+
++(NSNumber*) getNumberWithKey:(NSString*)key;
+
 //RemoveObject in userDefault with key
 +(void)removeObjectUsingKey:(NSString *)key;
 //clear all data in userDefault

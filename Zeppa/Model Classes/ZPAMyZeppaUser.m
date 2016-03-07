@@ -1,20 +1,25 @@
 //
-//  ZPAUser.m
+//  ZPAMyZeppaUser.m
 //  Zeppa
 //
-//  Created by Milan Agarwal on 30/08/14.
-//  Copyright (c) 2014 Milan Agarwal. All rights reserved.
+//  Created by Peter Schuette on 2/26/16.
+//  Copyright © 2016 Pete Schuette. All rights reserved.
 //
 
 #import "ZPAMyZeppaUser.h"
 
 @implementation ZPAMyZeppaUser
 
--(id)init{
-    self = [super init];
-    if (self) {
-        //self.endPointUser = [[GTLZeppaclientapiZeppaUser alloc] init];
+-(id) initWithZeppaUser: (GTLZeppaclientapiZeppaUser*) zeppaUser {
+    if(self = [super initWithUserInfo:zeppaUser.userInfo]) {
+        self.endPointUser = zeppaUser;
     }
     return self;
 }
+
+// Override the get user id method for simplicity
+- (NSNumber*) getUserId {
+    return self.endPointUser.identifier;
+}
+
 @end

@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPACommonMinglersCell.h"
 
 @interface ZPAMutualMinglerVC : UIViewController<UITableViewDataSource,UITableViewDelegate>
-@property (nonatomic,strong)ZPADefaulZeppatUserInfo *minglerUserInfo;
+@property (nonatomic,strong)ZPADefaultZeppaUserInfo *minglerUserInfo;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property BOOL isAttendingUser;
 @property (nonatomic,strong) NSArray * attendingUserIdArr;

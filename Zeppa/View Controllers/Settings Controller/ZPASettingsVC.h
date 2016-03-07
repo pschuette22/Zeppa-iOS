@@ -14,7 +14,9 @@
 
 - (IBAction)pushNotifBtnTapped:(UIButton *)sender;
 - (IBAction)pushNotifSwitch:(UISwitch *)sender;
-- (IBAction)calendarSyncSwitchTapped:(UISwitch *)sender;
+- (IBAction)seePrivacyTapped:(UIButton *)sender;
+- (IBAction)seeTermsTapped:(UIButton *)sender;
+- (IBAction)logoutTapped:(UIButton *)sender;
+- (IBAction)deleteAccountTapped:(UIButton *)sender;
 
-- (IBAction)manageSyncCalendarPressed:(UIButton *)sender;
 @end

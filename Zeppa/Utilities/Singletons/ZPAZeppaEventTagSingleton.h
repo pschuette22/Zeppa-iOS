@@ -23,6 +23,7 @@
 @property (nonatomic, strong)NSMutableArray *abstactEventTagArray;
 @property (nonatomic, strong) NSMutableArray * tagId;
 
+
 +(ZPAZeppaEventTagSingleton *)sharedObject;
 +(void)resetObject;
 -(void)clear;
@@ -42,6 +43,8 @@
 -(GTLZeppaclientapiEventTag *)getZeppaTagWithId:(long long)tagId;
 
 -(NSArray *)getTagsFromTagIdsArray:(NSArray *)ids;
+
+
 
 -(void)removeZeppaEventTag:(GTLZeppaclientapiEventTag *)tag;
 

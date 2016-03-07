@@ -12,7 +12,6 @@
 
 +(void)storedObject:(id)object withKey:(NSString *)key{
     
-    
     if ([object isKindOfClass:[NSData class]] || [object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]] || [object isKindOfClass:[NSDate class]] || [object isKindOfClass:[NSArray class]] || [object isKindOfClass:[NSDictionary class]]) {
         
         NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
@@ -34,6 +33,20 @@
     return nil;
     
 }
+
++(BOOL)getBoolWithKey:(NSString*)key withDefault:(BOOL) defaultValue {
+    
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    if ([userDefault objectForKey:key]) {
+        return [userDefault boolForKey:key];
+    } else {
+        [userDefault setBool:defaultValue forKey:key];
+        [userDefault synchronize];
+    }
+    return defaultValue;
+}
+
+
 +(void)removeObjectUsingKey:(NSString *)key{
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     if ([userDefault objectForKey:key]) {
@@ -47,9 +60,10 @@
     
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     if(appDomain){
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
     }
 }
+
 +(BOOL)isValueExistsForKey:(NSString *)key{
     
     NSUserDefaults *userDafault = [NSUserDefaults standardUserDefaults];
@@ -60,65 +74,35 @@
 
 /*
  * Deteremine if notification should be dispatched based on
+ * This method does not check to ensure that notifications are enabled for user
  */
 +(BOOL) doSendNotificationForType:(NSString*)type
 {
     BOOL doSend = NO;
     
-    NSMutableDictionary *notificationSettings = [self getValueFromUserDefaultUsingKey:kZeppaSettingNotificationKey];
-    if(notificationSettings) {
-        if([type isEqualToString:@"MINGLE_REQUEST"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingMingleKey] boolValue];
-            
-        } else if ([type isEqualToString:@"MINGLE_ACCEPTED"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingStartedMingleKey] boolValue];
-            
-        }else if ([type isEqualToString:@"EVENT_RECOMMENDATION"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingEventRecommendationsKey] boolValue];
-            
-        }else if ([type isEqualToString:@"DIRECT_INVITE"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingEventInvitesKey] boolValue];
-            
-        }else if ([type isEqualToString:@"COMMENT_ON_POST"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingCommentsKey] boolValue];
-            
-        }else if ([type isEqualToString:@"EVENT_CANCELED"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingEventCanceledKey] boolValue];
-            
-        }else if ([type isEqualToString:@"USER_JOINED"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingPeopleJoinKey] boolValue];
-            
-        }else if ([type isEqualToString:@"USER_LEAVING"]) {
-            doSend = [[notificationSettings valueForKey:kZeppaSettingPeopleLeaveKey] boolValue];
-            
-        }
-    } else {
-    
-        if([type isEqualToString:@"MINGLE_REQUEST"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingMingleKey] boolValue];
-            
-        } else if ([type isEqualToString:@"MINGLE_ACCEPTED"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingStartedMingleKey] boolValue];
-            
-        }else if ([type isEqualToString:@"EVENT_RECOMMENDATION"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingEventRecommendationsKey] boolValue];
-            
-        }else if ([type isEqualToString:@"DIRECT_INVITE"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingEventInvitesKey] boolValue];
-            
-        }else if ([type isEqualToString:@"COMMENT_ON_POST"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingCommentsKey] boolValue];
+    if([type isEqualToString:@"MINGLE_REQUEST"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingMingleKey] boolValue];
+        
+    } else if ([type isEqualToString:@"MINGLE_ACCEPTED"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingStartedMingleKey] boolValue];
+        
+    }else if ([type isEqualToString:@"EVENT_RECOMMENDATION"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingEventRecommendationsKey] boolValue];
+        
+    }else if ([type isEqualToString:@"DIRECT_INVITE"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingEventInvitesKey] boolValue];
+        
+    }else if ([type isEqualToString:@"COMMENT_ON_POST"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingCommentsKey] boolValue];
 
-        }else if ([type isEqualToString:@"EVENT_CANCELED"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingEventCanceledKey] boolValue];
+    }else if ([type isEqualToString:@"EVENT_CANCELED"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingEventCanceledKey] boolValue];
 
-        }else if ([type isEqualToString:@"USER_JOINED"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingPeopleJoinKey] boolValue];
-            
-        }else if ([type isEqualToString:@"USER_LEAVING"]) {
-            doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingPeopleLeaveKey] boolValue];
-            
-    }
+    }else if ([type isEqualToString:@"USER_JOINED"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingPeopleJoinKey] boolValue];
+        
+    }else if ([type isEqualToString:@"USER_LEAVING"]) {
+        doSend = [[self getValueFromUserDefaultUsingKey:kZeppaSettingPeopleLeaveKey] boolValue];
     }
     
     // Log if we are sending

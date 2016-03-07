@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPACommonMinglersCell.h"
 
 @interface ZPAInvitedUserVC : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 
-@property (nonatomic,strong)ZPADefaulZeppatUserInfo *invitedUserInfo;
+@property (nonatomic,strong)ZPADefaultZeppaUserInfo *invitedUserInfo;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property BOOL isAttendingUser;
 @property (nonatomic,strong) NSArray * attendingUserIdArr;

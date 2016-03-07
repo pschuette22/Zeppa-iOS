@@ -26,7 +26,7 @@
 @property (nonatomic, weak)NSMutableArray *arrInvitedUsers;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic ,strong)ZPAAddInviteCell *addInviteCell;
-@property (nonatomic ,strong)ZPAMyZeppaEvent *zeppaEvent;
+@property (nonatomic ,strong)ZPAEventInfoBase *zeppaEvent;
 @property  NSMutableArray *invitesUserIdArray;
 @property  NSMutableArray *selectedInvitesUserIdArray;
 @property (nonatomic, strong)NSMutableArray *arrInviteesCandidate;

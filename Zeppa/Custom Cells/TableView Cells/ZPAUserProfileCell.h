@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 
 #import "ZPAAppData.h"
 
@@ -25,5 +25,5 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tcHeightConstraint;
 
 
--(void)showZeppaMinglersInfoOnCell:(ZPADefaulZeppatUserInfo *)zeppaUser;
+-(void)showZeppaMinglersInfoOnCell:(ZPADefaultZeppaUserInfo *)zeppaUser;
 @end

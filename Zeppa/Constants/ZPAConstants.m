@@ -26,7 +26,7 @@ NSString *const kZeppaGooglePlusWebClientIdKey = @"587859844920-jiqoh8rn4j8d0941
 //NSString *const kZeppaKeychainItemNameKey = @"com.zeppamobile.zeppaios.GooglePlus";
 NSString *const kZeppaKeychainItemNameKey = @"com.zeppamobile.zeppaios.Zeppa";
 ;
-
+NSString *const kZeppaGoogleAPIKey = @"AIzaSyAFGt9RXiRxpXva8BTyj6lugrQ3OzW_G3Y";
 
 NSString *const kZeppaGoogleCalendarArrayKey = @"googleCalendarArray";
 //****************************************************
@@ -73,12 +73,6 @@ NSString *const kZeppaGooglePlusImageKey                = @"image";
 NSString *const kZeppaGooglePlusImageUrlKey             = @"url";
 NSString *const kZeppaGooglePlusGenderKey               = @"gender";
 
-//***************************************************************************
-#pragma mark - https://www.googleapis.com/calendar/v3/users/me/calendarList
-//***************************************************************************
-NSString *const kZeppaCalendarListIdKey                     = @"id";
-NSString *const kZeppaCalendarListDescriptionKey            = @"description";
-NSString *const kZeppaCalendarListSummaryKey                = @"summary";
 
 
 //*********************************************************************************
@@ -101,10 +95,17 @@ NSString *const kZeppaEventsSequenceKey               = @"sequence";
 
 
 //****************************************************
-#pragma mark - Notifications Keys
+#pragma mark - UINotifications Keys
+//****************************************************
+NSString *const kNotifDidFinishFindFriendsTask          =@"didFinishFindFriends";
+NSString *const kNotifDidUpdateLocation                 =@"didUpdateLocation";
+
+
+
+//****************************************************
+#pragma mark - Zeppa Notifications Keys
 //****************************************************
 
-NSString *const kZeppaSettingSyncCalendarKey              = @"syncCalendar";
 
  NSString *const kZeppaSettingNotificationKey             = @"notification";
  NSString *const kZeppaSettingVibrateKey                  = @"vibrateKey";
@@ -120,17 +121,27 @@ NSString *const kZeppaSettingSyncCalendarKey              = @"syncCalendar";
  NSString *const kZeppaTagUpdateNotificationKey           = @"tagNotification";
  NSString *const kZeppaEventsUpdateNotificationKey        = @"eventsNotification";
 
-// notification calendar Synchronization Key
-
-NSString *const kzeppacalendarSync                          = @"calendarSync";
 
 
 //****************************************************
 #pragma mark - Observer Keys
 //****************************************************
 
-NSString *const kObserveEventsChangedKey = @"observeEventsChanged";
-NSString *const kObserveMinglersChangedKey = @"observeMinglersChanged";
+NSString *const kObserveEventsChangedKey                    = @"observeEventsChanged";
+NSString *const kObserveMinglersChangedKey                  = @"observeMinglersChanged";
 
+
+//****************************************************
+#pragma mark - Pref Keys
+//****************************************************
+NSString *const kLocationLatitude                           = @"lastKnowLatitude";
+NSString *const kLocationLongitude                          = @"lastKnownLongitude";
+
+
+//****************************************************
+#pragma mark - Pref Keys
+//****************************************************
+NSString *const urlPrivacyPolicy                            = @"http://www.zeppamobile.com/privacy.html";
+NSString *const urlTermsOfUse                               = @"http://www.zeppamobile.com/TermsAndConditions.html";
 
 @end

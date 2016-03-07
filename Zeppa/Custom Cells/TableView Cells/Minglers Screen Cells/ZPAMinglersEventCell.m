@@ -8,7 +8,7 @@
 
 #import "ZPAMinglersEventCell.h"
 #import "ZPAZeppaEventSingleton.h"
-#import "ZPADefaulZeppatEventInfo.h"
+#import "ZPADefaultZeppaEventInfo.h"
 
 @implementation ZPAMinglersEventCell
 
@@ -37,28 +37,29 @@
 - (IBAction)joinButtonTapped:(UIButton *)sender {
 }
 
--(void)showEventDetailOnCell:(ZPADefaulZeppatUserInfo *)userInfo withZeppaEvents:(ZPAMyZeppaEvent *)zeppaEvent{
+-(void)showEventDetailOnCell:(ZPADefaultZeppaUserInfo *)userInfo withZeppaEvents:(ZPADefaultZeppaEventInfo *)zeppaEvent{
     
     
-    NSURL *profileImageURL = [NSURL URLWithString:userInfo.zeppaUserInfo.imageUrl];
+    NSURL *profileImageURL = [NSURL URLWithString:userInfo.userInfo.imageUrl];
     [_imageView_minglerImage setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
     }];
-    _lbl_minglerUserName.text = [NSString stringWithFormat:@"%@ %@",userInfo.zeppaUserInfo.givenName,userInfo.zeppaUserInfo.familyName];
-    _lbl_eventTitle.text = zeppaEvent.event.title;
+    _lbl_minglerUserName.text = userInfo.getDisplayName;
+    _lbl_eventTitle.text = zeppaEvent.zeppaEvent.title;
     
     
     _imageView_conflictIndicator.image = [UIImage imageNamed:@"small_circle_blue.png"];
     
-    [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_conflictIndicator withZeppaEvent:zeppaEvent];
+    //
+//    [[ZPAZeppaEventSingleton sharedObject]setConflictIndicator:_imageView_conflictIndicator withZeppaEvent:zeppaEvent];
     
     
     
-    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.event.start withEndTime:zeppaEvent.event.end];
+    NSString * durationString = [[ZPADateHelper sharedHelper]getEventTimeDuration:zeppaEvent.zeppaEvent.start withEndTime:zeppaEvent.zeppaEvent.end];
     
     [_btn_EventDuration setTitle:durationString forState:UIControlStateNormal];
     
-    [_btn_EventLocation setTitle:zeppaEvent.event.displayLocation forState:UIControlStateNormal];
+    [_btn_EventLocation setTitle:zeppaEvent.zeppaEvent.displayLocation forState:UIControlStateNormal];
     
     
     if ([zeppaEvent.relationship.isWatching boolValue] == true) {

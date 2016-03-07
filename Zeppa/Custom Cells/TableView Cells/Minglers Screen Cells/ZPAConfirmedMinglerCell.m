@@ -21,18 +21,18 @@
 
 - (IBAction)acceptBtnTapped:(UIButton *)sender {
     
-    
+    // Should update the relationship in the backend and load in new data
 }
 
 - (IBAction)deniedBtnTapped:(UIButton *)sender {
-    
+    // Should remove relationship in the backend
 }
 
--(void)showDetailOnCell:(ZPADefaulZeppatUserInfo *)userInfo{
+-(void)showDetailOnCell:(ZPADefaultZeppaUserInfo *)userInfo{
     
-    _lblUserName.text = [NSString stringWithFormat:@"%@ %@",userInfo.zeppaUserInfo.givenName,userInfo.zeppaUserInfo.familyName];
+    _lblUserName.text = userInfo.getDisplayName;
     
-    NSURL *confrmedMinglerImageUrl = [NSURL URLWithString:userInfo.zeppaUserInfo.imageUrl];
+    NSURL *confrmedMinglerImageUrl = [NSURL URLWithString:userInfo.userInfo.imageUrl];
     [_imageView_userImage setImageWithURL:confrmedMinglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
         ///Do anything with image

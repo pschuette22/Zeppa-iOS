@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ZPAAuthenticatonHandler.h"
+#import "ZPADefaultZeppaEventInfo.h"
 
 #import "GTLZeppaclientapiZeppaEvent.h"
 #import "GTLZeppaclientapiZeppaEventToUserRelationship.h"
@@ -22,7 +23,6 @@
 
 @property (strong, readonly) GTLServiceZeppaclientapi *eventService;
 @property (strong, readonly) GTLServiceZeppaclientapi *relationshipService;
-@property (nonatomic, weak) GTMOAuth2Authentication *auth;
 
 @property (nonatomic, strong) NSNumber* eventId;
 @property (nonatomic, strong) NSNumber* userId;

@@ -74,7 +74,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf accessGrantedForAddressBook:addressBook];
                                                          
-                });
+            });
         }
         else{
             [self showAlerView];
@@ -150,10 +150,12 @@
     NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
     fileName = [[fileName componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
     
-    if(fileName.length >= 10){
-         fileName = [fileName substringFromIndex:[fileName length] - 10];
+    if(fileName.length >= 11){
+        // get the last 11 characters
         
-        
+         fileName = [fileName substringFromIndex:[fileName length] - 11];
+    } else if (fileName.length==10) {
+        fileName = [NSString stringWithFormat:@"1%@",fileName];
     }
     
     return fileName;

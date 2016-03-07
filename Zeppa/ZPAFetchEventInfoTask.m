@@ -73,12 +73,11 @@
             GTLZeppaclientapiZeppaEventToUserRelationship * relationship = [response.items objectAtIndex:0];
             
             // Generate Event Holder Model
-            ZPAMyZeppaEvent *event = [[ZPAMyZeppaEvent alloc] init];
-            [event setEvent:self.zeppaEvent];
-            [event setRelationship:relationship];
-            [[ZPAZeppaEventSingleton sharedObject] addZeppaEvents:event];
+            ZPADefaultZeppaEventInfo *defaultEventInfo = [[ZPADefaultZeppaEventInfo alloc] initWithZeppaEvent:self.zeppaEvent withRelationship:relationship];
             
-            [self onCompletionWithTicket:ticket withEvent:event withError:error];
+            [[ZPAZeppaEventSingleton sharedObject] addZeppaEvent:defaultEventInfo];
+            
+            [self onCompletionWithTicket:ticket withEvent:defaultEventInfo withError:error];
         } else {
             [self onCompletionWithTicket:ticket withEvent:nil withError:error];
         }

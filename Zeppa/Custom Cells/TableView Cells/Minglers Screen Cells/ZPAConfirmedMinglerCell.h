@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "UIImageView+WebCache.h"
 
 @interface ZPAConfirmedMinglerCell : UITableViewCell
@@ -18,6 +18,6 @@
 
 - (IBAction)acceptBtnTapped:(UIButton *)sender;
 - (IBAction)deniedBtnTapped:(UIButton *)sender;
--(void)showDetailOnCell:(ZPADefaulZeppatUserInfo *)userInfo;
+-(void)showDetailOnCell:(ZPADefaultZeppaUserInfo *)userInfo;
 
 @end

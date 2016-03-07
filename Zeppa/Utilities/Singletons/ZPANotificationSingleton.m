@@ -7,9 +7,8 @@
 //
 
 #import "ZPANotificationSingleton.h"
-#import "ZPAFetchInitialNotifications.h"
-#import "ZPADefaulZeppatEventInfo.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaEventInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAZeppaUserSingleton.h"
 
@@ -47,7 +46,7 @@ BOOL hasLoadedInitial;
  * This method dispatches notification information appropriately
  *
  */
--(void)didReceiveNotification:(NSNumber *)notificationId
+-(void)didReceiveZeppaNotification:(NSNumber *)notificationId
 {
     // Fetch the current
     [self fetchNotificationById:notificationId];
@@ -211,54 +210,6 @@ BOOL hasLoadedInitial;
     return notificationTitle;
 }
 
--(NSString *)getNotificationMessage:(GTLZeppaclientapiZeppaNotification *)notification{
-    
-    NSString *notificationMessage;
-    ZPADefaulZeppatEventInfo *eventMediator = [ZPADefaulZeppatEventInfo sharedObject] ;
-    ZPADefaulZeppatUserInfo *userInfoMediator = [ZPADefaulZeppatUserInfo sharedObject];
-    eventMediator.zeppaEvent = [[ZPAZeppaEventSingleton sharedObject]getEventById:[notification.eventId longLongValue]];
-    userInfoMediator = [[ZPAZeppaUserSingleton sharedObject]getZPAUserMediatorById:[notification.senderId longLongValue]];
-    
-    switch ([self getNotificationTypeOrder:notification]) {
-        case 0:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ wants to mingle",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName ];
-            break;
-        case 1:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ accepted mingle request",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName];
-            break;
-        case 2:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ started %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-        case 3:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ invited you to %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-        case 4:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ commented on %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-        case 5:
-            // TODO: figure out how to retrieve canceled event name and put into
-            // notification body
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ canceled",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName];
-            break;
-        case 6:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ updated %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-        case 7:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ joined %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-        case 8:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ left %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-        case 9:
-            notificationMessage = [NSString stringWithFormat:@"%@ %@ reposted %@",userInfoMediator.zeppaUserInfo.givenName,userInfoMediator.zeppaUserInfo.familyName,eventMediator.zeppaEvent.event.title];
-            break;
-            
-        default:
-            break;
-    }
-    return notificationMessage;
-    
-}
 
 -(void)addZeppaNotification:(GTLZeppaclientapiZeppaNotification *)notification{
     
@@ -273,17 +224,18 @@ BOOL hasLoadedInitial;
 
 -(void)fetchInitialNotifications:(long long)userId{
     
-    ZPAFetchInitialNotifications * initialNotification = [[ZPAFetchInitialNotifications alloc]init];
-    
-    [initialNotification excuteZeppaApiWithUserId:userId andToken:nil];
+//    ZPAFetchInitialNotifications * initialNotification = [[ZPAFetchInitialNotifications alloc]init];
+//    
+//    [initialNotification excuteZeppaApiWithUserId:userId andToken:nil];
 }
 
 
 -(void)executeRemoveNotification:(long long)notificationId{
     
-    ZPAFetchInitialNotifications * initialNotification = [[ZPAFetchInitialNotifications alloc]init];
-    
-    [initialNotification executeZeppaNotificationRemoveQuery:notificationId];
+//    ZPAFetchInitialNotifications * initialNotification = [[ZPAFetchInitialNotifications alloc]init];
+//    
+//    [initialNotification executeZeppaNotificationRemoveQuery:notificationId];
 
 }
+
 @end

@@ -7,6 +7,9 @@
 //
 
 #import "ZPAStaticHelper.h"
+#import "ZPAUserDefault.h"
+#import "DistanceConverter.h"
+#import <CoreLocation/CoreLocation.h>
 
 @implementation ZPAStaticHelper
 
@@ -147,19 +150,6 @@
 }
 
 //****************************************************
-#pragma mark - Xib File Method
-//****************************************************
-+(ZPADateAndTimePicker *)datePickerView{
-    
-    return  [[[NSBundle mainBundle]loadNibNamed:@"Dialog_iPhone" owner:nil options:nil] objectAtIndex:0];
-    
-}
-+(ZPACustomPicker *)customPickerView{
-    
-    return [[[NSBundle mainBundle]loadNibNamed:@"Dialog_iPhone" owner:nil options:nil] objectAtIndex:1];
-}
-
-//****************************************************
 #pragma mark - Private Method
 //****************************************************
 +(BOOL)isValidString:(NSString *)string{
@@ -178,6 +168,36 @@
     
 }
 
+
++ (NSString*) locationSuffixOrNil {
+    NSString *locationSuffix = nil;
+    
+    // Verify location services is enabled and location is authorized
+        if([CLLocationManager locationServicesEnabled] &&
+           ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
+            [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways)) {
+    
+               NSDecimalNumber* lat = [ZPAUserDefault getValueFromUserDefaultUsingKey:kLocationLatitude];
+               NSDecimalNumber* lon = [ZPAUserDefault getValueFromUserDefaultUsingKey:kLocationLongitude];
+               
+               // Verify that these are stored numbers
+               if(lat && lon) {
+                   // Stored numbers, get the lat/lon window that is within 50 miles
+//                   CLLocationCoordinate2D *coordinates = CLLocationCoordinate2DMake([CLLocationDegrees de], CLLocationDegrees longitude)
+                   CLLocation *mLocation = [[CLLocation alloc] initWithLatitude:lat.doubleValue longitude:lon.doubleValue];
+                   NSArray *maxCoordinates = [DistanceConverter getAreaPoints:50 inUnits:DUUnitMiles from:mLocation];
+                   CLLocation *tl_coord = [maxCoordinates objectAtIndex:0];
+                   CLLocation *br_coord = [maxCoordinates objectAtIndex:1];
+                   
+                   // Build the suffix: && latitude <= topLeftLatitude && latitude >= bottomRightLatitude && longitude <= topLeftLongitude && longitude >= bottomRightLongitude
+                   locationSuffix = [NSString stringWithFormat:@"&& latitude <= %f && latitude >= %f && longitude <= %f && longitude >= %f",tl_coord.coordinate.latitude, br_coord.coordinate.latitude,tl_coord.coordinate.longitude,br_coord.coordinate.longitude];
+                   
+               }
+               
+        }
+    
+    return locationSuffix;
+}
 
 
 @end

@@ -8,7 +8,7 @@
 
 #import "ZPADiscussionCell.h"
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAMyZeppaUser.h"
 #import "GTLZeppaclientapiZeppaUserInfo.h"
 
@@ -49,13 +49,13 @@
     if (!zeppaUser) {
         // TODO: load user and set info when ready
         _lbl_discussionUserName.text = @"Loading...";
-    } else if ([zeppaUser isKindOfClass:[ZPADefaulZeppatUserInfo class]]) {
-        ZPADefaulZeppatUserInfo * user = zeppaUser;
-        NSURL *profileImageURL = [NSURL URLWithString:user.zeppaUserInfo.imageUrl];
+    } else if ([zeppaUser isKindOfClass:[ZPADefaultZeppaUserInfo class]]) {
+        ZPADefaultZeppaUserInfo * user = zeppaUser;
+        NSURL *profileImageURL = [NSURL URLWithString:user.userInfo.imageUrl];
         [_imageView_discussionUser setImageWithURL:profileImageURL placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             
         }];
-        NSString * userName = [NSString stringWithFormat:@"%@ %@",user.zeppaUserInfo.givenName,user.zeppaUserInfo.familyName];
+        NSString * userName = user.getDisplayName;
         
         _lbl_discussionUserName.text = userName;
         
@@ -69,8 +69,7 @@
             
         }];
         
-        NSString *userName = [NSString stringWithFormat:@"%@ %@",user.endPointUser.userInfo.givenName,user.endPointUser.userInfo.familyName];
-        
+        NSString *userName = user.getDisplayName;
         _lbl_discussionUserName.text = userName;
         
     }

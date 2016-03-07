@@ -7,8 +7,6 @@
 //
 
 #import "ZPAAuthenticatonHandler.h"
-#import "ZPAZeppaCalendarSingleton.h"
-#import "ZPACalendarModel.h"
 #import "ZPAAppDelegate.h"
 #import "ZPAUserDefault.h"
 #import "ZPADeviceInfo.h"
@@ -18,7 +16,6 @@
 #import "ZPAZeppaEventSingleton.h"
 #import "ZPAZeppaUserSingleton.h"
 #import "ZPANotificationSingleton.h"
-#import "ZPASwapperVC.h"
 #import "GTLCalendar.h"
 #import "GTLZeppaclientapi.h"
 
@@ -147,16 +144,14 @@ didDisconnectWithUser:(GIDGoogleUser *)user
 ///**********************************************
 -(void)logout{
     
-    [[ZPAZeppaCalendarSingleton sharedObject]clear];
-    [[ZPAZeppaCalendarSingleton sharedObject]clear];
+    
     [[ZPAZeppaEventSingleton sharedObject]clear];
     [[ZPAZeppaEventTagSingleton sharedObject]clear];
     [[ZPAZeppaUserSingleton sharedObject]clear];
     
-    [[ZPADeviceInfo sharedObject] removeDeviceInfoWithObject:[ZPADeviceInfo sharedObject].currentDevice];
+//    [[ZPADeviceInfo sharedObject] removeDeviceInfoWithObject:[ZPADeviceInfo sharedObject].currentDevice];
     [ZPAUserDefault clearUserDefault];
     [[ZPAAppDelegate sharedObject] userDidLogoutFromZeppa];
-    
     
     
 }

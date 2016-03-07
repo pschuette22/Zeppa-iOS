@@ -8,19 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "ZPARevealSplitMenuBaseVC.h"
-#import "ZPAMyZeppaEvent.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPAEventInfoBase.h"
+#import "ZPAUserInfoBase.h"
 #import "ZPAFetchDefaultTagsForUser.h"
 #import "ZPADiscussionCell.h"
 
-@interface ZPAEventDetailVC : ZPARevealSplitMenuBaseVC<UITableViewDelegate,UITextViewDelegate>
+@interface ZPAEventDetailVC : UIViewController<UITableViewDelegate,UITextViewDelegate>
 
 
-// Objects and tasks
-@property (weak, nonatomic) ZPAMyZeppaEvent *eventDetail;
-@property (weak, nonatomic) ZPADefaulZeppatUserInfo *userInfo;
-@property (nonatomic, strong) ZPAFetchDefaultTagsForUser *defaultTagsForUser;
-
+// Hold the objects for this event and host
+// event info of the event to be displayed
+@property (weak, nonatomic) ZPAEventInfoBase *eventInfo;
+// user info of the event host
+@property (weak, nonatomic) ZPAUserInfoBase *hostInfo;
+// user info of the person who invited you, or nil
+@property (weak, nonatomic) ZPAUserInfoBase *inviteUserInfo;
 /*
  * Views
  */
@@ -48,9 +50,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *quickActionHeight;
 
-
 // Tag Container
-@property (nonatomic, strong)NSMutableArray *tagsArray;
 @property (weak, nonatomic) IBOutlet UIView *tagContainerView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagContainerHeight;
 
@@ -98,6 +98,8 @@
 - (IBAction)descriptionTapped:(UIButton*)sender;
 
 - (IBAction)postButtonTapped:(UIButton *)sender;
+- (IBAction)mapBtnTapped:(UIButton*)sender;
 
 - (void) notificationReceived: (NSNotification*) notification;
+- (void) setEventDetail:(ZPAMyZeppaEvent * _Nullable)eventDetail;
 @end

@@ -8,14 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ZPAMyZeppaEvent.h"
+#import "ZPAEventInfoBase.h"
+#import "ZPAInitialEventsQuery.h"
+#import "ZPANewEventsQuery.h"
+#import "ZPAMoreEventsQuery.h"
 
 #import "GTLZeppaclientapiZeppaEvent.h"
 
 @interface ZPAZeppaEventSingleton : NSObject
 
-@property (nonatomic, strong)NSMutableArray *zeppaEvents;
-@property (nonatomic, strong)NSMutableArray *relationships;
+@property (nonatomic, strong)NSMutableArray<ZPAEventInfoBase *> *zeppaEvents;
+
+typedef void (^OnEventQueryCompletion)(GTLServiceTicket*,GTLZeppaclientapiCollectionResponseZeppaEventToUserRelationship*,NSError*);
 
 +(ZPAZeppaEventSingleton *)sharedObject;
 +(void)resetObject;
@@ -23,29 +27,27 @@
 
 -(void)clearOldEvents;
 
--(void)addZeppaEvents:(ZPAMyZeppaEvent *)event;
+-(void)addZeppaEvent:(ZPAEventInfoBase *)event;
 
--(BOOL)removeMediator:(ZPAMyZeppaEvent *)event;
+-(BOOL)removeMediator:(ZPAEventInfoBase *)event;
 
 -(void)removeMediatorsForUser:(long long)userId;
 
 -(void)removeEventById:(long long)eventId;
 
--(BOOL)relationshipAlreadyHeld:(GTLZeppaclientapiZeppaEventToUserRelationship *)relation;
--(ZPAMyZeppaEvent *)getEventById:(long long)eventId;
+-(BOOL) fetchInitialEvents:(OnEventQueryCompletion) completion;
+
+-(BOOL) fetchNewEvents:(OnEventQueryCompletion) completion;
+
+-(BOOL) fetchMoreEvents:(OnEventQueryCompletion) completion;
+
+-(ZPAEventInfoBase *)getEventById:(long long)eventId;
 
 -(NSArray *)getEventMediatorsForFriend:(long long)userId;
 
 -(NSArray *)getHostedEventMediators;
 
 -(NSArray *)getInterestingEventMediators;
-
-
--(ZPAMyZeppaEvent *)getMatchingEventMediator:(GTLZeppaclientapiZeppaEvent *)event;
-
--(void)setConflictIndicator:(UIImageView *)imageView withZeppaEvent:(ZPAMyZeppaEvent *)zeppaEvent;
-
--(NSArray *)getAttendingUserIds:(ZPAMyZeppaEvent *)zeppaEvent;
 
 -(void)notificationChangeForEvents;
 

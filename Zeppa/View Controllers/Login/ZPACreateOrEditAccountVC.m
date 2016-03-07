@@ -623,7 +623,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
      }
     
     _userImageView.image = image;
-    _user.profileImage = image;
+    _user.image = image;
     [self uploadPhotoToUser:image];
    
     [self dismissViewControllerAnimated:NO completion:^{
@@ -700,7 +700,7 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
                 ZPAMyZeppaUser *user = [[ZPAMyZeppaUser alloc]init];
                 user.endPointUser = response;
                 user.endPointUser.userInfo = responseInfo;
-                [ZPAZeppaUserSingleton sharedObject].zeppaUser = user;
+                [[ZPAZeppaUserSingleton sharedObject] setMyZeppaUser:user];
                 [[ZPAApplication sharedObject] initizationsWithCurrentUser:user];
                 [self hideActivity];
                 [weakSelf.delegate didFinishCreatingNewUser:user];
@@ -955,10 +955,10 @@ typedef NS_OPTIONS(NSUInteger, CalendarFecthedStatus) {
     NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
     fileName = [[fileName componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
     
-    if(fileName.length >= 10){
+    if(fileName.length > 10){
+        // Remove the first digit
+        // Make sure this is a 10 digit number
         fileName = [fileName substringFromIndex:[fileName length] - 10];
-        
-        
     }
     
     return fileName;

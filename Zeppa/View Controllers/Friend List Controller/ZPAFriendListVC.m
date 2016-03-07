@@ -11,7 +11,7 @@
 #import "ZPAUserProfileCell.h"
 
 #import "ZPAZeppaUserSingleton.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPADefaultZeppaUserInfo.h"
 #import "ZPAMyZeppaUser.h"
 
 #import "ZPAZeppaEventTagSingleton.h"
@@ -61,7 +61,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
     self.arrMinglers = [[[ZPAZeppaUserSingleton sharedObject] getZeppaMinglerUsers] mutableCopy];
 //    
 //    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"zeppaUserInfo.givenName" ascending:YES];
@@ -84,9 +84,9 @@
         
         ZPAUserProfileVC *userProfile = segue.destinationViewController;
         
-        ZPADefaulZeppatUserInfo *defaultZeppaUserInfo = [self.arrMinglers objectAtIndex:indexPath.row];
+        ZPADefaultZeppaUserInfo *defaultZeppaUserInfo = [self.arrMinglers objectAtIndex:indexPath.row];
         
-        NSString * str = [NSString stringWithFormat:@"%@ %@", defaultZeppaUserInfo.zeppaUserInfo.givenName,defaultZeppaUserInfo.zeppaUserInfo.familyName];
+        NSString * str = defaultZeppaUserInfo.getDisplayName;
         
         NSLog(@"name %@",str);
         
@@ -143,7 +143,7 @@
     minglerCell.selectedBackgroundView = bgView;
 
     
-    ZPADefaulZeppatUserInfo *userInfo = [self.arrMinglers objectAtIndex:indexPath.row];
+    ZPADefaultZeppaUserInfo *userInfo = [self.arrMinglers objectAtIndex:indexPath.row];
     
     [minglerCell showZeppaMinglersInfoOnCell:userInfo];
     

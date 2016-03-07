@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "ZPADateAndTimePicker.h"
-#import "ZPACustomPicker.h"
 
 
 @interface ZPAStaticHelper : NSObject
@@ -77,13 +75,6 @@
 //****************************************************
 +(void)setCornarRadiusofView:(UIView *)view andRadius:(float)radius withBordarColor:(UIColor *)bordarColor andBordarWidth:(float)width;
 
-//****************************************************
-#pragma mark - Xib File Method
-//****************************************************
-
-+(ZPADateAndTimePicker *)datePickerView;
-+(ZPACustomPicker *)customPickerView;
-
 
 //****************************************************
 #pragma mark - Private Method
@@ -92,4 +83,11 @@
 
 
 +(void)sortArrayAlphabatically:(NSMutableArray *)array withKey:(NSString *)string;
+
+//****************************************************
+#pragma mark - Query Helper Methods
+//****************************************************
+
++ (NSString*) locationSuffixOrNil;
+
 @end

@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ZPAUserInfoBaseClass.h"
-#import "ZPADefaulZeppatUserInfo.h"
+#import "ZPAUserInfoBase.h"
+#import "ZPADefaultZeppaUserInfo.h"
 
 #import "GTLZeppaclientapiZeppaUserInfo.h"
 #import "GTLZeppaclientapiCollectionResponseZeppaUserInfo.h"
@@ -23,16 +23,14 @@
 
 @end
 
-@interface ZPAFindMinglers : ZPAUserInfoBaseClass
+@interface ZPAFindMinglers : ZPAUserInfoBase
 
 @property (strong,readonly)GTLServiceZeppaclientapi *zeppaUserRelationshipService;
 
 @property (nonatomic,strong) NSMutableArray *uniqueInfoItems;
-@property (nonatomic,strong) NSMutableArray *recognizedEmails;
-@property (nonatomic,strong) NSMutableArray *recognizedNumbers;
 
 @property (strong,readonly)GTLServiceZeppaclientapi *zeppaUserInfoService;
-@property (strong,readonly)ZPADefaulZeppatUserInfo *defaultZeppaUser;
+@property (strong,readonly)ZPADefaultZeppaUserInfo *defaultZeppaUser;
 @property (nonatomic, strong) id<FindMinglerDelegate>delegate;
 
 -(void)getAllContacts;

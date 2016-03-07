@@ -31,10 +31,7 @@
 
 @property (strong,readonly) GTLServiceZeppaclientapi *zeppaUserService;
 
-@property (nonatomic, weak) GTMOAuth2Authentication *auth;
 @property (nonatomic, strong) NSMutableArray *heldUserMediators;
-@property (nonatomic, strong) ZPAMyZeppaUser *zeppaUser;
-@property (nonatomic, strong) NSNumber *userId;
 
 ///Create ZPAUserEndpoint  Completion Block
 typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, id object, NSError *error);
@@ -48,10 +45,9 @@ typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, 
 -(void)addDefaultZeppaUserMediatorWithUserInfo:(GTLZeppaclientapiZeppaUserInfo *)userInfo andRelationShip:(GTLZeppaclientapiZeppaUserToUserRelationship *)relationShip;
 -(void)removeHeldMediatorById:(long long)userId;
 -(id)getZPAUserMediatorById:(long long)userId;
-
-
--(NSArray *)getZeppaRecognizedEmails;
--(NSArray *)getZeppaRecognizedNumbers;
+-(ZPAMyZeppaUser*) setMyZeppaUser:(ZPAMyZeppaUser*)zeppaUser;
+-(ZPAMyZeppaUser*) getMyZeppaUser;
+- (NSNumber*) getMyZeppaUserIdentifier;
 
 -(NSArray *)getPossibleFriendInfoMediators;
 -(NSArray *)getPendingFriendRequests;
@@ -62,7 +58,9 @@ typedef void(^ZPAUserEndpointServiceCompletionBlock) (GTLServiceTicket *ticket, 
 ///*******************************
 -(GTLServiceTicket *)getZeppaUserWithUserId:(long long)zeppaUserId andCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion;
 -(GTLServiceTicket *)getCurrentZeppaUserWithCompletionHandler:(ZPAUserEndpointServiceCompletionBlock)completion;
-  
+
+-(GTLServiceTicket *) updateUserLocation: (CLLocation *)location withCompletion:(ZPAUserEndpointServiceCompletionBlock)completionBlock;
+
 @end
 
 

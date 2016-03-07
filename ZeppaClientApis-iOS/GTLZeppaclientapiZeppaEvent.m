@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLZeppaclientapiZeppaEvent (0 custom class methods, 19 custom properties)
+//   GTLZeppaclientapiZeppaEvent (0 custom class methods, 21 custom properties)
 
 #import "GTLZeppaclientapiZeppaEvent.h"
 
@@ -28,8 +28,8 @@
 @implementation GTLZeppaclientapiZeppaEvent
 @dynamic created, descriptionProperty, displayLocation, end,
          googleCalendarEventId, googleCalendarId, guestsMayInvite, host, hostId,
-         iCalUID, identifier, invitedUserIds, key, mapsLocation, privacy, start,
-         tagIds, title, updated;
+         iCalUID, identifier, invitedUserIds, key, latitude, longitude,
+         mapsLocation, privacy, start, tagIds, title, updated;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map = @{

@@ -8,6 +8,14 @@
 
 #import "ZPAAddEventVC.h"
 #import "ZPAAddInvitesVC.h"
+#import "ZPAAuthenticatonHandler.h"
+#import "ZPAZeppaEventSingleton.h"
+#import "ZPAMyZeppaEvent.h"
+#import "ZPAMyZeppaUser.h"
+#import "ZPAZeppaEventTagSingleton.h"
+#import "ZPAFetchDefaultTagsForUser.h"
+#import "ZPAUserDefault.h"
+#import "ZPAConstants.h"
 
 #import "BRStaticHelper.h"
 
@@ -15,16 +23,10 @@
 #import "GTLQueryZeppaclientapi.h"
 #import "GTLServiceZeppaclientapi.h"
 #import "GTLZeppaclientapiEventTag.h"
-
 #import "GTLZeppaclientapiEventTagFollow.h"
 
-#import "ZPAAuthenticatonHandler.h"
-
-#import "ZPAZeppaEventSingleton.h"
-#import "ZPAMyZeppaEvent.h"
-#import "ZPAZeppaEventTagSingleton.h"
-#import "ZPAFetchDefaultTagsForUser.h"
 #import "GrowingTextViewHandler.h"
+@import GoogleMaps;
 
 #define SEGUE_ID_ADD_INVITES @"addInvitesSegue"
 
@@ -39,17 +41,21 @@
 //#define HEIGHTEXTEND 33
 //#define MAX_HEIGHT 2000
 
+#define PRIVACY_PICKER 250
+#define START_PICKER 251
+#define END_PICKER 252
+#define ALL_PICKERS 253
+
 typedef NS_ENUM(NSInteger, selectedBtn){
     startDate=0,
     endDate
 };
 
-@interface ZPAAddEventVC ()<CustomPickerDelegate,UIPickerViewDataSource, UIPickerViewDelegate,UITextViewDelegate,addInvitesDelegate>
+
+@interface ZPAAddEventVC ()<UIPickerViewDataSource, UIPickerViewDelegate,UITextViewDelegate,addInvitesDelegate>
 @property (nonatomic, strong)NSMutableArray *tagsArray;
 @property (nonatomic, assign,getter = isFirstTime) BOOL firstTime;
 @property (nonatomic, strong)NSMutableArray *arrInvitedUsers;
-@property (nonatomic, strong) ZPAFetchDefaultTagsForUser *defaultTagsForUser;
-@property (nonatomic,strong)ZPADefaulZeppatUserInfo *userProfileInfo;
 @property (strong, nonatomic) GrowingTextViewHandler *handler;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagContainerHeightConstraint;
@@ -58,25 +64,22 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 @implementation ZPAAddEventVC
 {
-//    ZPADateAndTimePicker *dateAndTimePicker;
-    ZPACustomPicker *customPicker;
-//    NSString *dateAndTimeValue;
-    selectedBtn selectedButton;
-    NSString * mapLocationStr;
     NSMutableArray *temp;
     NSMutableArray *testArray;
     NSMutableArray *invitedUserIdArray;
     ZPAMyZeppaUser *currentUser;
-//    NSMutableArray *eventTagIdsArray;
     int counter;
-    UIAlertView * alertWithTextField;
     ZPAAddInvitesVC *addInvitesVC;
     NSMutableArray *tagBtnArray;
-    NSMutableArray * selectedTagBtn;
+    NSMutableArray *selectedTagBtn;
 
+    
     NSDate * startTime;
     NSDate *endTime;
     NSInteger noOfLines;
+    
+    GMSPlacePicker *_placePicker;
+    GMSPlace *_selectedPlace;
 }
 
 //****************************************************
@@ -99,14 +102,16 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     [self initialization];
 
     [_navigationBar setFrame:CGRectMake(0, 0, self.view.frame.size.width, 64)];
+
     
-    
+    // Setup the checkbox
     _checkBox.tintColor = [UIColor darkGrayColor];
     _checkBox.checkMarkColor = [ZPAStaticHelper zeppaThemeColor];
     _checkBox.checked = YES;
-    currentUser = [ZPAAppData sharedAppData].loggedInUser;
-    currentUser.tagsArray = [[NSMutableArray alloc]init];
     
+    // Set the current user
+    currentUser = [ZPAAppData sharedAppData].loggedInUser;
+
     // set the description label handler
     self.handler = [[GrowingTextViewHandler alloc]initWithTextView:self.textView_Description withHeightConstraint:self.heightConstraint];
     [self.handler updateMinimumNumberOfLines:2 andMaximumNumberOfLine:8];
@@ -117,6 +122,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     testArray = [NSMutableArray array];
     counter = 1;
     
+    // Roll through all the users tags
     for (GTLZeppaclientapiEventTag *tag in _tagsArray) {
         
         UIButton *newButton =[[UIButton alloc]init];
@@ -191,6 +197,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         self.firstTime = NO;
         [self resetScrollViewContentSize];
     }
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -297,9 +304,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     selectedTagBtn = [NSMutableArray array];
     
-    customPicker = [ZPAStaticHelper customPickerView];
-    customPicker.delegate = self;
-    
     // Set the start and end times
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSCalendarUnit calendarUnits = NSCalendarUnitTimeZone | NSCalendarUnitYear | NSCalendarUnitMonth
@@ -317,7 +321,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
     
     currentUser = [ZPAAppData sharedAppData].loggedInUser;
-    currentUser.tagsArray = [[NSMutableArray alloc]init];
     _eventTagIdsArray = [NSMutableArray array];
     
     for (NSNumber *tagId in [ZPAZeppaEventTagSingleton sharedObject].tagId){
@@ -356,6 +359,8 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
 }
 
+
+
 //****************************************************
 #pragma mark - UIPickerViewDataSource Methods
 //****************************************************
@@ -387,7 +392,7 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     if(pickerView == self.privacyPicker){
         switch (row){
             case 0:
-                return @"Casual";
+                return @"Friends";
             case 1:
                 return @"Private";
         }
@@ -402,6 +407,8 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    // If the user finished editing the event location, hide the selector
+
     [textField resignFirstResponder];
     
     return YES;
@@ -410,7 +417,10 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [[BRStaticHelper sharedObject] setContentOffSetof:textField insideInView:_scrollView_base withLastFieldTagValue:103];
+//    [[BRStaticHelper sharedObject] setContentOffSetof:textField insideInView:_scrollView_base withLastFieldTagValue:103];
+    
+    
+    [self setPicker:ALL_PICKERS isVisible:NO];
     return YES;
     
 }
@@ -420,8 +430,16 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    [[BRStaticHelper sharedObject] setContentOffSetof:textView insideInView:_scrollView_base withLastFieldTagValue:103];
-        return YES;
+//    [[BRStaticHelper sharedObject] setContentOffSetof:textView insideInView:_scrollView_base withLastFieldTagValue:103];
+
+    [self setPicker:ALL_PICKERS isVisible:NO];
+    return YES;
+}
+
+-(BOOL)textViewShouldReturn:(UITextView *)textView
+{
+    
+    return YES;
 }
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     
@@ -488,6 +506,8 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 //****************************************************
 
 
+
+
 - (IBAction)doneBtnTapped:(UIBarButtonItem *)sender {
     
     if ([ZPAZeppaEventTagSingleton sharedObject].tagId.count>0) {
@@ -512,134 +532,76 @@ typedef NS_ENUM(NSInteger, selectedBtn){
     
 }
 
-- (IBAction)btnMapLocationTapped:(UIButton *)sender {
+
+/*
+ * Show place picker
+ */
+- (IBAction) btnSelectLocationTapped:(id)sender {
+    CLLocationCoordinate2D center;
+    if(_selectedPlace){
+        center = _selectedPlace.coordinate;
+    } else {
+        NSDecimalNumber *lat = [ZPAUserDefault getValueFromUserDefaultUsingKey:kLocationLatitude];
+        NSDecimalNumber *lon = [ZPAUserDefault getValueFromUserDefaultUsingKey:kLocationLongitude];
+        
+        if(lat==nil || lon==nil) {
+            // Set the starting point to a default
+            // Drexel for now
+            center = CLLocationCoordinate2DMake(39.956613,-75.189944);
+        } else {
+            center = CLLocationCoordinate2DMake(lat.doubleValue,lon.doubleValue);
+        }
+    }
     
-    [_txtEventLocation resignFirstResponder];
-    [_txtEventTitle resignFirstResponder];
-    [_txtNewTag resignFirstResponder];
-    [_textView_Description resignFirstResponder];
     
-    alertWithTextField = [[UIAlertView alloc]initWithTitle:@"Set Map Address" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done",nil];
-    alertWithTextField.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [alertWithTextField textFieldAtIndex:0].placeholder = @"42 Wallaby way, Sydney";
+    CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(center.latitude + 0.001, center.longitude + 0.001);
+    CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(center.latitude - 0.001, center.longitude - 0.001);
+    GMSCoordinateBounds *viewport = [[GMSCoordinateBounds alloc] initWithCoordinate:northEast
+                                                                         coordinate:southWest];
+    GMSPlacePickerConfig *config = [[GMSPlacePickerConfig alloc] initWithViewport:viewport];
+    _placePicker = [[GMSPlacePicker alloc] initWithConfig:config];
     
-    [alertWithTextField show];
+    [_placePicker pickPlaceWithCallback:^(GMSPlace *place, NSError *error) {
+        if (error != nil) {
+            NSLog(@"Pick Place error %@", [error localizedDescription]);
+            return;
+        }
+        
+        if (place != nil) {
+            _selectedPlace = place;
+            _txtEventLocation.text = place.name;
+            NSLog(@"Place name %@", place.name);
+            NSLog(@"Place address %@", place.formattedAddress);
+            NSLog(@"Place coordinates %f, %f",place.coordinate.latitude,place.coordinate.longitude);
+            NSLog(@"Place attributions %@", place.attributions.string);
+        } else {
+            NSLog(@"No place selected");
+        }
+    }];
 }
+
+
 
 /*
  * User attempts to set the start time
  */
 - (IBAction)btnSelectEventStartTimeTapped:(id)sender {
     
-    [self.view layoutIfNeeded];
+    [self.view endEditing:YES];
     
-    CGFloat y_offset = 0;
-    NSTimeInterval duration = 0.3;
-    // Determine if date picker is visible by observing it's height
-    if(self.startPickerHeight.constant>0){
-        // picker is visible, set and hide
-        // Set the start time to the selected time
-//        startTime = [[ZPADateHelper sharedHelper] stringFromDate:self.startTimePicker.date withFormat:@"MM/dd/yyyy hh:mm a"];
-        self.startBaseHeight.constant=33;
-        // TODO: update end time as needed
-        [UIView animateWithDuration:duration animations:^{
-            [self.view layoutIfNeeded];
-            self.startPickerHeight.constant=0;
-            startTime = self.startTimePicker.date;
-            
-            // Update end time if applicable
-            if([startTime timeIntervalSinceDate:endTime] > 0){
-                endTime = [NSDate dateWithTimeInterval:(60*60) sinceDate:startTime];
-            }
-            
-            [self updateTimeText];
-        }];
-        // Animate layout changes
-        y_offset = -100;
-        
-    } else {
-        // picker should be made visible
-        
-        // Set the picker times to the currently visible times
-        
-        // Animate start picker visible
-        self.startPickerHeight.constant=100;
-        self.startBaseHeight.constant+=100;
-        // Set the current time to the minimum date
-        self.startTimePicker.minimumDate = [NSDate date];
-        
-        // Set the picker time to the start time
-        self.startTimePicker.date = startTime;
-        
-        // Animate the changes
-        [UIView animateWithDuration:duration animations:^{
-            
-            [self.view layoutIfNeeded];
-            
-        }];
-        
-        y_offset = 100;
-    }
-
-    [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
+    [self setPicker:PRIVACY_PICKER isVisible:NO];
+    [self setPicker:END_PICKER isVisible:NO];
+    [self setPicker:START_PICKER isVisible:self.startPickerHeight.constant>0?NO:YES];
 
 }
 
 - (IBAction)btnSelectEventEndTimeTapped:(id)sender {
     
-    [self.view layoutIfNeeded];
-    CGFloat y_offset = 0;
-    NSTimeInterval duration = 0.3;
-    // Determine if date picker is visible by observing it's height
-    if(self.endPickerHeight.constant>0){
-        // picker is visible, set and hide
-        // Set the start time to the selected time
-        //        startTime = [[ZPADateHelper sharedHelper] stringFromDate:self.startTimePicker.date withFormat:@"MM/dd/yyyy hh:mm a"];
-        
-        self.endBaseHeight.constant=33;
-        
-        [UIView animateWithDuration:duration animations:^{
-            [self.view layoutIfNeeded];
-            
-            self.endPickerHeight.constant=0;
-            
-            endTime = self.endTimePicker.date;
-            
-            // Update end time if applicable
-            if([startTime timeIntervalSinceDate:endTime] > 0){
-                startTime = [NSDate dateWithTimeInterval:-(60*60) sinceDate:endTime];
-                // If current date is later, set it to the current date
-                startTime = [startTime laterDate:[NSDate date]];
-            }
-            
-            [self updateTimeText];
-
-        }];
-        // Animate layout changes
-        
-        y_offset = -100;
-        
-    } else {
-        // picker should be made visible
-        
-        // Set the picker times to the currently visible times
-        
-        // Animate start picker visible
-        self.endBaseHeight.constant+=100;
-        self.endTimePicker.minimumDate = [NSDate date];
-        self.endTimePicker.date = endTime;
-        
-        // Animate the layout changes
-        [UIView animateWithDuration:duration animations:^{
-            [self.view layoutIfNeeded];
-            self.endPickerHeight.constant=100;
-        }];
-        
-        y_offset = 100;
-    }
+    [self.view endEditing:YES];
     
-    [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
-
+    [self setPicker:PRIVACY_PICKER isVisible:NO];
+    [self setPicker:START_PICKER isVisible:NO];
+    [self setPicker:END_PICKER isVisible:self.endPickerHeight.constant>0?NO:YES];
 }
 
 /*
@@ -648,51 +610,190 @@ typedef NS_ENUM(NSInteger, selectedBtn){
  
 - (IBAction)btnSelectEventPrivacyTapped:(id)sender {
     
-    [self.view layoutIfNeeded];
+    [self.view endEditing:YES];
     
-    CGFloat y_offset = 0;
-    NSTimeInterval duration = 0.3;
-    // Determine if date picker is visible by observing it's height
-    if(self.privacyPickerHeight.constant>0){
-        // picker is visible, set and hide
-        
-        self.privacyBaseHeight.constant=33;
-        
-        [UIView animateWithDuration:duration animations:^{
-            [self.view layoutIfNeeded];
-            
-            self.privacyPickerHeight.constant=0;
-            NSInteger selectedIndex = [self.privacyPicker selectedRowInComponent:0];
-            self.lblEventPrivacy.text = (selectedIndex==0?@"Casual":@"Private");
-            
-        }];
-        // Animate layout changes
-        
-        y_offset = -75;
-        
-    } else {
-        // picker should be made visible
-        
-        // Set the picker times to the currently visible times
-        
-        // Animate start picker visible
-        self.privacyPickerHeight.constant=75;
-        self.privacyBaseHeight.constant+=75;
-        NSInteger selectedIndex = [self.lblEventPrivacy.text isEqualToString:@"Casual"]?0:1;
-        [self.privacyPicker selectRow:selectedIndex inComponent:0 animated:NO];
-        
-        // Animate the layout changes
-        [UIView animateWithDuration:duration animations:^{
-            [self.view layoutIfNeeded];
-            
-        }];
-        
-        y_offset = 75;
-    }
-    
-    [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
+    [self setPicker:END_PICKER isVisible:NO];
+    [self setPicker:START_PICKER isVisible:NO];
+    [self setPicker:PRIVACY_PICKER isVisible:self.privacyPickerHeight.constant>0?NO:YES];
     
 }
+
+
+/*
+ * Set the specified picker vsibility
+ */
+- (void) setPicker:(int) pickerId isVisible:(BOOL) isVisible {
+
+    // Offset of the scroll view that will be set
+    CGFloat y_offset = 0;
+    NSTimeInterval duration = 0.2;
+    
+    /*
+     * Flip through the pickers and assign the the proper height
+     */
+    switch(pickerId){
+        
+        case ALL_PICKERS:
+        case PRIVACY_PICKER:
+            if(self.privacyPickerHeight.constant>0 && !isVisible){
+                // picker is visible, set and hide
+                
+                self.privacyBaseHeight.constant=33;
+                self.privacyPickerHeight.constant=0;
+
+                [UIView animateWithDuration:duration animations:^{
+                    [self.view layoutIfNeeded];
+                    
+                    NSInteger selectedIndex = [self.privacyPicker selectedRowInComponent:0];
+                    self.lblEventPrivacy.text = (selectedIndex==0?@"Friends":@"Private");
+                    
+                }];
+                // Animate layout changes
+                
+                y_offset -=75;
+                //        [self.privacyPicker removeTarget:self action:@selector(btnSelectEventPrivacyTapped:) forControlEvents:UIControlEventTouchUpOutside];
+                
+                
+            } else if (self.privacyPickerHeight.constant==0 && isVisible) {
+                // picker should be made visible
+                
+                // Set the picker times to the currently visible times
+                
+                // Animate start picker visible
+                self.privacyPickerHeight.constant=75;
+                self.privacyBaseHeight.constant+=75;
+                NSInteger selectedIndex = [self.lblEventPrivacy.text isEqualToString:@"Friends"]?0:1;
+                [self.privacyPicker selectRow:selectedIndex inComponent:0 animated:NO];
+                
+                // Animate the layout changes
+                [UIView animateWithDuration:duration animations:^{
+                    [self.view layoutIfNeeded];
+                }];
+                
+                y_offset += 75;
+                //        [self.privacyPicker addTarget:self action:@selector(btnSelectEventPrivacyTapped:) forControlEvents:UIControlEventTouchUpOutside];
+            }
+            
+            if(pickerId != ALL_PICKERS)
+                break;
+            
+            
+        /*
+         * Set the height constraints of the start picker
+         */
+        case START_PICKER:
+            if(self.startPickerHeight.constant>0 && !isVisible){
+                // picker is visible, set and hide
+                self.startBaseHeight.constant=33;
+                self.startPickerHeight.constant=0;
+
+                // TODO: update end time as needed
+                [UIView animateWithDuration:duration animations:^{
+                    [self.view layoutIfNeeded];
+                    startTime = self.startTimePicker.date;
+                    
+                    // Update end time if applicable
+                    if([startTime timeIntervalSinceDate:endTime] > 0){
+                        endTime = [NSDate dateWithTimeInterval:(60*60) sinceDate:startTime];
+                    }
+                    
+                    [self updateTimeText];
+                }];
+                // Animate layout changes
+                y_offset -=100;
+                
+            } else if(self.startPickerHeight.constant==0 && isVisible) {
+                // picker should be made visible
+                
+                // Set the picker times to the currently visible times
+                
+                // Animate start picker visible
+                self.startBaseHeight.constant+=100;
+                // Set the current time to the minimum date
+                self.startTimePicker.minimumDate = [NSDate date];
+                self.startPickerHeight.constant=100;
+
+                // Set the picker time to the start time
+                self.startTimePicker.date = startTime;
+                
+                // Animate the changes
+                [UIView animateWithDuration:duration animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
+                
+                y_offset += 100;
+                
+                
+            }
+            
+            if(pickerId != ALL_PICKERS)
+                break;
+            /*
+             * Interact with the visibility of the end picker height constraints
+             */
+        case END_PICKER:
+            if(self.endPickerHeight.constant>0 && !isVisible){
+                // picker is visible, set and hide
+                // Set the start time to the selected time
+                //        startTime = [[ZPADateHelper sharedHelper] stringFromDate:self.startTimePicker.date withFormat:@"MM/dd/yyyy hh:mm a"];
+                
+                self.endBaseHeight.constant=33;
+                self.endPickerHeight.constant=0;
+
+                [UIView animateWithDuration:duration animations:^{
+                    [self.view layoutIfNeeded];
+                    
+                    
+                    endTime = self.endTimePicker.date;
+                    
+                    // Update end time if applicable
+                    if([startTime timeIntervalSinceDate:endTime] > 0){
+                        startTime = [NSDate dateWithTimeInterval:(-1*60*60) sinceDate:endTime];
+                        // If current date is later, set it to the current date
+                        startTime = [startTime laterDate:[NSDate date]];
+                    }
+                    
+                    [self updateTimeText];
+                    
+                }];
+                // Animate layout changes
+                
+                y_offset -=100;
+                
+            } else if (self.endPickerHeight.constant==0 && isVisible) {
+                // picker should be made visible
+                
+                // Set the picker times to the currently visible times
+                
+                // Animate start picker visible
+                self.endBaseHeight.constant+=100;
+                self.endPickerHeight.constant=100;
+                self.endTimePicker.minimumDate = [NSDate date];
+                self.endTimePicker.date = endTime;
+                
+                // Animate the layout changes
+                [UIView animateWithDuration:duration animations:^{
+                    [self.view layoutIfNeeded];
+                }];
+                
+                y_offset += 100;
+                
+            }
+            
+            if(pickerId != ALL_PICKERS)
+                break;
+            
+    }
+    
+    if(y_offset != 0){
+        [self updateBaseViewFramesWithOffset:y_offset withAnimationDuration:duration];
+    }
+
+}
+
+
+
 
 
 
@@ -835,15 +936,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 #pragma mark - AlertView Delegate Method
 ///*************************************************
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if ([alertView isEqual:alertWithTextField] ) {
-        mapLocationStr = [alertView textFieldAtIndex:0].text;
-        NSLog(@"%@",[alertView textFieldAtIndex:0].text);
-
-    }
-}
-
-
 
 
 -(void)arrangeButtonWhenCallCellForRowAtIndex{
@@ -904,8 +996,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
         self.view_baseAddInvites.frame = CGRectMake(self.view_baseAddInvites.frame.origin.x, y, self.scrollView_base.contentSize.width, self.view_baseAddInvites.frame.size.height);
         
         y += self.view_baseAddInvites.frame.size.height;
-
-        
         
 //        // Adjust the content view size
         _scrollView_base.contentSize = CGSizeMake(self.scrollView_base.frame.size.width,  y);
@@ -965,44 +1055,6 @@ typedef NS_ENUM(NSInteger, selectedBtn){
    // [self executeZeppaTagFollowApi:sender];
 }
 
--(void )executeZeppaTagFollowApi:(UIButton *)tagButton{
-    
-    
-    GTLZeppaclientapiEventTagFollow * tagFollow = [[GTLZeppaclientapiEventTagFollow alloc]init];
-    
-    
-    
-    for (GTLZeppaclientapiEventTag * tag in _tagsArray) {
-        if ([tag.tagText.uppercaseString isEqualToString:tagButton.titleLabel.text.uppercaseString]) {
-            
-            if ([_defaultTagsForUser isFollowing:tag ] == NO ){
-                
-                [tagButton setBackgroundColor:[ZPAStaticHelper zeppaThemeColor]];
-                
-                tagFollow.tagOwnerId = _userProfileInfo.userId;
-                tagFollow.followerId = currentUser.endPointUser.identifier;
-                tagFollow.tagId = tag.identifier;
-                [_defaultTagsForUser insertZeppaTagFollow:tagFollow];
-                
-            }else{
-                
-                [_defaultTagsForUser removeZeppaTagFollow:tag];
-                [tagButton setBackgroundColor:[ UIColor whiteColor]];
-            }
-        }
-    }
-    
-}
-
-///*************************************************
-#pragma mark - Custom PickerView  Delegate Method
-///*************************************************
-
--(void)doneBtnTappedOnCustomPicker:(NSString *)string{
-    [customPicker removeFromSuperview];
-    _lblEventPrivacy.text= string;
-}
-
 ///*************************************************
 #pragma mark - Events API Method
 ///*************************************************
@@ -1010,35 +1062,45 @@ typedef NS_ENUM(NSInteger, selectedBtn){
 
 - (void) executeInsertZeppaEventTask:(id)sender {
     
-    ZPAMyZeppaEvent * myZeppaEvent = [[ZPAMyZeppaEvent alloc]init];
     UIAlertView *alert;
+    
+    if(!_selectedPlace){
+        alert = [[UIAlertView alloc]initWithTitle:@"Invalid Event" message:@"Must Select Location" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     
     GTLZeppaclientapiZeppaEvent *zeppaEvent = [[GTLZeppaclientapiZeppaEvent alloc] init];
     
-    
+    // Set the basics
     [zeppaEvent setHostId:currentUser.endPointUser.identifier];
     [zeppaEvent setTitle:_txtEventTitle.text];
     [zeppaEvent setDescriptionProperty:_textView_Description.text];
-    [zeppaEvent setPrivacy:[_lblEventPrivacy.text uppercaseString]];
-    
     [zeppaEvent setGuestsMayInvite:[NSNumber numberWithInt:_checkBox.checked]];
-    
-    double startTimeStamp = ([startTime timeIntervalSince1970])*1000;
-    
-    NSNumber * startTimee = [NSNumber numberWithDouble:startTimeStamp];
-    
 
+    // Set privacy, account for legacy
+    if([_lblEventPrivacy.text isEqualToString:@"Private"]) {
+        [zeppaEvent setPrivacy:@"PRIVATE"];
+    } else {
+        [zeppaEvent setPrivacy:@"CASUAL"];
+    }
+    
+    
+    // Enter the time stamps
+    double startTimeStamp = ([startTime timeIntervalSince1970])*1000;
+    NSNumber * startTimee = [NSNumber numberWithDouble:startTimeStamp];
     double endTimeStamp = ([endTime timeIntervalSince1970])*1000;
      NSNumber * endTimee = [NSNumber numberWithDouble:endTimeStamp];
-    
     [zeppaEvent setStart:startTimee];
-   
     [zeppaEvent setEnd:endTimee];
-    
-    [zeppaEvent setDisplayLocation:_txtEventLocation.text];
-    [zeppaEvent setMapsLocation:mapLocationStr];
    
+    // Set Location Info
+    [zeppaEvent setDisplayLocation:_selectedPlace.name];
+    [zeppaEvent setMapsLocation:_selectedPlace.formattedAddress];
+    [zeppaEvent setLatitude:[NSDecimalNumber numberWithDouble:_selectedPlace.coordinate.latitude]];
+    [zeppaEvent setLongitude:[NSDecimalNumber numberWithDouble:_selectedPlace.coordinate.longitude]];
     
+    // Set arrays
     [zeppaEvent setTagIds:_eventTagIdsArray];
     [zeppaEvent setInvitedUserIds:invitedUserIdArray];
     
@@ -1069,15 +1131,13 @@ typedef NS_ENUM(NSInteger, selectedBtn){
             
         } else if (event.identifier){
             
-            myZeppaEvent.event = event;
+            ZPAMyZeppaEvent *myEvent = [[ZPAMyZeppaEvent alloc] initWithZeppaEvent:event];
            
-            [[ZPAZeppaEventSingleton sharedObject]addZeppaEvents:myZeppaEvent];
-            [[NSNotificationCenter defaultCenter]postNotificationName:kzeppacalendarSync object:nil];
+            [[ZPAZeppaEventSingleton sharedObject]addZeppaEvent:myEvent];
             
             [alert dismissWithClickedButtonIndex:0 animated:YES];
-//            [self.navigationController popToRootViewControllerAnimated:YES];
-            
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
+            // TODO: post notification that an event has been added to the users calendar
             
         } else if (event == nil) {
             

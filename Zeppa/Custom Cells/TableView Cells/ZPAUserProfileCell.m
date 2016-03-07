@@ -45,7 +45,7 @@
 - (IBAction)commonMinglerBtn:(UIButton *)sender {
 }
 
--(void)showZeppaMinglersInfoOnCell:(ZPADefaulZeppatUserInfo *)zeppaUser{
+-(void)showZeppaMinglersInfoOnCell:(ZPADefaultZeppaUserInfo *)zeppaUser{
     
 //    if(zeppaUser.zeppaUserInfo.primaryUnformattedNumber.length >0){
 //        _btnContactNumber.hidden = NO;
@@ -53,13 +53,13 @@
 //        _btnContactNumber.hidden = YES;
 //    }
     
-    NSURL *minglerImageUrl = [NSURL URLWithString:zeppaUser.zeppaUserInfo.imageUrl];
+    NSURL *minglerImageUrl = [NSURL URLWithString:zeppaUser.userInfo.imageUrl];
     [_imageView_UserProfile setImageWithURL:minglerImageUrl placeholderImage:[ZPAAppData sharedAppData].defaultUserImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         
         ///Do anything with image
         
     }];
-    _lblUserName.text = [NSString stringWithFormat:@"%@ %@",zeppaUser.zeppaUserInfo.givenName,zeppaUser.zeppaUserInfo.familyName];
+    _lblUserName.text = zeppaUser.getDisplayName;
     
 //    //[_btnContactNumber setTitle:zeppaUser.zeppaUserInfo.primaryUnformattedNumber forState:UIControlStateNormal];
 //    [_btnEmail setTitle:zeppaUser.zeppaUserInfo.googleAccountEmail forState:UIControlStateNormal];

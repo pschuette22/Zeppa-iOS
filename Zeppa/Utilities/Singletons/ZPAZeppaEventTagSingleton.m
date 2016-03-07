@@ -12,6 +12,8 @@
 static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
 
 @implementation ZPAZeppaEventTagSingleton
+
+
 +(ZPAZeppaEventTagSingleton *)sharedObject{
     
     if (zeppaEvent == nil) {

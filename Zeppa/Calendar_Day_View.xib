@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="FCVCalendarDayView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x39-aB-9mr">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                    <subviews>
+                        <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Elu-wK-VFM">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="oLi-ZT-bik"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="##" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3bB-d0-ahx">
+                            <rect key="frame" x="286" y="3" width="28" height="28"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="28" id="aaR-x6-tBP"/>
+                                <constraint firstAttribute="width" constant="28" id="kok-iB-6Cz"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iW9-KS-qRi">
+                            <rect key="frame" x="295" y="33" width="10" height="10"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="10" id="B6k-YP-u35"/>
+                                <constraint firstAttribute="height" constant="10" id="HON-ll-oU0"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Elu-wK-VFM" secondAttribute="trailing" id="0h1-Bv-U7b"/>
+                        <constraint firstItem="Elu-wK-VFM" firstAttribute="top" secondItem="x39-aB-9mr" secondAttribute="top" id="L1X-uo-N0n"/>
+                        <constraint firstAttribute="height" constant="50" id="NTm-Rf-oDw"/>
+                        <constraint firstItem="3bB-d0-ahx" firstAttribute="centerX" secondItem="x39-aB-9mr" secondAttribute="centerX" id="OGg-dj-ft2"/>
+                        <constraint firstItem="Elu-wK-VFM" firstAttribute="top" secondItem="x39-aB-9mr" secondAttribute="top" constant="1" id="RAb-Lg-8qO"/>
+                        <constraint firstItem="3bB-d0-ahx" firstAttribute="top" secondItem="Elu-wK-VFM" secondAttribute="bottom" constant="2" id="arR-Ry-wBc"/>
+                        <constraint firstItem="iW9-KS-qRi" firstAttribute="top" secondItem="3bB-d0-ahx" secondAttribute="bottom" constant="2" id="bok-kB-siz"/>
+                        <constraint firstItem="Elu-wK-VFM" firstAttribute="leading" secondItem="x39-aB-9mr" secondAttribute="leading" id="kDx-s9-gK1"/>
+                        <constraint firstItem="iW9-KS-qRi" firstAttribute="centerX" secondItem="3bB-d0-ahx" secondAttribute="centerX" id="wi3-N5-dzH"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="RAb-Lg-8qO"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="x39-aB-9mr" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7NM-BX-CIa"/>
+                <constraint firstItem="x39-aB-9mr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OtO-ce-7pO"/>
+                <constraint firstAttribute="bottom" secondItem="x39-aB-9mr" secondAttribute="bottom" id="hqe-c9-kHH"/>
+                <constraint firstAttribute="trailing" secondItem="x39-aB-9mr" secondAttribute="trailing" id="kRi-gv-qAp"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="hqe-c9-kHH"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="lbl_date" destination="3bB-d0-ahx" id="duT-kO-F2P"/>
+                <outlet property="view_base" destination="x39-aB-9mr" id="ycA-cO-3fZ"/>
+                <outlet property="view_eventsIndicator" destination="iW9-KS-qRi" id="UYu-Yj-TBn"/>
+            </connections>
+        </view>
+    </objects>
+</document>
