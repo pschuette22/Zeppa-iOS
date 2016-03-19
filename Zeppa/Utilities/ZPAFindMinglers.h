@@ -23,7 +23,7 @@
 
 @end
 
-@interface ZPAFindMinglers : ZPAUserInfoBase
+@interface ZPAFindMinglers : NSObject
 
 @property (strong,readonly)GTLServiceZeppaclientapi *zeppaUserRelationshipService;
 

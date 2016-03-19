@@ -151,6 +151,7 @@
 		CEAC10451C7D1D4600AE40CD /* ZPAHomeTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEAC10441C7D1D4600AE40CD /* ZPAHomeTabController.m */; };
 		CEAC10521C7D44B600AE40CD /* (null) in Resources */ = {isa = PBXBuildFile; };
 		CEAC10551C7D46FD00AE40CD /* (null) in Resources */ = {isa = PBXBuildFile; };
+		CEB429331C9AFB1300C36C79 /* ZPAFetchMyTagsTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB429321C9AFB1300C36C79 /* ZPAFetchMyTagsTask.m */; };
 		CEB499EF1C81004F005F6F38 /* DistanceConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB499EE1C81004F005F6F38 /* DistanceConverter.m */; };
 		CEB499F51C812583005F6F38 /* ZPAUpdateUserTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB499F41C812583005F6F38 /* ZPAUpdateUserTask.m */; };
 		CEB499F81C8128EB005F6F38 /* ZPAMyZeppaUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB499F71C8128EB005F6F38 /* ZPAMyZeppaUser.m */; };
@@ -599,6 +600,8 @@
 		CE9E927B1C87159700F67738 /* ZPAMoreEventsQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAMoreEventsQuery.m; sourceTree = "<group>"; };
 		CEAC10431C7D1D4600AE40CD /* ZPAHomeTabController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAHomeTabController.h; sourceTree = "<group>"; };
 		CEAC10441C7D1D4600AE40CD /* ZPAHomeTabController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAHomeTabController.m; sourceTree = "<group>"; };
+		CEB429311C9AFB1300C36C79 /* ZPAFetchMyTagsTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAFetchMyTagsTask.h; sourceTree = "<group>"; };
+		CEB429321C9AFB1300C36C79 /* ZPAFetchMyTagsTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPAFetchMyTagsTask.m; sourceTree = "<group>"; };
 		CEB499ED1C81004F005F6F38 /* DistanceConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistanceConverter.h; sourceTree = "<group>"; };
 		CEB499EE1C81004F005F6F38 /* DistanceConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistanceConverter.m; sourceTree = "<group>"; };
 		CEB499F31C812583005F6F38 /* ZPAUpdateUserTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPAUpdateUserTask.h; sourceTree = "<group>"; };
@@ -997,7 +1000,6 @@
 				A2B11B1E1ADFD6C3004F863A /* Singleton */,
 				26D5289619B08D49000C3649 /* Constants */,
 				26D5289419B08A53000C3649 /* Utilities */,
-				A2E81FF81AEFA390003B0523 /* Zeppa Classes */,
 				26FFAEC019D1A41C005FAF3B /* Core Data */,
 				2664FDDE19ACA743009C43EE /* User Interface */,
 				D86F16DF1ACD5DA500CF53AC /* images */,
@@ -1366,14 +1368,6 @@
 			name = "Helper Classes";
 			sourceTree = "<group>";
 		};
-		A28623C51AE4D88400C5DCAC /* Zeppa Custom Classes */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Zeppa Custom Classes";
-			path = Utilities/Singletons;
-			sourceTree = "<group>";
-		};
 		A29490C41A11E6A200EB7908 /* Request Minglers Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -1431,14 +1425,6 @@
 			name = "UserProfile Screen Cells";
 			sourceTree = "<group>";
 		};
-		A2E81FF81AEFA390003B0523 /* Zeppa Classes */ = {
-			isa = PBXGroup;
-			children = (
-				A28623C51AE4D88400C5DCAC /* Zeppa Custom Classes */,
-			);
-			name = "Zeppa Classes";
-			sourceTree = "<group>";
-		};
 		A2F1E7E41A135F2600DB5324 /* Event Detail Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -1466,6 +1452,8 @@
 				CE8E6E0C1B78F8B1008B49C8 /* ZPAFetchEventInfoTask.m */,
 				CEB499F31C812583005F6F38 /* ZPAUpdateUserTask.h */,
 				CEB499F41C812583005F6F38 /* ZPAUpdateUserTask.m */,
+				CEB429311C9AFB1300C36C79 /* ZPAFetchMyTagsTask.h */,
+				CEB429321C9AFB1300C36C79 /* ZPAFetchMyTagsTask.m */,
 			);
 			name = "Query Task";
 			sourceTree = "<group>";
@@ -2361,6 +2349,7 @@
 				CE1B7A911C7FE79000373340 /* GTLZeppaclientapiZeppaEvent.m in Sources */,
 				268150D719F4E6A9009D51DF /* ZPAFeedVC.m in Sources */,
 				A2D9FC091A109E54002B3E2B /* ZPAUserProfileVC.m in Sources */,
+				CEB429331C9AFB1300C36C79 /* ZPAFetchMyTagsTask.m in Sources */,
 				26B45D1519FFCCB400E83530 /* ZPAMyBasicInfoCell.m in Sources */,
 				26BCBB9719E3C44A005B9824 /* ZPAAppData.m in Sources */,
 				A2BF9A7E1AD7B7C000F91712 /* ZPAUserDefault.m in Sources */,
@@ -2612,7 +2601,7 @@
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";
-				VALID_ARCHS = "armv7s arm64 armv7";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2675,7 +2664,7 @@
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";
-				VALID_ARCHS = "armv7s arm64 armv7";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

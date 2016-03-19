@@ -12,7 +12,6 @@
 
 #import "ZPAZeppaEventTagSingleton.h"
 #import "ZPADefaultZeppaEventInfo.h"
-#import "ZPADefaultZeppaEventTagInfo.h"
 #import "ZPAFetchDefaultTagsForUser.h"
 #import "ZPAEventDetailVC.h"
 #import "ZPAMutualMinglerVC.h"
@@ -62,7 +61,6 @@ NSArray *minglerTagsArray;
     
     ZPAMyZeppaUser *currentUser;
     ZPAMyZeppaEvent *zeppaEvent;
-    ZPADefaultZeppaEventTagInfo *tagInfo;
     
 //    int counter;
     NSString *_mutualMinglerStr;
@@ -86,7 +84,6 @@ NSArray *minglerTagsArray;
 {
     [super viewDidLoad];
 
-    tagInfo = [[ZPADefaultZeppaEventTagInfo alloc]init];
     selectedTagBtn = [NSMutableArray array];
     
     [self showProgressHUD];

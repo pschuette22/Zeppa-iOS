@@ -27,7 +27,7 @@
 #import "ZPAConstants.h"
 
 
-@interface ZPAFetchNotificationTask: ZPAUserInfoBase
+@interface ZPAFetchNotificationTask: NSObject
 
 // Authed service objects
 @property (nonatomic, strong)GTLServiceZeppaclientapi * service;

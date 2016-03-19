@@ -21,6 +21,7 @@
     ZPAMyZeppaUser *loggedInUser;
     ZPADeviceInfo *device;
 }
+
 +(ZPAApplication *)sharedObject{
     
     static ZPAApplication *app;
@@ -74,6 +75,8 @@
 }
 -(void)fetchMyEventTags{
 
+    
+    
 }
 -(void)fetchInitialEvents{
 

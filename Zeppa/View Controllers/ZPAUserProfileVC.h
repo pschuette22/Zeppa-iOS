@@ -14,6 +14,7 @@
 #import "ZPAMinglersEventCell.h"
 #import "ZPADefaultZeppaUserInfo.h"
 
+
 @interface ZPAUserProfileVC : UIViewController<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property(nonatomic,strong)ZPAUserProfileCell *userProfileCell;
