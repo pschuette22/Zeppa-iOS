@@ -30,7 +30,7 @@
 
 -(NSNumber *)getCurrentUserId;
 
--(void)addEventTagsFromArray:(NSArray *)array;
+-(void)addMyEventTagsFromArray:(NSArray *)array;
 
 -(GTLZeppaclientapiEventTag *)newTagInstance;
 

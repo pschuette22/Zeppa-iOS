@@ -10,7 +10,7 @@
 
 @interface ZPAMyEventTag : ZPAEventTagBase
 
--(id) initWithEventTag:(GTLZeppaclientapiEventTag *)tag withOwner:(ZPAUserInfoBase *)owner;
+-(id) initWithEventTag:(GTLZeppaclientapiEventTag *)tag;
 
 -(BOOL) isMyTag;
 -(void) deleteTag;

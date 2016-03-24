@@ -10,4 +10,19 @@
 
 @interface ZPAFetchMyTagsTask : NSObject
 
+// Handles completing the fetch task
+typedef void (^FetchMyTagsCompletionBlock) (GTLServiceTicket *ticket, id object, NSError
+                                  *error);
+@property (nonatomic, copy) FetchMyTagsCompletionBlock completionBlock;
+
+
+// Initialize
+-(id) initWithCompletionHandler:(void (^) (UIBackgroundFetchResult))handler;
+
+// Run the task
+-(void) executeWithCompletion:(FetchMyTagsCompletionBlock)completionBlock;
+
+// Once it finishes, clean a few things up
+-(void) onTaskCompletedWithError:(NSError*)error;
+
 @end

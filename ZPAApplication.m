@@ -10,6 +10,8 @@
 #import "ZPAMyZeppaUser.h"
 #import "ZPADeviceInfo.h"
 #import "ZPAUserDefault.h"
+#import "ZPAFetchMyTagsTask.h"
+
 
 #import "GTLZeppaclientapiZeppaUserInfo.h"
 #import "GTLZeppaclientapiZeppaUser.h"
@@ -74,7 +76,13 @@
    
 }
 -(void)fetchMyEventTags{
-
+    
+    [[[ZPAFetchMyTagsTask alloc] initWithCompletionHandler:nil] executeWithCompletion:^(GTLServiceTicket *ticket, id object, NSError *error) {
+        // Do something when this completes...?
+        if(error){
+            NSLog(@"There was an error with execution");
+        }
+    }];
     
     
 }

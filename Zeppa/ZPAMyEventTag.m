@@ -7,11 +7,12 @@
 //
 
 #import "ZPAMyEventTag.h"
+#import "ZPAZeppaUserSingleton.h"
 
 @implementation ZPAMyEventTag
 
--(id) initWithEventTag:(GTLZeppaclientapiEventTag *)tag withOwner:(ZPAUserInfoBase *)owner {
-    if(self = [super initWithEventTag:tag withOwner:owner]){
+-(id) initWithEventTag:(GTLZeppaclientapiEventTag *)tag {
+    if(self = [super initWithEventTag:tag withOwner:[ZPAZeppaUserSingleton sharedObject].getMyZeppaUser]){
         // Any other custom initialization that may come our way
     }
     return self;

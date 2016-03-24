@@ -8,24 +8,25 @@
 
 #import "ZPAZeppaEventTagSingleton.h"
 #import "ZPAAddEventVC.h"
+#import "ZPAMyEventTag.h"
 
-static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
+static ZPAZeppaEventTagSingleton *instance = nil;
 
 @implementation ZPAZeppaEventTagSingleton
 
 
 +(ZPAZeppaEventTagSingleton *)sharedObject{
     
-    if (zeppaEvent == nil) {
-        zeppaEvent = [[ZPAZeppaEventTagSingleton alloc]init];
-        zeppaEvent.abstactEventTagArray = [[NSMutableArray alloc]init];
-        zeppaEvent.tagId = [NSMutableArray array];
+    if (instance == nil) {
+        instance = [[ZPAZeppaEventTagSingleton alloc]init];
+        instance.abstactEventTagArray = [[NSMutableArray alloc]init];
+        instance.tagId = [NSMutableArray array];
     }
-    return zeppaEvent;
+    return instance;
 }
 +(void)resetObject{
 
-    zeppaEvent = nil;
+    instance = nil;
 }
 -(void)clear{
     
@@ -36,9 +37,12 @@ static ZPAZeppaEventTagSingleton *zeppaEvent = nil;
     
     return [ZPAAppData sharedAppData].loggedInUser.endPointUser.identifier;
 }
--(void)addEventTagsFromArray:(NSArray *)array{
+-(void)addMyEventTagsFromArray:(NSArray *)array{
     
-    _abstactEventTagArray = [array mutableCopy];
+    for(GTLZeppaclientapiEventTag *tag in array) {
+        ZPAMyEventTag *myEventTag = [[ZPAMyEventTag alloc] initWithEventTag:tag];
+        [_abstactEventTagArray addObject:myEventTag];
+    }
 }
 -(GTLZeppaclientapiEventTag *)newTagInstance{
     
